@@ -24,7 +24,7 @@
 	<!-- Bootstrap CSS -->    
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- bootstrap theme -->
     <link href="css/bootstrap-theme.css" rel="stylesheet">
@@ -39,7 +39,7 @@
 	
 
 	<!-- Load the jQuery library, which we'll use to manipulate HTML elements with Javascript. -->
-    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script> -->
     
     <!-- Load Bootstrap stylesheet, which will is CSS that makes everything prettier and also responsive (aka will work on all devices of all sizes). -->
 
@@ -53,26 +53,33 @@
 
 		}else{
 
-			var email = document.getElementById('loginEmail').value;
-			var password = document.getElementById('loginPassword').value;
+			var email = document.getElementById('signupEmail').value;
+			var password = document.getElementById('signupPassword').value;
+			var firstname = document.getElementById('signupFirstName').value;
+			var lastname = document.getElementById('signupLastName').value;
+			var office = document.querySelector('input[name="optradio"]:checked').value;
+			var $this = $('#signup-submit');
+			$this.button('loading');
 
+			console.log(email, password, firstname, lastname, office);
 			// alert(email+" "+password);
 			firebase.auth().createUserWithEmailAndPassword(email, password).then(function(){
 
 				firebase.auth().onAuthStateChanged(function(user){
 
-					if (user != null) {
+					var uid = user.uid;
+					var uemail = user.email;
 
-						var uid = user.uid;
-						var uemail = user.email;
+					var userInfo = {
+						firstname: firstname,
+						lastname: lastname,
+						email: uemail,
+						position: " ",
+						office: office
+					}
 
-						firebase.database().ref().child("users/"+uid).set({
-							firstname: "Carmela",
-							lastname: "Carmela",
-							email: uemail,
-							position: "secretary",
-							office: "Bravo"
-						});
+					if(firebase.database().ref("users/"+uid).set(userInfo)){
+						alert("User created succesfully!!");
 					}
 				});
 			}).catch(function(error) {
@@ -90,18 +97,6 @@
 		}
 	}
 
-	function signoutUser(){
-
-		firebase.auth().signOut().then(function() {
-		  window.location.href = 'login.php';
-		}).catch(function(error) {
-		  	var errorCode = error.code;
-			var errorMessage = error.message;
-
-			alert(errorMessage);
-		});
-	}
-
 	function initState(){
 
 		firebase.auth().onAuthStateChanged(function(user) {
@@ -113,22 +108,9 @@
 
 					if(snapshot.val().office == "Head Office"){
 
-						console.log("UID: " + uid);
-						console.log("First Name: " + snapshot.val().firstname);
-						console.log("Last Name: " + snapshot.val().lastname);
-						console.log("Email: " + snapshot.val().email);
-						console.log("Position: " + snapshot.val().position);
-						console.log("Office: " + snapshot.val().office);
-
 						window.location.href = "headoffice/index.html";
 						
 					}else if(snapshot.val().office == "Bravo" || snapshot.val().office == "Delta"){
-						console.log("UID: " + uid);
-						console.log("First Name: " + snapshot.val().firstname);
-						console.log("Last Name: " + snapshot.val().lastname);
-						console.log("Email: " + snapshot.val().email);
-						console.log("Position: " + snapshot.val().position);
-						console.log("Office: " + snapshot.val().office);
 						
 						window.location.href = "plant/index.html";
 					}
@@ -142,10 +124,10 @@
 
 	function signIn(){
 
-		event.preventDefault();
-
 		var email = document.getElementById('loginEmail').value;
 		var password = document.getElementById('loginPassword').value;
+		var $this = $('#login-submit');
+		$this.button('loading');
 
 		firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
 			// window.location.href = 'admin/index.html';
@@ -176,21 +158,8 @@
 
 						if(snapshot.val().office == "Head Office"){
 
-							console.log("UID: " + uid);
-							console.log("First Name: " + snapshot.val().firstname);
-							console.log("Last Name: " + snapshot.val().lastname);
-							console.log("Email: " + snapshot.val().email);
-							console.log("Position: " + snapshot.val().position);
-							console.log("Office: " + snapshot.val().office);
-
 							window.location.href = "headoffice/index.html";
 						}else{
-							console.log("UID: " + uid);
-							console.log("First Name: " + snapshot.val().firstname);
-							console.log("Last Name: " + snapshot.val().lastname);
-							console.log("Email: " + snapshot.val().email);
-							console.log("Position: " + snapshot.val().position);
-							console.log("Office: " + snapshot.val().office);
 							
 							window.location.href = "plant/index.html";
 						}
@@ -205,6 +174,7 @@
 			});
 		}).catch(function(error) {
 			// Handle Errors here.
+			$this.button('reset');
 			var errorCode = error.code;
 			var errorMessage = error.message;
 			// [START_EXCLUDE]
@@ -218,38 +188,99 @@
 	}
 
 	window.onload = function() {
+		
 		initState();
+    	document.getElementById('login-submit').addEventListener('click', signIn, false);
+
+    	var input_pass = document.getElementById('loginPassword');
+    	input_pass.addEventListener('keyup', function(event){
+    		event.preventDefault();
+    		if(event.keyCode === 13){
+    			signIn();
+    		}
+    	});
+		
     };
+
 
 </script>
 </head>
 <body class="login-img3-body">
     <div class="container">
-        <form class="login-form" onsubmit="return signIn();">        
-            <div class="login-wrap">
-                <p class="login-img"><i class="icon_lock_alt"></i></p>
-                    <div class="alert alert-danger" id="error_msg" style="display: none;">
-                        <span class="glyphicon glyphicon-remove"></span> Your Username or Password is invalid.
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="icon_profile"></i></span>
-                        <input type="email" name="loginEmail" id="loginEmail" class="form-control" placeholder="Email" required autofocus>
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="icon_key_alt"></i></span>
-                        <input type="password" name="loginPassword" id="loginPassword" class="form-control" placeholder="Password" required>
-                    </div>
-                    <div class="input-group">
-                        <div class="col-lg-12">
-                            <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="remember" id="remember"> Remember me
-                            </label>
-                            </div>
-                        </div>
-                    </div>
-                <input class="btn btn-primary btn-lg btn-block" name="login-submit" id="login-submit" type="submit" value="Login">
-            </div>
+        <form class="login-form">       
+	        <!-- <ul class="nav nav-tabs">
+	            <li class="active"><a data-toggle="tab" href="#tab_signin"><strong>Sign In</strong></a></li>
+	            <li><a data-toggle="tab" href="#tab_signup"><strong>Signup</strong></a></li>
+	        </ul> -->
+	        <!-- <div class="row"> -->
+<!--         		<ul class="row nav nav-tabs" style="text-align: center;">
+	        		<li class="col-md-6 active"><a data-toggle="tab" href="#tab_signin"><strong>Sign In</strong></a></li>
+	        		<li class="col-md-6"><a data-toggle="tab" href="#tab_signup"><strong>Signup</strong></a></li>
+		        </ul> -->
+	        <!-- </div> -->
+	        <div class="tab-content">
+	            <div id="tab_signin" class="tab-pane fade in active">
+	            	<div class="login-wrap">
+
+		                <p class="login-img"><i class="icon_lock_alt"></i></p>
+<!-- 		                    <div class="alert alert-danger" id="error_msg" style="display: none;">
+		                        <span class="glyphicon glyphicon-remove"></span> Your Username or Password is invalid.
+		                    </div> -->
+		                    <div class="input-group">
+		                        <span class="input-group-addon"><i class="icon_profile"></i></span>
+		                        <input type="email" name="loginEmail" id="loginEmail" class="form-control" placeholder="Email" required autofocus>
+		                    </div>
+		                    <div class="input-group">
+		                        <span class="input-group-addon"><i class="icon_key_alt"></i></span>
+		                        <input type="password" name="loginPassword" id="loginPassword" class="form-control" placeholder="Password" required>
+		                    </div>
+		                    <div class="input-group">
+		                        <div class="col-lg-12">
+		                            <div class="checkbox">
+		                            <label>
+		                                <input type="checkbox" name="remember" id="remember"> Remember me
+		                            </label>
+		                            </div>
+		                        </div>
+		                    </div>
+		                <button class="btn btn-primary btn-lg btn-block" name="login-submit"  id="login-submit" type="button"  data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Logging In">Login</button>
+		            </div>
+	            </div>
+	            <div id="tab_signup" class="tab-pane fade">
+	            	<div class="login-wrap">
+	            		<p class="login-img"><i class="icon_document_alt"></i></p>
+		            	<div class="input-group">
+	                        <span class="input-group-addon"><i class="icon_profile"></i></span>
+	                        <input type="text" name="signupFirstName" id="signupFirstName" class="form-control" placeholder="First Name" required autofocus>
+	                    </div>
+	                    <div class="input-group">
+	                        <span class="input-group-addon"><i class="icon_profile"></i></span>
+	                        <input type="text" name="signupLastName" id="signupLastName" class="form-control" placeholder="Last Name" required>
+	                    </div>
+	                    <div class="input-group">
+	                        <span class="input-group-addon"><i class="icon_profile"></i></span>
+	                        <input type="email" name="signupEmail" id="signupEmail" class="form-control" placeholder="Email" required>
+	                    </div>
+	                    <div class="input-group">
+	                        <span class="input-group-addon"><i class="icon_key_alt"></i></span>
+	                        <input type="password" name="signupPassword" id="signupPassword" class="form-control" placeholder="Password" required>
+	                    </div>
+	                    <div class="input-group">
+	                    	Office: 
+	                        <label class="radio-inline">
+						      <input type="radio" name="optradio" id="optradio" value="Head Office" checked>Head Office
+						    </label>
+						    <label class="radio-inline">
+						      <input type="radio" name="optradio" id="optradio" value="Bravo">Bravo
+						    </label>
+						    <label class="radio-inline">
+						      <input type="radio" name="optradio" id="optradio" value="Delta">Delta
+						    </label>
+	                    </div>
+	                    <button class="btn btn-primary btn-lg btn-block" name="signup-submit"  id="signup-submit" type="button"  data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Signing Up">Sign Up</button>
+	                </div>
+	            </div>
+	        </div> 
         </form>
     </div>
 </body>

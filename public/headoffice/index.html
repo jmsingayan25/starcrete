@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
     <meta name="author" content="GeeksLabs">
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
-    <link rel="shortcut icon" href="img/favicon.png">
+    <link rel="shortcut icon" href="../img/favicon.png">
 
-    <title>History - Starcrete Manufacturing Corporation</title>
+    <title>Home</title>
 
-	<!-- Firebase App is always required and must be first -->
-	<!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
+    <!-- Firebase App is always required and must be first -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
     <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase-app.js"></script>
 
-	<!-- Add additional services you want to use -->
-	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
-	<script src="../js_config/firebase_config.js"></script>
+    <!-- Add additional services you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+    <script src="../js_config/firebase_config.js"></script>
 
-	<!-- Bootstrap CSS -->    
+    <!-- Bootstrap CSS -->    
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <!-- bootstrap theme -->
     <link href="../css/bootstrap-theme.css" rel="stylesheet">
@@ -36,7 +36,7 @@
     <link href="../css/widgets.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/style-responsive.css" rel="stylesheet" />
-    <link href="../css/xcharts.min.css" rel=" stylesheet">	
+    <link href="../css/xcharts.min.css" rel=" stylesheet">  
     <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
 
     <!-- javascripts -->
@@ -79,56 +79,36 @@
     <script src="../js/sparklines.js"></script>    
     <script src="../js/charts.js"></script>
     <script src="../js/jquery.slimscroll.min.js"></script>
-
-    <!-- =======================================================
-    Theme Name: NiceAdmin
-    Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-    Author: BootstrapMade
-    Author URL: https://bootstrapmade.com
-    ======================================================= -->
+    <script src="../js_config/function.js"></script>
 
 <script>
-	
-    $(document).ready(function(){
-        $('.filterable .btn-filter').click(function(){
-            var $panel = $(this).parents('.filterable'),
-            $filters = $panel.find('.filters input'),
-            $tbody = $panel.find('.table tbody');
-            if ($filters.prop('disabled') == true) {
-                $filters.prop('disabled', false);
-                $filters.first().focus();
-            } else {
-                $filters.val('').prop('disabled', true);
-                $tbody.find('.no-result').remove();
-                $tbody.find('tr').show();
-            }
-        });
+    
+    var timer = null;
 
-        $('.filterable .filters input').keyup(function(e){
-            /* Ignore tab key */
-            var code = e.keyCode || e.which;
-            if (code == '9') return;
-            /* Useful DOM data and selectors */
-            var $input = $(this),
-            inputContent = $input.val().toLowerCase(),
-            $panel = $input.parents('.filterable'),
-            column = $panel.find('.filters th').index($input.parents('th')),
-            $table = $panel.find('.table'),
-            $rows = $table.find('tbody tr');
-            /* Dirtiest filter function ever ;) */
-            var $filteredRows = $rows.filter(function(){
-                var value = $(this).find('td').eq(column).text().toLowerCase();
-                return value.indexOf(inputContent) === -1;
-            });
-            /* Clean previous no-result if exist */
-            $table.find('tbody .no-result').remove();
-            /* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
-            $rows.show();
-            $filteredRows.hide();
-            /* Prepend no-result row if all rows are filtered */
-            if ($filteredRows.length === $rows.length) {
-                 $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="3" style="height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
-            }
+    function goAway() {
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+            // window.location.reload(true);
+            tableData();
+        }, 60000);
+    }
+
+    window.addEventListener('mousemove', goAway, true);
+    window.addEventListener('keypress', goAway, true);
+
+    goAway();
+
+    $(document).ready(function(){
+
+        startTime();
+        tableData();
+
+        firebase.database().ref('available_stock').on('child_changed', function(){
+            $(".se-pre-con").fadeIn("fast");
+            setTimeout(function() {
+                tableData();
+                $(".se-pre-con").fadeOut("slow");
+            }, 1000);
         });
 
         firebase.auth().onAuthStateChanged(function(user) {
@@ -137,14 +117,13 @@
                 var uid = user.uid;
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-                    // console.log("UID: " + uid);
-                    // console.log("First Name: " + snapshot.val().firstname);
-                    // console.log("Last Name: " + snapshot.val().lastname);
-                    // console.log("Email: " + snapshot.val().email);
-                    // console.log("Position: " + snapshot.val().position);
-                    // console.log("Office: " + snapshot.val().office);
+                    if(snapshot.val().office != 'Head Office'){
+                        window.location.href = '../plant/index.html';
+                    }
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
+
+                    $(".se-pre-con").fadeOut("slow");
                 },(error) => {
                     console.log(error);
                 });
@@ -155,122 +134,319 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
+        document.getElementById('link_bravo_delivered_order').innerHTML = "<a href='delivery_delivered_order.html?plant=Bravo&date=" + new Date().toLocaleDateString('en') + "' class='view_details_btn'><strong>View Detail >></strong></a>";
+        document.getElementById('link_delta_delivered_order').innerHTML = "<a href='delivery_delivered_order.html?plant=Delta&date=" + new Date().toLocaleDateString('en') + "' class='view_details_btn'><strong>View Detail >></strong></a>";
+
+        document.getElementById('link_bravo_backloaded_order').innerHTML = "<a href='delivery_backloaded_order.html?plant=Bravo&date=" + new Date().toLocaleDateString('en') + "' class='view_details_btn'><strong>View Detail >></strong></a>";
+
+        document.getElementById('link_delta_backloaded_order').innerHTML = "<a href='delivery_backloaded_order.html?plant=Delta&date=" + new Date().toLocaleDateString('en') + "' class='view_details_btn'><strong>View Detail >></strong></a>";
+
     });
-
-    function userSignOut(){
-
-        firebase.auth().signOut().then(function() {
-            // console.log('Signed Out');
-            window.location.href = '../login.html';
-        }, function(error) {
-            // console.error('Sign Out Error', error);
-        });
-    }
-
-	// function updateUserDetail(){
-
-	// 	var uname = document.getElementById('updateDisplayName').value;
-
-	// 	firebase.auth().onAuthStateChanged(function(user){
-
-	// 		user.updateProfile({
-	// 			displayName: uname
-	// 		}).then(function(){
-	// 			var displayName = user.displayName;
-	// 			console.log('Display Name:' + displayName);
-	// 			window.refresh
-	// 		}, function(error){
-	// 			console.log('Update error');
-	// 		});
-	// 	});
-	// }
 
     function tableData(){
 
-        var myTbody = "";
-        firebase.database().ref('users').orderByChild('firstname').on('value', function(snapshot) {
-            if(snapshot != null){
+        /*START OF PENDING ORDER*/
 
-                snapshot.forEach(function(childSnapshot) {
+        bravo_pending_order_count = 0;
+        delta_pending_order_count = 0;
 
-                    var firstName = childSnapshot.val().firstname;   //Example of value
-                    var lastName = childSnapshot.val().lastname;   //Example of value
-                    var emailAdd = childSnapshot.val().email;   //Example of value
+        firebase.database().ref('purchase_order').orderByChild('issued_po_plant').equalTo('Bravo').once('value', function(orderSnapshot){
 
-                    // console.log("First Name: " + firstName);
-                    // console.log("Last Name: " + lastName);
-                    // console.log("Email: " + emailAdd);
+            bravo_pending_order_count = 0;
 
-                    myTbody += "<tr><td>" + firstName + "</td>";
-                    myTbody += "<td>" + lastName + "</td>";
-                    myTbody += "<td>" + emailAdd + "</td></tr>";
+            if(orderSnapshot.val() != null){
+                orderSnapshot.forEach(function(orderChildSnapshot){
 
-                    console.log(JSON.stringify(childSnapshot));
-                    document.getElementById("userList").innerHTML = myTbody;
+                    firebase.database().ref('purchase_order/'+orderChildSnapshot.key+'/item').once('value', function(itemSnapshot){
+                        itemSnapshot.forEach(function(itemChildSnapshot){
 
+                            if(itemChildSnapshot.val().balance != 0){
+
+                                bravo_pending_order_count++;
+
+                                document.getElementById('id_bravo_pending_order').innerHTML = Number(bravo_pending_order_count).toLocaleString('en');
+                            }
+                        });
+                    });
                 });
-            }else{
+            }
 
-                myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+            
+        });
+   
+        firebase.database().ref('purchase_order').orderByChild('issued_po_plant').equalTo('Delta').once('value', function(orderSnapshot){
 
-                document.getElementById("userList").innerHTML = myTbody;
+            delta_pending_order_count = 0;
 
+            if(orderSnapshot.val() != null){
+                orderSnapshot.forEach(function(orderChildSnapshot){
+                    firebase.database().ref('purchase_order/'+orderChildSnapshot.key+'/item').once('value', function(itemSnapshot){
+                        itemSnapshot.forEach(function(itemChildSnapshot){
+
+                            if(itemChildSnapshot.val().balance != 0){
+
+                                delta_pending_order_count++;
+
+                                document.getElementById('id_delta_pending_order').innerHTML = Number(delta_pending_order_count).toLocaleString('en');
+                            }
+                        });
+                    });
+                });
             }
             
-
         });
 
+        if(bravo_pending_order_count == 0){
+            document.getElementById('id_bravo_pending_order').innerHTML = bravo_pending_order_count;
+            
+        }
+
+        if(delta_pending_order_count == 0){
+            document.getElementById('id_delta_pending_order').innerHTML = delta_pending_order_count;
+            
+        }
+
+        /*END OF PENDING ORDER*/
+
+        /*START OF ONGOING ORDER*/
+
+        bravo_ongoing_order_count = 0;
+        delta_ongoing_order_count = 0;
+
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo('Bravo').once('value', function(ongoingOrderSnapshot) {
+
+            bravo_ongoing_order_count = 0;
+
+            if(ongoingOrderSnapshot.val() != null){
+
+                ongoingOrderSnapshot.forEach(function(ongoingOrderChildSnapshot){
+                    bravo_ongoing_order_count = bravo_ongoing_order_count + 1;
+                });
+                
+                document.getElementById('id_bravo_ongoing_order').innerHTML = Number(bravo_ongoing_order_count).toLocaleString('en');
+            }
+            
+        });
+
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo('Delta').once('value', function(ongoingOrderSnapshot) {
+
+            delta_ongoing_order_count = 0;
+
+            if(ongoingOrderSnapshot.val() != null){
+
+                ongoingOrderSnapshot.forEach(function(ongoingOrderChildSnapshot){
+                    delta_ongoing_order_count = delta_ongoing_order_count + 1;
+                });
+                
+                document.getElementById('id_delta_ongoing_order').innerHTML = Number(delta_ongoing_order_count).toLocaleString('en');
+            }
+            
+        });
+
+        if(bravo_ongoing_order_count == 0){
+            document.getElementById('id_bravo_ongoing_order').innerHTML = bravo_ongoing_order_count;
+            
+        }
+
+        if(delta_ongoing_order_count == 0){
+            document.getElementById('id_delta_ongoing_order').innerHTML = delta_ongoing_order_count;
+            
+        }
+
+        /*END OF ONGOING ORDER*/
+
+        /*START OF DELIVERED ORDER*/
+
+        bravo_delivered_order_count = 0;
+        delta_delivered_order_count = 0;
+
+        newDate = new Date().toLocaleDateString('en');
+        currentDate = new Date(newDate);
+
+        firebase.database().ref('delivery_delivered_order').orderByChild('delivered_plant').equalTo('Bravo').once('value', function(deliveredOrderSnapshot) {
+
+            bravo_delivered_order_count = 0;
+
+            if(deliveredOrderSnapshot.val() != null){
+
+                deliveredOrderSnapshot.forEach(function(deliveredOrderChildSnapshot){
+
+                    if(new Date(deliveredOrderChildSnapshot.val().date).getTime() == currentDate.getTime()){
+                        bravo_delivered_order_count = bravo_delivered_order_count + 1;
+                    }
+                });
+
+                document.getElementById('id_bravo_delivered_order').innerHTML = Number(bravo_delivered_order_count).toLocaleString('en');
+            }
+            
+        });
+
+        firebase.database().ref('delivery_delivered_order').orderByChild('delivered_plant').equalTo('Delta').once('value', function(deliveredOrderSnapshot) {
+
+            delta_delivered_order_count = 0;
+
+            if(deliveredOrderSnapshot.val() != null){
+
+                deliveredOrderSnapshot.forEach(function(deliveredOrderChildSnapshot){
+
+                    if(new Date(deliveredOrderChildSnapshot.val().date).getTime() == currentDate.getTime()){
+                        delta_delivered_order_count = delta_delivered_order_count + 1;
+                    }
+                });
+
+                document.getElementById('id_delta_delivered_order').innerHTML = Number(delta_delivered_order_count).toLocaleString('en');
+            }
+            
+        });
+
+        if(bravo_delivered_order_count == 0){
+            document.getElementById('id_bravo_delivered_order').innerHTML = bravo_delivered_order_count;
+            
+        }
+
+        if(delta_delivered_order_count == 0){
+            document.getElementById('id_delta_delivered_order').innerHTML = delta_delivered_order_count;
+            
+        }
+
+        /*END OF DELIVERY ORDER*/
+
+        /*START OF BACKLOADED ORDER*/
+
+        bravo_backloaded_order_count = 0;
+        delta_backloaded_order_count = 0;
+
+        firebase.database().ref('delivery_backloaded_order').orderByChild('backloaded_plant').equalTo('Bravo').once('value', function(backloadedOrderSnapshot) {
+
+            bravo_backloaded_order_count = 0;
+
+            if(backloadedOrderSnapshot.val() != null){
+
+                backloadedOrderSnapshot.forEach(function(backloadedOrderChildSnapshot){
+
+                    if(new Date(backloadedOrderChildSnapshot.val().date).getTime() == currentDate.getTime()){
+                        bravo_backloaded_order_count = bravo_backloaded_order_count + 1;
+                    }
+                });
+                
+                document.getElementById('id_bravo_backloaded_order').innerHTML = Number(bravo_backloaded_order_count).toLocaleString('en');
+            }
+            
+        });
+
+        firebase.database().ref('delivery_backloaded_order').orderByChild('backloaded_plant').equalTo('Delta').once('value', function(backloadedOrderSnapshot) {
+
+            delta_backloaded_order_count = 0;
+
+            if(backloadedOrderSnapshot.val() != null){
+
+                backloadedOrderSnapshot.forEach(function(backloadedOrderChildSnapshot){
+
+                    if(new Date(backloadedOrderChildSnapshot.val().date).getTime() == currentDate.getTime()){
+                        delta_backloaded_order_count = delta_backloaded_order_count + 1;
+                    }
+                });
+
+                document.getElementById('id_delta_backloaded_order').innerHTML = Number(delta_backloaded_order_count).toLocaleString('en');
+            }
+            
+        });
+
+        if(bravo_backloaded_order_count == 0){
+            document.getElementById('id_bravo_backloaded_order').innerHTML = bravo_backloaded_order_count;
+            
+        }
+
+        if(delta_backloaded_order_count == 0){
+            document.getElementById('id_delta_backloaded_order').innerHTML = delta_backloaded_order_count;
+            
+        }
+
+        /*END OF BACKLOADED ORDER*/
+
+        /*START OF DIESEL STOCK*/
+
+        bravo_diesel_count = 0;
+        delta_diesel_count = 0;
+
+        firebase.database().ref('available_stock/').orderByKey().equalTo('Bravo').once('value', function(dieselSnapshot){
+            dieselSnapshot.forEach(function(dieselChildSnapshot){
+               bravo_diesel_count = dieselChildSnapshot.val().Liters;
+               document.getElementById('id_bravo_diesel').innerHTML = Number(bravo_diesel_count).toLocaleString('en');
+            });
+            
+        });
+
+        firebase.database().ref('available_stock/').orderByKey().equalTo('Delta').once('value', function(dieselSnapshot){
+            dieselSnapshot.forEach(function(dieselChildSnapshot){
+               delta_diesel_count = dieselChildSnapshot.val().Liters;
+               document.getElementById('id_delta_diesel').innerHTML = Number(delta_diesel_count).toLocaleString('en');
+            });
+            
+        });
+
+        if(bravo_diesel_count == 0){
+            document.getElementById('id_bravo_diesel').innerHTML = Number(bravo_diesel_count).toLocaleString('en');
+
+            
+        }
+
+        if(delta_diesel_count == 0){
+            document.getElementById('id_delta_diesel').innerHTML = Number(delta_diesel_count).toLocaleString('en');
+
+            
+        }
+
+        /*END OF DIESEL STOCK*/
     }
 
+    function startTime() {
+
+        var today = new Date();
+        var hr = today.getHours();
+        var min = today.getMinutes();
+        var sec = today.getSeconds();
+        ap = (hr < 12) ? "<span>AM</span>" : "<span>PM</span>";
+        hr = (hr == 0) ? 12 : hr;
+        hr = (hr > 12) ? hr - 12 : hr;
+        //Add a zero in front of numbers<10
+        hr = checkTime(hr);
+        min = checkTime(min);
+        sec = checkTime(sec);
+        document.getElementById("clock").innerHTML = hr + ":" + min + ":" + sec + " " + ap;
+        
+        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        var curWeekDay = days[today.getDay()];
+        var curDay = today.getDate();
+        var curMonth = months[today.getMonth()];
+        var curYear = today.getFullYear();
+        var date = curWeekDay+", "+curDay+" "+curMonth+" "+curYear;
+        document.getElementById("date").innerHTML = date;
+        
+        var time = setTimeout(function(){ startTime() }, 500);
+    }
+
+    function checkTime(i) {
+
+        if (i < 10) {
+            i = "0" + i;
+        }
+        return i;
+    }
 </script>
 <style>
-.table_page{
-    /*margin: auto;*/
-    margin-top: -40px;
-    /*width: 100%;*/
-    text-align: center;
+.view_details_btn{
+    color: #333; 
+    float: right; 
+    margin-right: -15px; 
+    margin-top: -25px;
 }
-
-.table_row_count{
-    margin-top: -15px;
-}
-
-.filterable .panel-heading .pull-right {
-    margin-top: -20px;
-}
-
-.filterable .filters input[disabled] {
-    background-color: transparent;
-    text-align: center;
-    border: none;
-    cursor: auto;
-    box-shadow: none;
-    padding: 0;
-    height: auto;
-}
-
-.filterable .filters input[disabled]::-webkit-input-placeholder {
-    color: gray;
-    text-align: left;
-    font-weight: bold;
-}
-
-.filterable .filters input[disabled]::-moz-placeholder {
-     color: gray;
-     text-align: left;
-     font-weight: bold;
-}
-
-.filterable .filters input[disabled]:-ms-input-placeholder {
-     color: gray;
-     text-align: left;
-     font-weight: bold;
-}
-
 </style>
 </head>
-<body onload="tableData();">
-	<section id="container" class="">
+<body>
+    <div class="se-pre-con"></div>
+    <section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
             <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
@@ -312,24 +488,27 @@
                     <li class="active">
                         <a class="" href="index.html">
                             <i class="icon_house"></i>
-                            <span>History</span>
+                            <span>Dashboard</span>
                         </a>
                     </li> 
                     <li>
-                        <a class="" href="client.html">
-                            <i class="fa fa-address-book"></i>
-                            <span>Clients</span>
+                        <a class="" href="transaction_log.html">
+                            <i class="fa fa-list"></i>
+                            <span>Transaction Log</span>
                         </a>
                     </li>
-                    <!-- <li class="sub-menu">
+                    <li class="sub-menu">
                         <a href="javascript:;" class="">
                             <i class="fa fa-building"></i>
                             <span>Bravo</span>
                             <span class="menu-arrow arrow_carrot-down"></span>
                         </a>
                         <ul class="sub">
-                            <li><a class="" href="purchase_order.php?office=bravo">Purchase Order</a></li>                          
-                            <li><a class="" href="delivery_order.php?office=bravo">Delivery Page</a></li>
+                            <li><a class="" href="diesel.html?plant=Bravo">Diesel</a></li>
+                            <li><a class="" href="diesel_category.html?plant=Bravo">Oil</a></li>
+                            <li><a class="" href="parts.html?plant=Bravo">Parts</a></li>
+                            <li><a class="" href="lineup.html?plant=Bravo">Line Up</a></li>
+                            <!-- <li><a class="" href="attendance.html?plant=Bravo">Attendance</a></li> -->
                         </ul>
                     </li>  
                     <li class="sub-menu">
@@ -339,21 +518,13 @@
                             <span class="menu-arrow arrow_carrot-down"></span>
                         </a>
                         <ul class="sub">
-                            <li><a class="" href="purchase_order.php?office=delta">Purchase Order</a></li>                          
-                            <li><a class="" href="delivery_order.php?office=delta">Delivery Page</a></li>
+                            <li><a class="" href="diesel.html?plant=Delta">Diesel</a></li>
+                            <li><a class="" href="diesel_category.html?plant=Delta">Oil</a></li>
+                            <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
+                            <li><a class="" href="lineup.html?plant=Delta">Line Up</a></li>
+                            <!-- <li><a class="" href="attendance.html?plant=Delta">Attendance</a></li> -->
                         </ul>
-                    </li> -->  
-                    <li class="sub-menu">
-                        <a href="javascript:;" class="">
-                            <i class="fa fa-file"></i>
-                            <span>Forms</span>
-                            <span class="menu-arrow arrow_carrot-down"></span>
-                        </a>
-                        <ul class="sub">
-                            <li><a class="" href="purchase_order_form.html">Add New P.O.</a></li>
-                            <!-- <li><a class="" href="purchase_aggregates_order_form.php">P.O. Aggregates Form</a></li>                           -->
-                        </ul>
-                    </li>
+                    </li>  
                 </ul>
                 <!-- sidebar menu end-->
             </div>
@@ -362,113 +533,261 @@
 
         <!--main content start-->
         <section id="main-content">
-            <section class="wrapper">            
-                <!--overview start-->
+            <section class="wrapper">
+                 <!--overview start-->
                 <div class="row">
                     <div class="col-md-8">
                         <!-- <h3 class="page-header"><i class="fa fa-home"></i> History</h3> -->
                         <ol class="breadcrumb">
-                            <li><i class="fa fa-home"></i>History</li>                          
+                            <li><i class="fa fa-home"></i>Dashboard</li>                          
                         </ol>
                     </div>
                     <div class="col-md-4">
                         <!-- <h3 class="page-header"><i class="fa fa-home"></i> History</h3> -->
                         <ol class="breadcrumb">
-                            <li>As of <strong></strong></li>                          
+                            <li>As of <strong><span id="clock"></span>, <span id="date"></span></strong></li>                          
                         </ol>
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="col-md-12">
                         <section class="panel">
-                            <div class="form-inline">
-                                <header class="panel-heading">
+                            <div class="panel-body">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a data-toggle="tab" href="#tabbravo"><strong>Bravo</strong></a></li>
+                                    <li><a data-toggle="tab" href="#tabdelta"><strong>Delta</strong></a></li>
+                                </ul>
+                                <div class="tab-content">
+                                <div id="tabbravo" class="tab-pane fade in active">
+                                    <div class="row" style="display: none;">
+                                        <div class="col-md-12">
+                                            <section class="panel">
+                                                <header class="panel-heading">
+                                                    <strong>Delivery</strong>
+                                                </header>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <div class="info-box dark-bg">
+                                                                <div class="row">
+                                                                    <div class="col-md-6"><i class="fa fa-spinner"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_bravo_pending_order"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-2 col-md-10"><div class="title">REMAINING PENDING ORDER</div> </div>
+                                                                </div>                    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                    <a href="delivery_pending_order.html?plant=Bravo" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="info-box orange-bg">
+                                                                <div class="row">
+                                                                    <div class="col-md-6"><i class="fa fa-truck"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_bravo_ongoing_order"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-5 col-md-7"><div class="title">ONGOING ORDER</div></div>
+                                                                </div>                     
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                    <a href="delivery_ongoing_order.html?plant=Bravo" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="info-box green-bg">
+                                                                <div class="row">
+                                                                    <div class="col-md-6"><i class="fa fa-archive"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_bravo_delivered_order"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-3 col-md-9"><div class="title">DELIVERED ORDER TODAY</div> </div>
+                                                                </div>                       
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                    
+                                                                    <span id="link_bravo_delivered_order"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="info-box red-bg">
+                                                                <div class="row">
+                                                                    <div class="col-md-6"><i class="fa fa-rotate-left"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_bravo_backloaded_order"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-2 col-md-10"><div class="title">BACKLOADED ORDER TODAY</div> </div>
+                                                                </div>                     
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                   
+                                                                   <span id="link_bravo_backloaded_order"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="search">Plant:</label>
-                                                <label class="radio-inline">
-                                                    <input type="radio" name="plant" value="bravo" checked><strong>Bravo</strong>
-                                                </label>
-                                                <label class="radio-inline">
-                                                    <input type="radio" name="plant" value="delta"><strong>Delta</strong>
-                                                </label>
-                                            </div>
+                                        <div class="col-md-12">
+                                            <section class="panel">
+                                                <header class="panel-heading">
+                                                    <strong>Stock</strong>
+                                                </header>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <div class="info-box dark-bg">
+                                                                <div class="row">
+                                                                    <div class="col-md-4"><i class="fa fa-database"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_bravo_diesel"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-4 col-md-8"><div class="title">DIESEL STOCK (in liter)</div></div>
+                                                                </div>                    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                    <a href="diesel.html?plant=Bravo" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
                                         </div>
                                     </div>
-                                    <div class="row" style="margin-bottom: 5px;">
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label for="start_date">From:</label>
-                                                <div class="tooltips" data-original-title="Start date of transaction" data-placement="top">
-                                                    <input type="date" name="start_date" class="form-control">
+                                </div>
+                                <div id="tabdelta" class="tab-pane fade">
+                                    <div class="row" style="display: none;">
+                                        <div class="col-md-12">
+                                            <section class="panel">
+                                                <header class="panel-heading">
+                                                    <strong>Delivery</strong>
+                                                </header>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <div class="info-box dark-bg">
+                                                                <div class="row">
+                                                                    <div class="col-md-6"><i class="fa fa-spinner"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_delta_pending_order"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-2 col-md-10"><div class="title">REMAINING PENDING ORDER</div></div>
+                                                                </div>                     
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                    <a href="delivery_pending_order.html?plant=Delta" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="info-box orange-bg">
+                                                                <div class="row">
+                                                                    <div class="col-md-6"><i class="fa fa-truck"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_delta_ongoing_order"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-5 col-md-7">
+                                                                        <div class="title">ONGOING ORDER</div>  
+                                                                    </div>
+                                                                </div>                    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                    <a href="delivery_ongoing_order.html?plant=Delta" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="info-box green-bg">
+                                                                <div class="row">
+                                                                    <div class="col-md-6"><i class="fa fa-archive"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_delta_delivered_order"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-3 col-md-9"><div class="title">DELIVERED ORDER TODAY</div></div>
+                                                                </div>                     
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                   
+                                                                    <span id="link_delta_delivered_order"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="info-box red-bg">
+                                                                <div class="row">
+                                                                    <div class="col-md-6"><i class="fa fa-rotate-left"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_delta_backloaded_order"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-2 col-md-10"><div class="title">BACKLOADED ORDER TODAY</div> </div>
+                                                                </div>                      
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                    
+                                                                    <span id="link_delta_backloaded_order"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label for="end_date">To:</label>
-                                                <div class="tooltips" data-original-title="End date of transaction" data-placement="top">
-                                                    <input type="date" name="end_date" class="form-control">
-                                                </div>
-                                            </div>
-                                        </div>  
-                                        <div class="input-group col-md-5" style="margin: 38px 0px 0px 0px;">
-                                            <div class="tooltips" data-original-title="Search Transaction or Description" data-placement="top">
-                                                <input type="text" name="search" class="form-control" placeholder="Search...">
-                                            </div>
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-info" type="submit" name="search_table">
-                                                    <i class="fa fa-search"></i>
-                                                </button>
-                                            </span>
-                                        </div>
-                                        <div class="input-group col-md-2" style="white-space: nowrap; margin: 38px 0px 0px 60px;">
-                                            <label for="view" class="col-md-8 control-label">Number of rows:</label>
-                                            <div class="form-group">
-                                                <div class="col-md-12">
-                                                    <select id="view" name="view" class="form-control">
-                                                        <option value="25">25</option>
-                                                        <option value="50">50</option>
-                                                        <option value="75">75</option>
-                                                        <option value="100">100</option>
-                                                    </select>
-                                                </div>
-                                            </div>
+                                            </section>
                                         </div>
                                     </div>
-                                </header>
-                                <div class="table-responsive filterable">
-                                    <table class="table table-striped table-bordered" id="myTable">
-                                        <thead>
-                                            <tr class="filterable">
-                                                <th colspan="3">
-                                                    <p style="float: left;">Plant:</p>
-                                                    <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
-                                                </th>
-                                                <!-- <th colspan="3">
-                                                    <input type="text" id="myInput" onkeyup="filterTable()" class="form-control" placeholder="Search for names.." title="Type in a name">
-                                                </th> -->
-                                            </tr>
-                                            <tr class="filters">
-                                                <th class="col-md-1"><input type="text" class="form-control" placeholder="Transaction" disabled>
-                                                </th>
-                                                <th class="col-md-7"><input type="text" class="form-control" placeholder="Description" disabled></th>
-                                                <th class="col-md-1">Date</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="userList">
-                                            
-                                        </tbody>
-                                    </table>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <section class="panel">
+                                                <header class="panel-heading">
+                                                    <strong>Stock</strong>
+                                                </header>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <div class="info-box dark-bg">
+                                                                <div class="row">
+                                                                    <div class="col-md-4"><i class="fa fa-database"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_delta_diesel"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-4 col-md-8"><div class="title">DIESEL STOCK (in liter)</div></div>
+                                                                </div>                
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                    <a href="diesel.html?plant=Delta" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </section>
+                        
                     </div>
                 </div>
+                
             </section>
         </section>
-    </section>    
+    </section>
 </body>
 </html>

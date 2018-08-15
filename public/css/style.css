@@ -14,7 +14,7 @@
 
 body {
 
-    color: #797979;
+    color: #666666;
 
     background: #eeeeee;
 
@@ -26,6 +26,25 @@ body {
 
     font-size:14px !important;    
 
+}
+
+.no-js #loader { 
+    display: none; 
+}
+.js #loader { 
+    display: block; 
+    position: absolute; 
+    left: 100px; 
+    top: 0; 
+}
+.se-pre-con {
+    position: fixed;
+    left: 0px;
+    top: 60px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: url(../images/loader-64x/Preloader_2.gif) center no-repeat #fff;
 }
 
 h1,h2,h3,h4,h5{
@@ -1592,7 +1611,7 @@ div[data-role="editor-toolbar"] {
 
 .dropdown-menu > li > a{
 
-    color: #797979;
+    color: black;
 
 }
 
@@ -3970,7 +3989,7 @@ div[data-role="editor-toolbar"] {
 
 .badge.bg-inverse {
 
-    background: #797979;
+    background: black;
 
 }
 
@@ -4220,7 +4239,7 @@ div[data-role="editor-toolbar"] {
 
     border-right: 1px solid #d5d8df;
 
-    color: #797979;
+    color: black;
 
 }
 
@@ -7566,7 +7585,7 @@ ul.amounts li {
 
 .dataTables_paginate.paging_bootstrap.pagination li a{
 
-    color: #797979;
+    color: black;
 
     padding: 5px 10px;
 
@@ -7578,7 +7597,7 @@ ul.amounts li {
 
 .dataTables_paginate.paging_bootstrap.pagination li:hover a, .dataTables_paginate.paging_bootstrap.pagination li.active a{
 
-    color: #797979;
+    color: black;
 
     background: #eee;
 
@@ -7672,7 +7691,7 @@ ul.amounts li {
 
     border-color: #f1f2f7;
 
-    color: #797979;
+    color: black;
 
 }
 
