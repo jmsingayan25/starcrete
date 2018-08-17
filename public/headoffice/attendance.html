@@ -136,6 +136,7 @@
         }else{
             var passcurrentDate = new Date().toLocaleDateString('en');
         }
+        // var currentDate = "August 9, 2018";
 
         document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <button class='btn btn-success' onclick='return tablePrint();' style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button> <br> Plant: " + plant + " <br> Result: <span id='id_record'></span></th>";
 
@@ -210,61 +211,63 @@
                                         firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid3/helper').once('value', function(nonskid3HelperSnapshot){
                                             firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid4/helper').once('value', function(nonskid4HelperSnapshot){
 
-                                myTableNonskid += "<tr><td colspan='1'>";
+                                                myTableNonskid += "<tr><td colspan='1'>";
 
-                                nonskid1Snapshot.forEach(function(nonskid1ChildSnapshot){
+                                                nonskid1Snapshot.forEach(function(nonskid1ChildSnapshot){
 
-                                    myTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid1ChildSnapshot.val().employee_name + "</div></div>";
-                                });
+                                                    myTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid1ChildSnapshot.val().employee_name + "</div></div>";
+                                                });
 
-                                myTableNonskid += "</td><td>";
+                                                myTableNonskid += "</td><td>";
 
-                                nonskid2Snapshot.forEach(function(nonskid2ChildSnapshot){
+                                                nonskid2Snapshot.forEach(function(nonskid2ChildSnapshot){
 
-                                    myTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid2ChildSnapshot.val().employee_name + "</div></div>";
-                                });
+                                                    myTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid2ChildSnapshot.val().employee_name + "</div></div>";
+                                                });
 
-                                myTableNonskid += "</td><td>";
+                                                myTableNonskid += "</td><td>";
 
-                                nonskid3Snapshot.forEach(function(nonskid3ChildSnapshot){
+                                                nonskid3Snapshot.forEach(function(nonskid3ChildSnapshot){
 
-                                    myTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid3ChildSnapshot.val().employee_name + "</div></div>";
-                                });
+                                                    myTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid3ChildSnapshot.val().employee_name + "</div></div>";
+                                                });
 
-                                myTableNonskid += "</td><td>";
+                                                myTableNonskid += "</td><td>";
 
-                                nonskid4Snapshot.forEach(function(nonskid4ChildSnapshot){
+                                                nonskid4Snapshot.forEach(function(nonskid4ChildSnapshot){
 
-                                    myTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid4ChildSnapshot.val().employee_name + "</div></div>";
-                                });
+                                                    myTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid4ChildSnapshot.val().employee_name + "</div></div>";
+                                                });
 
-                                myTableNonskid += "</td></tr><tr><td>";
+                                                myTableNonskid += "</td></tr><tr><td>";
 
-                                nonskid1HelperSnapshot.forEach(function(nonskid1HelperChildSnapshot){
-                                    myTableNonskid += "Helper: " + nonskid1HelperChildSnapshot.val().helper_name;
-                                });
+                                                nonskid1HelperSnapshot.forEach(function(nonskid1HelperChildSnapshot){
+                                                    myTableNonskid += "Helper: " + nonskid1HelperChildSnapshot.val().helper_name;
+                                                });
 
-                                myTableNonskid += "</td><td>";
+                                                myTableNonskid += "</td><td>";
 
-                                nonskid2HelperSnapshot.forEach(function(nonskid2HelperChildSnapshot){
-                                    myTableNonskid += "Helper: " + nonskid2HelperChildSnapshot.val().helper_name;
-                                });
+                                                nonskid2HelperSnapshot.forEach(function(nonskid2HelperChildSnapshot){
+                                                    myTableNonskid += "Helper: " + nonskid2HelperChildSnapshot.val().helper_name;
+                                                });
 
-                                myTableNonskid += "</td><td>";
+                                                myTableNonskid += "</td><td>";
 
-                                nonskid3HelperSnapshot.forEach(function(nonskid3HelperChildSnapshot){
-                                    myTableNonskid += "Helper: " + nonskid3HelperChildSnapshot.val().helper_name;
-                                });
+                                                nonskid3HelperSnapshot.forEach(function(nonskid3HelperChildSnapshot){
+                                                    myTableNonskid += "Helper: " + nonskid3HelperChildSnapshot.val().helper_name;
+                                                });
 
-                                myTableNonskid += "</td><td>";
+                                                myTableNonskid += "</td><td>";
 
-                                nonskid4HelperSnapshot.forEach(function(nonskid4HelperChildSnapshot){
-                                    myTableNonskid += "Helper: " + nonskid4HelperChildSnapshot.val().helper_name;
-                                });
+                                                nonskid4HelperSnapshot.forEach(function(nonskid4HelperChildSnapshot){
+                                                    myTableNonskid += "Helper: " + nonskid4HelperChildSnapshot.val().helper_name;
+                                                });
 
-                                myTableNonskid += "</td></tr>";
+                                                myTableNonskid += "</td></tr>";
 
-                                document.getElementById('row_nonskid_list').innerHTML = myTableNonskid;
+                                                document.getElementById('row_nonskid_list').innerHTML = myTableNonskid;
+
+                                                $(".se-pre-con").fadeOut("slow");
                                             });
                                         });
                                     });
@@ -288,15 +291,15 @@
 
                 });
 
-                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/forklift').once('value', function(forkliftSnapshot){
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/forklift_operator').once('value', function(forkliftSnapshot){
                     firebase.database().ref('attendance/'+plant+'/'+currentDate+'/guard').once('value', function(guardSnapshot){
                         firebase.database().ref('attendance/'+plant+'/'+currentDate+'/guard/dayshift').once('value', function(guardDayshiftSnapshot){
                             firebase.database().ref('attendance/'+plant+'/'+currentDate+'/guard/nightshift').once('value', function(guardNightshiftSnapshot){
 
-                                myTableForklift += "<tr><td colspan='2'><table class='table table-bordered'><thead><tr class='header_line'><th class='col-md-3' style='text-align: center;'>FORKLIFT NO.</th><th class='col-md-9' style='text-align: center;'>OPERATOR / COMMENT</th></tr></thead><tbody>";
+                                myTableForklift += "<tr><td colspan='2'><table class='table table-bordered'><thead><tr class='header_line'><th class='col-md-3' style='text-align: center;'>FORKLIFT NO.</th><th class='col-md-5' style='text-align: center;'>OPERATOR</th><th class='col-md-4' style='text-align: center;'>COMMENT</th></tr></thead><tbody>";
 
                                 forkliftSnapshot.forEach(function(forkliftChildSnapshot){
-                                    myTableForklift += "<tr align='center'><td>" + forkliftChildSnapshot.val().forklift_no + "</td><td>" + forkliftChildSnapshot.val().operator + "</td></tr>";
+                                    myTableForklift += "<tr align='center'><td>" + forkliftChildSnapshot.val().forklift_no + "</td><td>" + forkliftChildSnapshot.val().operator + "</td><td>" + forkliftChildSnapshot.val().comment + "</td></tr>";
                                 });
 
                                 myTableForklift += "</tbody></table></td><td colspan='2'><table class='table table-bordered'><thead><tr><th>Guard: <strong>" + guardSnapshot.val().agency_name + "<strong></th></tr><tr class='header_line'><th>DAY SHIFT</th></tr></thead><tbody><tr><td>";
@@ -324,7 +327,7 @@
                 firebase.database().ref('attendance/'+plant+'/'+currentDate+'/comment').once('value', function(commentSnapshot){
                     commentSnapshot.forEach(function(commentChildSnapshot){
 
-                        myTableComment += "<tr><td colspan='2'><div class='row'><div class='col-md-3'><strong>FROM " + plant.toUpperCase() + "</strong></div><div class='col-md-9'>" + commentChildSnapshot.val().comment_plant + "</div></div></td><td colspan='2'><div class='row'><div class='col-md-3'><strong>FROM HEAD OFFICE</strong></div><div class='col-md-9'>" + commentChildSnapshot.val().comment_headoffice + "</div></div></td></tr>";
+                        myTableComment += "<tr><td colspan='2'><div class='row'><div class='col-md-3'><strong>FROM " + plant.toUpperCase() + "</strong></div><div class='col-md-9'>" + commentChildSnapshot.val().comment_attendance_plant + "</div></div></td><td colspan='2'><div class='row'><div class='col-md-3'><strong>FROM HEAD OFFICE</strong></div><div class='col-md-9'>" + commentChildSnapshot.val().comment_attendance_headoffice + "</div></div></td></tr>";
                     });
                     document.getElementById('row_comment').innerHTML = myTableComment;
                 });
@@ -405,27 +408,6 @@
                     });
                 });
 
-                    // firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/plant').once('value', function(plantSnapshot){
-
-                    //     myTableAbsentAgencyPlant += "<tr><td colspan='2'>";
-
-                    //     agencySnapshot.forEach(function(agencyChildSnapshot){
-
-                    //         myTableAbsentAgencyPlant += "<div class='row'><div class='col-md-12'>" + agencyChildSnapshot.val().employee_name + " - " + agencyChildSnapshot.val().employee_comment + "</div></div>";
-                    //     });
-
-                    //     myTableAbsentAgencyPlant += "</td><td colspan='2'>";
-
-                    //     plantSnapshot.forEach(function(plantChildSnapshot){
-
-                    //         myTableAbsentAgencyPlant += "<div class='row'><div class='col-md-12'>" + plantChildSnapshot.val().employee_name + " - " + plantChildSnapshot.val().employee_comment + "</div></div>";
-                    //     });
-
-                    //     myTableAbsentAgencyPlant += "</td></tr>";
-
-                    //     document.getElementById('row_agency_plant_list').innerHTML = myTableAbsentAgencyPlant;
-                    // });
-
                 firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/plant').once('value', function(plantSnapshot){
                     firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/motorpool').once('value', function(motorpoolSnapshot){
                         firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/trucking').once('value', function(truckingSnapshot){
@@ -467,61 +449,63 @@
                                         firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid3/helper').once('value', function(nonskid3HelperSnapshot){
                                             firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid4/helper').once('value', function(nonskid4HelperSnapshot){
 
-                                myTableNonskid += "<tr><td>";
+                                                myTableNonskid += "<tr><td colspan='1'>";
 
-                                nonskid1Snapshot.forEach(function(nonskid1ChildSnapshot){
+                                                nonskid1Snapshot.forEach(function(nonskid1ChildSnapshot){
 
-                                    myTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid1ChildSnapshot.val().employee_name + "</div></div>";
-                                });
+                                                    myTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid1ChildSnapshot.val().employee_name + "</div></div>";
+                                                });
 
-                                myTableNonskid += "</td><td>";
+                                                myTableNonskid += "</td><td>";
 
-                                nonskid2Snapshot.forEach(function(nonskid2ChildSnapshot){
+                                                nonskid2Snapshot.forEach(function(nonskid2ChildSnapshot){
 
-                                    myTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid2ChildSnapshot.val().employee_name + "</div></div>";
-                                });
+                                                    myTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid2ChildSnapshot.val().employee_name + "</div></div>";
+                                                });
 
-                                myTableNonskid += "</td><td>";
+                                                myTableNonskid += "</td><td>";
 
-                                nonskid3Snapshot.forEach(function(nonskid3ChildSnapshot){
+                                                nonskid3Snapshot.forEach(function(nonskid3ChildSnapshot){
 
-                                    myTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid3ChildSnapshot.val().employee_name + "</div></div>";
-                                });
+                                                    myTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid3ChildSnapshot.val().employee_name + "</div></div>";
+                                                });
 
-                                myTableNonskid += "</td><td>";
+                                                myTableNonskid += "</td><td>";
 
-                                nonskid4Snapshot.forEach(function(nonskid4ChildSnapshot){
+                                                nonskid4Snapshot.forEach(function(nonskid4ChildSnapshot){
 
-                                    myTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid4ChildSnapshot.val().employee_name + "</div></div>";
-                                });
+                                                    myTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid4ChildSnapshot.val().employee_name + "</div></div>";
+                                                });
 
-                                myTableNonskid += "</td></tr><tr><td>";
+                                                myTableNonskid += "</td></tr><tr><td>";
 
-                                nonskid1HelperSnapshot.forEach(function(nonskid1HelperChildSnapshot){
-                                    myTableNonskid += "Helper: " + nonskid1HelperChildSnapshot.val().helper_name;
-                                });
+                                                nonskid1HelperSnapshot.forEach(function(nonskid1HelperChildSnapshot){
+                                                    myTableNonskid += "Helper: " + nonskid1HelperChildSnapshot.val().helper_name;
+                                                });
 
-                                myTableNonskid += "</td><td>";
+                                                myTableNonskid += "</td><td>";
 
-                                nonskid2HelperSnapshot.forEach(function(nonskid2HelperChildSnapshot){
-                                    myTableNonskid += "Helper: " + nonskid2HelperChildSnapshot.val().helper_name;
-                                });
+                                                nonskid2HelperSnapshot.forEach(function(nonskid2HelperChildSnapshot){
+                                                    myTableNonskid += "Helper: " + nonskid2HelperChildSnapshot.val().helper_name;
+                                                });
 
-                                myTableNonskid += "</td><td>";
+                                                myTableNonskid += "</td><td>";
 
-                                nonskid3HelperSnapshot.forEach(function(nonskid3HelperChildSnapshot){
-                                    myTableNonskid += "Helper: " + nonskid3HelperChildSnapshot.val().helper_name;
-                                });
+                                                nonskid3HelperSnapshot.forEach(function(nonskid3HelperChildSnapshot){
+                                                    myTableNonskid += "Helper: " + nonskid3HelperChildSnapshot.val().helper_name;
+                                                });
 
-                                myTableNonskid += "</td><td>";
+                                                myTableNonskid += "</td><td>";
 
-                                nonskid4HelperSnapshot.forEach(function(nonskid4HelperChildSnapshot){
-                                    myTableNonskid += "Helper: " + nonskid4HelperChildSnapshot.val().helper_name;
-                                });
+                                                nonskid4HelperSnapshot.forEach(function(nonskid4HelperChildSnapshot){
+                                                    myTableNonskid += "Helper: " + nonskid4HelperChildSnapshot.val().helper_name;
+                                                });
 
-                                myTableNonskid += "</td></tr>";
+                                                myTableNonskid += "</td></tr>";
 
-                                document.getElementById('row_nonskid_list').innerHTML = myTableNonskid;
+                                                document.getElementById('row_nonskid_list').innerHTML = myTableNonskid;
+
+                                                $(".se-pre-con").fadeOut("slow");
                                             });
                                         });
                                     });
@@ -545,15 +529,15 @@
 
                 });
 
-                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/forklift').once('value', function(forkliftSnapshot){
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/forklift_operator').once('value', function(forkliftSnapshot){
                     firebase.database().ref('attendance/'+plant+'/'+currentDate+'/guard').once('value', function(guardSnapshot){
                         firebase.database().ref('attendance/'+plant+'/'+currentDate+'/guard/dayshift').once('value', function(guardDayshiftSnapshot){
                             firebase.database().ref('attendance/'+plant+'/'+currentDate+'/guard/nightshift').once('value', function(guardNightshiftSnapshot){
 
-                                myTableForklift += "<tr><td colspan='2'><table class='table table-bordered'><thead><tr class='header_line'><th class='col-md-3' style='text-align: center;'>FORKLIFT NO.</th><th class='col-md-9' style='text-align: center;'>OPERATOR / COMMENT</th></tr></thead><tbody>";
+                                myTableForklift += "<tr><td colspan='2'><table class='table table-bordered'><thead><tr class='header_line'><th class='col-md-3' style='text-align: center;'>FORKLIFT NO.</th><th class='col-md-5' style='text-align: center;'>OPERATOR</th><th class='col-md-4' style='text-align: center;'>COMMENT</th></tr></thead><tbody>";
 
                                 forkliftSnapshot.forEach(function(forkliftChildSnapshot){
-                                    myTableForklift += "<tr align='center'><td>" + forkliftChildSnapshot.val().forklift_no + "</td><td>" + forkliftChildSnapshot.val().operator + "</td></tr>";
+                                    myTableForklift += "<tr align='center'><td>" + forkliftChildSnapshot.val().forklift_no + "</td><td>" + forkliftChildSnapshot.val().operator + "</td><td>" + forkliftChildSnapshot.val().comment + "</td></tr>";
                                 });
 
                                 myTableForklift += "</tbody></table></td><td colspan='2'><table class='table table-bordered'><thead><tr><th>Guard: <strong>" + guardSnapshot.val().agency_name + "<strong></th></tr><tr class='header_line'><th>DAY SHIFT</th></tr></thead><tbody><tr><td>";
@@ -581,7 +565,7 @@
                 firebase.database().ref('attendance/'+plant+'/'+currentDate+'/comment').once('value', function(commentSnapshot){
                     commentSnapshot.forEach(function(commentChildSnapshot){
 
-                        myTableComment += "<tr><td colspan='2'><div class='row'><div class='col-md-3'><strong>FROM " + plant.toUpperCase() + "</strong></div><div class='col-md-9'>" + commentChildSnapshot.val().comment_plant + "</div></div></td><td colspan='2'><div class='row'><div class='col-md-3'><strong>FROM HEAD OFFICE</strong></div><div class='col-md-9'>" + commentChildSnapshot.val().comment_headoffice + "</div></div></td></tr>";
+                        myTableComment += "<tr><td colspan='2'><div class='row'><div class='col-md-3'><strong>FROM " + plant.toUpperCase() + "</strong></div><div class='col-md-9'>" + commentChildSnapshot.val().comment_attendance_plant + "</div></div></td><td colspan='2'><div class='row'><div class='col-md-3'><strong>FROM HEAD OFFICE</strong></div><div class='col-md-9'>" + commentChildSnapshot.val().comment_attendance_headoffice + "</div></div></td></tr>";
                     });
                     document.getElementById('row_comment').innerHTML = myTableComment;
                 });
@@ -598,9 +582,9 @@
                 document.getElementById('row_trucking_list').innerHTML = "";
                 document.getElementById('row_forklift_list').innerHTML = "";
                 document.getElementById('row_comment').innerHTML = "";
-            }
 
-            $(".se-pre-con").fadeOut("slow");
+                $(".se-pre-con").fadeOut("slow");
+            }
         });
     }
 
@@ -786,6 +770,28 @@
                                         </tbody>
                                         <thead>
                                             <tr class="header_line">
+                                                <th class="col-md-3">NON-SKID 1</th>
+                                                <th class="col-md-3">NON-SKID 2</th>
+                                                <th class="col-md-3">NON-SKID 3</th>
+                                                <th class="col-md-3">NON-SKID 4</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="row_nonskid_list"></tbody>
+                                        <thead>
+                                            <tr class="header_line">
+                                                <th colspan="4">TRUCKING</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="row_trucking_list"></tbody>
+                                        <thead>
+                                            <tr class="header_line">
+                                                <th colspan="2">FORKLIFT</th>
+                                                <th colspan="2">GUARD</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="row_forklift_list"></tbody>
+                                        <thead>
+                                            <tr class="header_line">
                                                 <th colspan="4">
                                                     ABSENT
                                                 </th>
@@ -807,28 +813,6 @@
                                                 </td>
                                             </tr>
                                         </tbody>
-                                        <thead>
-                                            <tr class="header_line">
-                                                <th class="col-md-3">NON-SKID 1</th>
-                                                <th class="col-md-3">NON-SKID 2</th>
-                                                <th class="col-md-3">NON-SKID 3</th>
-                                                <th class="col-md-3">NON-SKID 4</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="row_nonskid_list"></tbody>
-                                        <thead>
-                                            <tr class="header_line">
-                                                <th colspan="4">TRUCKING</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="row_trucking_list"></tbody>
-                                        <thead>
-                                            <tr class="header_line">
-                                                <th colspan="2">FORKLIFT</th>
-                                                <th colspan="2">GUARD</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="row_forklift_list"></tbody>
                                         <thead>
                                             <tr class="header_line">
                                                 <th colspan="2">NOTE</th>
