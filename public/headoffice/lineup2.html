@@ -154,7 +154,7 @@
 
         document.getElementById('id_date_new_set').innerHTML = "<th colspan='4'>Result: NEW SET OF LINE UP <button class='btn btn-success btn-md' onclick=\"tablePrint('new');\" style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button></th>";
 
-        document.getElementById('link_comment_update').innerHTML = "<a href='lineup_update.html?plant=" + plant + "&option=comment_headoffice&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_comment_update').innerHTML = "<a href='lineup2_update.html?plant=" + plant + "&option=comment_headoffice&date=" + passcurrentDate + "'>Update</a>";
         // document.getElementById('link_machine1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine1&date=" + passcurrentDate + "'>Update</a>";
         // document.getElementById('link_machine3_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine3&date=" + passcurrentDate + "'>Update</a>";
         // document.getElementById('link_forklift_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=forklift_operator&date=" + passcurrentDate + "'>Update</a>";
@@ -175,6 +175,8 @@
             // console.log(tableContentSnapshot.val());
 
             if(tableContentSnapshot.val() != null){
+
+                $(".button-link").show();
 
                 document.getElementById('id_record').innerHTML = "RECORD FOUND";
 
@@ -404,9 +406,9 @@
                     if(newlineupSnapshot.val() != null){
 
                         $(".new_set_table").show();
-                        $(".button-link").show();
+                        $(".button-link-new").show();
 
-                        document.getElementById('link_new_comment_update').innerHTML = "<a href='lineup_update.html?plant=" + plant + "&option=new_comment_headoffice&date=" + passcurrentDate + "'>Update</a>";
+                        document.getElementById('link_new_comment_update').innerHTML = "<a href='lineup2_update.html?plant=" + plant + "&option=new_comment_headoffice&date=" + passcurrentDate + "'>Update</a>";
 
                         firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/machine1').once('value', function(machine1Snapshot){
                             firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/machine3').once('value', function(machine3Snapshot){
@@ -627,7 +629,7 @@
                     }else{
 
                         $(".new_set_table").hide();
-                        $(".button-link").hide();
+                        $(".button-link-new").hide();
                         $(".se-pre-con").fadeOut("slow");
                     }
                 });
@@ -694,7 +696,7 @@
 
         document.getElementById('id_date_new_set').innerHTML = "<th colspan='4'>Result: NEW SET OF LINE UP <button class='btn btn-success btn-md' onclick=\"tablePrint('new');\" style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button></th>";
 
-        document.getElementById('link_comment_update').innerHTML = "<a href='lineup_update.html?plant=" + plant + "&option=comment_headoffice&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_comment_update').innerHTML = "<a href='lineup2_update.html?plant=" + plant + "&option=comment_headoffice&date=" + passcurrentDate + "'>Update</a>";
 
         // document.getElementById('link_machine1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine1&date=" + passcurrentDate + "'>Update</a>";
         // document.getElementById('link_machine3_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine3&date=" + passcurrentDate + "'>Update</a>";
@@ -716,6 +718,8 @@
             console.log(tableContentSnapshot.val());
 
             if(tableContentSnapshot.val() != null){
+
+                $(".button-link").show();
 
                 document.getElementById('id_record').innerHTML = "RECORD FOUND";
 
@@ -942,9 +946,9 @@
                     if(newlineupSnapshot.val() != null){
 
                         $(".new_set_table").show();
-                        $(".button-link").show();
+                        $(".button-link-new").show();
 
-                        document.getElementById('link_new_comment_update').innerHTML = "<a href='lineup_update.html?plant=" + plant + "&option=new_comment_headoffice&date=" + passcurrentDate + "'>Update</a>";
+                        document.getElementById('link_new_comment_update').innerHTML = "<a href='lineup2_update.html?plant=" + plant + "&option=new_comment_headoffice&date=" + passcurrentDate + "'>Update</a>";
 
                         firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/machine1').once('value', function(machine1Snapshot){
                             firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/machine3').once('value', function(machine3Snapshot){
@@ -1165,7 +1169,7 @@
                     }else{
 
                         $(".new_set_table").hide();
-                        $(".button-link").hide();
+                        $(".button-link-new").hide();
                         $(".se-pre-con").fadeOut("slow");
                     }
                 });
@@ -1218,7 +1222,7 @@
     color: white;
 }
 
-.new_set_table, .button-link{
+.new_set_table, .button-link, .button-link-new{
     display: none;
 }
 </style>
@@ -1276,12 +1280,6 @@
                             <span>Transaction Log</span>
                         </a>
                     </li>
-                    <li class="">
-                        <a class="" href="client.html">
-                            <i class="fa fa-address-book"></i>
-                            <span>Clients</span>
-                        </a>
-                    </li>
                     <li class="sub-menu">
                         <a href="javascript:;" class="">
                             <i class="fa fa-building"></i>
@@ -1289,13 +1287,11 @@
                             <span class="menu-arrow arrow_carrot-down"></span>
                         </a>
                         <ul class="sub">
-                            <li><a class="" href="purchase_order.html?plant=Bravo">Purchase Order</a></li>                          
-                            <li><a class="" href="delivery_ongoing_order.html?plant=Bravo">Delivery Page</a></li>
                             <li><a class="" href="diesel.html?plant=Bravo">Diesel</a></li>
                             <li><a class="" href="diesel_category.html?plant=Bravo">Oil</a></li>
                             <li><a class="" href="parts.html?plant=Bravo">Parts</a></li>
                             <li><a class="" href="lineup.html?plant=Bravo">Line Up</a></li>
-                            <li><a class="" href="attendance.html?plant=Bravo">Attendance</a></li>
+                            <!-- <li><a class="" href="attendance.html?plant=Bravo">Attendance</a></li> -->
                         </ul>
                     </li>  
                     <li class="sub-menu">
@@ -1305,25 +1301,13 @@
                             <span class="menu-arrow arrow_carrot-down"></span>
                         </a>
                         <ul class="sub">
-                            <li><a class="" href="purchase_order.html?plant=Delta">Purchase Order</a></li>                          
-                            <li><a class="" href="delivery_ongoing_order.html?plant=Delta">Delivery Page</a></li>
                             <li><a class="" href="diesel.html?plant=Delta">Diesel</a></li>
                             <li><a class="" href="diesel_category.html?plant=Delta">Oil</a></li>
                             <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
                             <li><a class="" href="lineup.html?plant=Delta">Line Up</a></li>
-                            <li><a class="" href="attendance.html?plant=Delta">Attendance</a></li>
+                            <!-- <li><a class="" href="attendance.html?plant=Delta">Attendance</a></li> -->
                         </ul>
-                    </li>    
-                    <li class="sub-menu">
-                        <a href="javascript:;" class="">
-                            <i class="fa fa-file"></i>
-                            <span>Forms</span>
-                            <span class="menu-arrow arrow_carrot-down"></span>
-                        </a>
-                        <ul class="sub">
-                            <li><a class="" href="purchase_order_form.html">Add New P.O.</a></li>
-                        </ul>
-                    </li>      
+                    </li>  
                 </ul>
                 <!-- sidebar menu end-->
             </div>
@@ -1553,7 +1537,7 @@
                                                 </th>
                                                 <th colspan="2">
                                                     COMMENT FROM HEAD OFFICE
-                                                    <div class="btn-group pull-right button-link">
+                                                    <div class="btn-group pull-right button-link-new">
                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
                                                             <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
                                                         </a>
