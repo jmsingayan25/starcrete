@@ -422,7 +422,7 @@
                 }
             
                 firebase.database().ref('lineup/'+plant+'/'+input_date+'/absent').push(absentData);
-                count++;
+                
             }
 
             for(var a = 0; a < input_trucking_no.length; a++){
@@ -435,12 +435,11 @@
                     comment: input_trucking_comment[a].toUpperCase() || "N/A"
                 }
 
-                // console.log(truckingData);
-
                 firebase.database().ref('lineup/'+plant+'/'+input_date+'/trucking').push(truckingData);
+                count++;
             }
 
-            if(count == input_absent_name.length){
+            if(count == input_trucking_no.length){
                 alert("Line up recorded");
                 window.location='lineup.html';
             }
