@@ -82,18 +82,18 @@
     <script src="../js_config/function.js"></script>
 
 <script>
-	
-	var option = getUrlParameter('option');
-	var plant = getUrlParameter('plant');
-	var getCurrentDate = getUrlParameter('date');
-	var date_option = {year: "numeric", month: "long", day: "numeric"}
+    
+    var option = getUrlParameter('option');
+    var plant = getUrlParameter('plant');
+    var getCurrentDate = getUrlParameter('date');
+    var date_option = {year: "numeric", month: "long", day: "numeric"}
     var currentDate = new Date(getCurrentDate).toLocaleDateString('en', date_option);
     var optionTable = "";
 
     $(document).ready(function(){
 
-    	tableData();
-    	firebase.auth().onAuthStateChanged(function(user) {
+        tableData();
+        firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
 
                 var uid = user.uid;
@@ -113,73 +113,62 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
-    	document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-home'></i><a href='lineup.html?plant=" + plant + "'>Line Up</a></li><li><i class='icon_document'></i>Line Up Update</li>  ";
+        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-home'></i><a href='lineup.html?plant=" + plant + "'>Line Up</a></li><li><i class='icon_document'></i>Line Up Update</li>  ";
 
     });
 
     function tableData(){
 
-    	if(option == "comment_headoffice"){
+        if(option == "comment"){
+            query_ext = option;
+        }else if(option == "new_comment"){
+            query_ext = "new/comment";
+        }
 
-    		firebase.database().ref('lineup/'+plant+'/'+currentDate+'/comment_headoffice').once('value', function(commentSnapshot){
+        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(commentSnapshot){
 
-	    		if(commentSnapshot.val() != null){
+             if(commentSnapshot.val() != null){
 
-	    			optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;' required>" + commentSnapshot.val().comment  + "</textarea></div>";
+                    commentSnapshot.forEach(function(commentChildSnapshot){
 
-	    		}else{
+                        optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;' required>" + commentChildSnapshot.val().comment_lineup_headoffice  + "</textarea></div>";
+                    });
 
-	    			optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;' required></textarea></div>";
+             }else{
 
-	    		}
-	    		
+                 optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;' required></textarea></div>";
 
-	    		document.getElementById('id_comment_field').innerHTML = optionTable;
-	    	});
-
-    	}else if(option == "new_comment_headoffice"){
-
-    		firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/comment_headoffice').once('value', function(commentSnapshot){
-
-    			if(commentSnapshot.val() != null){
-
-	    			optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;'>" + commentSnapshot.val().comment  + "</textarea></div>";
-
-	    		}else{
-
-	    			optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;'></textarea></div>";
-
-	    		}
-
-	    		document.getElementById('id_comment_field').innerHTML = optionTable;
-	    	});
-    	}
+             }
+                
+             document.getElementById('id_comment_field').innerHTML = optionTable;
+        });
     }
 
     function submitForm(){
 
-    	event.preventDefault();
+        event.preventDefault();
 
-    	var input_comment = document.getElementById('comment').value || "N/A";
+        var input_comment = document.getElementById('comment').value || "N/A";
 
-    	var commentData = {
-    		comment: input_comment.toUpperCase()
-    	}
+        var commentData = {
+            comment_lineup_headoffice: input_comment.toUpperCase()
+        }
 
-    	if(option == "comment_headoffice"){
+        if(option == "comment"){
+            query_ext = option;
+        }else if(option == "new_comment"){
+            query_ext = "new/comment";
+        }
 
-    		if(firebase.database().ref('lineup/'+plant+'/'+currentDate+'/comment_headoffice').set(commentData)){
-    			alert("Date update successfully");
-    			window.location.href = "lineup.html?plant="+plant;
-    		}
+        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(commentSnapshot){
+            commentSnapshot.forEach(function(commentChildSnapshot){
 
-    	}else if(option == "new_comment_headoffice"){
-
-    		if(firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/comment_headoffice').set(commentData)){
-    			alert("Date update successfully");
-    			window.location.href = "lineup.html?plant="+plant;
-    		}
-    	}
+                 if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/'+commentChildSnapshot.key).update(commentData)){
+                     alert("Date update successfully");
+                     window.location.href = "lineup.html?plant="+plant;
+                 }
+            });
+        });
     }
 
 </script>
@@ -231,12 +220,12 @@
                             <span>Dashboard</span>
                         </a>
                     </li> 
-                    <li>
+                    <!-- <li>
                         <a class="" href="transaction_log.html">
                             <i class="fa fa-list"></i>
                             <span>Transaction Log</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li class="sub-menu">
                         <a href="javascript:;" class="">
                             <i class="fa fa-building"></i>
@@ -248,7 +237,7 @@
                             <li><a class="" href="diesel_category.html?plant=Bravo">Oil</a></li>
                             <li><a class="" href="parts.html?plant=Bravo">Parts</a></li>
                             <li><a class="" href="lineup.html?plant=Bravo">Line Up</a></li>
-                            <!-- <li><a class="" href="attendance.html?plant=Bravo">Attendance</a></li> -->
+                            <li><a class="" href="attendance.html?plant=Bravo">Attendance</a></li>
                         </ul>
                     </li>  
                     <li class="sub-menu">
@@ -262,7 +251,7 @@
                             <li><a class="" href="diesel_category.html?plant=Delta">Oil</a></li>
                             <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
                             <li><a class="" href="lineup.html?plant=Delta">Line Up</a></li>
-                            <!-- <li><a class="" href="attendance.html?plant=Delta">Attendance</a></li> -->
+                            <li><a class="" href="attendance.html?plant=Delta">Attendance</a></li>
                         </ul>
                     </li>  
                 </ul>
@@ -288,24 +277,22 @@
                             </header>
                             <header class="panel-heading" style="text-align: center;"><strong>NOTE</strong></header>
                             <div class="panel-body">
-                            	<div class="row">                                          
-	                                <form class="form-horizontal" role="form" id="form" onsubmit='if(confirm("Proceed?")){submitForm();}else{ event.preventDefault();}'>
-										<div id="id_comment_field"></div>
-										<hr>
-	                                    <div class="col-md-12">
-	                                        <div class="form-group">
-	                                            <div class="row">
-	                                                <!-- <div class="form-group"> -->
-	                                                <div class="col-md-offset-7 col-md-5">
-	                                                    <input type="submit" name="submit" id="submit" value="Update" class="btn btn-primary" style="font-weight: bold;">
-	                                                    <button type="button" class="btn btn-default" onclick="window.history.back();"><strong>Cancel</strong></button>
-	                                                <!-- </div> -->
-	                                                </div>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                </form>
-	                            </div>
+                                <div class="row">                                          
+                                    <form class="form-horizontal" role="form" id="form" onsubmit='if(confirm("Proceed?")){submitForm();}else{ event.preventDefault();}'>
+                                        <div id="id_comment_field"></div>
+                                        <hr>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-offset-7 col-md-5">
+                                                        <input type="submit" name="submit" id="submit" value="Update" class="btn btn-primary" style="font-weight: bold;">
+                                                        <button type="button" class="btn btn-default" onclick="window.history.back();"><strong>Cancel</strong></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </section>
                     </div>
