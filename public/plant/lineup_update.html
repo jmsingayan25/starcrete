@@ -127,11 +127,270 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
-        document.getElementById('li_attendance').innerHTML = "<i class='icon_document'></i><a href='lineup.html?date=" + getCurrentDate + "'>Line Up</a>";
+        document.getElementById('li_attendance').innerHTML = "<i class='icon_document'></i><a href='lineup.html'>Line Up</a>";
         document.getElementById('li_attendance_update').innerHTML = "<i class='icon_document'></i>Line Up Form";
-
+        document.getElementById('header_text').innerHTML = "Update Form for " + currentDate;
 
     });
+
+    function tableData(plant){
+
+        if(option == "machine1" || option == "new_machine1"){
+            headline = "MACHINE 1 DETAILS";
+        }else if(option == "machine3" || option == "new_machine3"){
+            headline = "MACHINE 3 DETAILS";
+        }else if(option == "forklift_operator" || option == "new_forklift_operator"){
+            headline = "FORKLIFT OPERATOR DETAILS";
+        }else if(option == "mechanic" || option == "new_mechanic"){
+            headline = "MECHANIC DETAILS";
+        }else if(option == "nonskid1" || option == "new_nonskid1"){
+            headline = "NON-SKID 1 DETAILS";
+        }else if(option == "nonskid2" || option == "new_nonskid2"){
+            headline = "NON-SKID 2 DETAILS";
+        }else if(option == "nonskid3" || option == "new_nonskid3"){
+            headline = "NON-SKID 3 DETAILS";
+        }else if(option == "nonskid4" || option == "new_nonskid4"){
+            headline = "NON-SKID 4 DETAILS";
+        }else if(option == "tagapukpok" || option == "new_tagapukpok"){
+            headline = "TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG DETAILS";
+        }else if(option == "checker" || option == "new_checker"){
+            headline = "CHECKER / FOREMAN / BATCHER / SUPERVISOR DETAILS";
+        }else if(option == "kamador" || option == "new_kamador"){
+            headline = "KAMADOR DETAILS";
+        }else if(option == "loader" || option == "new_loader"){
+            headline = "LOADER DETAILS";
+        }else if(option == "others" || option == "new_others"){
+            headline = "OTHERS DETAILS";
+        }else if(option == "absent_plant" || option == "new_absent_plant"){
+            headline = "ABSENT IN PLANT DETAILS";
+        }else if(option == "absent_motorpool" || option == "new_absent_motorpool"){
+            headline = "ABSENT IN MOTORPOOL DETAILS";
+        }else if(option == "absent_trucking" || option == "new_absent_trucking"){
+            headline = "ABSENT IN TRUCKING DETAILS";
+        }else if(option == "comment" || option == "new_comment"){
+            headline = "COMMENT DETAILS";
+        }else if(option == "trucking" || option == "new_trucking"){
+            headline = "TRUCKING DETAILS";
+        }
+
+        if(option == "mechanic" || option == "kamador" || option == "loader" || option == "new_mechanic" || option == "new_kamador" || option == "new_loader"){
+
+            if(option == "mechanic" || option == "kamador" || option == "loader"){
+                query_ext = option;
+            }else if(option == "new_mechanic" || option == "new_kamador" || option == "new_loader"){
+                new_option = option.replace("new_","");
+                query_ext = "new/"+new_option;
+            }
+
+            document.getElementById('not_comment_section').style.display = "block";
+            document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
+
+            $('.button_add').show();
+
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(optionSnapshot){
+
+                optionTable += "<thead><tr><th class='col-md-5 header_center'>Name</th><th class='col-md-1'></th></tr></thead><tbody>";
+
+                optionSnapshot.forEach(function(optionChildSnapshot){
+
+                    optionTable += "<tr><td><input type='text' name='update_employee_name[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_name + "' class='form-control'></td> <td><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
+                });
+
+                optionTable += "</tbody>";
+
+                document.getElementById('id_fields').innerHTML = optionTable;
+            });
+
+        }else if(option == "comment" || option == "new_comment"){
+
+            if(option == "comment"){
+                query_ext = option;
+            }else if(option == "new_comment"){
+                query_ext = "new/comment";
+            }
+
+            document.getElementById('comment_section').style.display = "block";
+            document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
+
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(optionSnapshot){
+
+                optionSnapshot.forEach(function(optionChildSnapshot){
+
+                    optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;'>" + optionChildSnapshot.val().comment_lineup_plant  + "</textarea></div>";
+                });
+
+                document.getElementById('id_comment_field').innerHTML = optionTable;
+            });
+
+        }else if(option == "tagapukpok" || option == "checker" || option == "others" || option == "machine1" || option == "machine3" || option == "new_tagapukpok" || option == "new_checker" || option == "new_others" || option == "new_machine1" || option == "new_machine3"){
+
+            if(option == "tagapukpok" || option == "checker" || option == "others" || option == "machine1" || option == "machine3"){
+                query_ext = option;
+            }else if(option == "new_tagapukpok" || option == "new_checker" || option == "new_others" || option == "new_machine1" || option == "new_machine3"){
+                new_option = option.replace("new_","");
+                query_ext = "new/"+new_option;
+            }
+
+            document.getElementById('not_comment_section').style.display = "block";
+            document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
+
+            $('.button_add').show();
+
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(optionSnapshot){
+
+                optionTable += "<thead><tr><td class='col-md-1 header_center'>Name</td><td class='col-md-1 header_center'>Position</td></tr></thead><tbody>";
+
+                optionSnapshot.forEach(function(optionChildSnapshot){
+
+                    optionTable += "<tr><td class='col-md-5'><input type='text' name='update_employee_name[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_name + "' class='form-control'></td><td class='col-md-5'><input type='text' name='update_employee_position[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_position + "' class='form-control'></td><td class='col-md-1'><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
+                });
+
+                optionTable += "</tbody>";
+
+                document.getElementById('id_fields').innerHTML = optionTable;
+            });
+
+        }else if(option == "trucking" || option == "new_trucking"){
+
+            if(option == "trucking"){
+                query_ext = option;
+            }else if(option == "new_trucking"){
+                query_ext = "new/trucking";
+            }
+
+            document.getElementById('not_comment_section').style.display = "block";
+            document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
+
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(optionSnapshot){
+
+                if(optionSnapshot.val() != null){
+
+                    optionTable += "<thead><tr align='center'><th class='col-md-1 header_center'>Truck No.</th><th class='col-md-2 header_center'>Driver</th><th class='col-md-2 header_center'>Pahinante 1</th><th class='col-md-2 header_center'>Pahinante 2</th><th class='col-md-2 header_center'>Commment</th></tr></thead><tbody>";
+
+                    optionSnapshot.forEach(function(optionChildSnapshot){
+
+                        optionTable += "<tr align='center'><td class='col-md-1'>" + optionChildSnapshot.val().truck_no + "</td><td class='col-md-2'><input type='hidden' name='hidden_trucking[]' value='" + optionChildSnapshot.val().truck_no + "'><textarea name='update_driver[]' style='text-transform: uppercase;' class='form-control'>" + optionChildSnapshot.val().driver + "</textarea></td><td class='col-md-2'><textarea name='update_pahinante1[]' style='text-transform: uppercase;' class='form-control'>" + optionChildSnapshot.val().pahinante1 + "</textarea></td><td class='col-md-2'><textarea name='update_pahinante2[]' style='text-transform: uppercase;' class='form-control'>" + optionChildSnapshot.val().pahinante2 + "</textarea></td><td class='col-md-2'><textarea name='update_comment[]' style='text-transform: uppercase;' class='form-control'>" + optionChildSnapshot.val().comment + "</textarea></td></tr>";
+
+                    });
+
+                    optionTable += "<tr align='center'><td class='col-md-1'>HOWO</td><td class='col-md-2'><input type='hidden' name='hidden_trucking[]' value='HOWO'><textarea name='update_driver[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_pahinante1[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_pahinante2[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_comment[]' style='text-transform: uppercase;' class='form-control'></textarea></td></tr>";
+
+                    optionTable += "</tbody>";
+
+                    document.getElementById('id_fields').innerHTML = optionTable;
+
+                }else{
+
+                    firebase.database().ref('trucking_list/Bravo').once('value', function(truckingSnapshot){
+                        truckingSnapshot.forEach(function(truckingChildSnapshot){
+
+                            optionTable += "<tr align='center'><td class='col-md-1'>" + truckingChildSnapshot.val().item + "</td><td class='col-md-2'><input type='hidden' name='hidden_trucking[]' value='" + truckingChildSnapshot.val().item + "'><textarea name='update_driver[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_pahinante1[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_pahinante2[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_comment[]' style='text-transform: uppercase;' class='form-control'></textarea></td></tr>";
+                        });
+
+                        document.getElementById('id_fields').innerHTML = optionTable;
+                    });
+                }
+            });
+
+        }else if(option == "forklift_operator" || option == "new_forklift_operator"){
+
+            if(option == "forklift_operator"){
+                query_ext = option;
+            }else if(option == "new_forklift_operator"){
+                query_ext = "new/forklift_operator";
+            }
+
+            document.getElementById('not_comment_section').style.display = "block";
+            document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
+
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(optionSnapshot){
+
+                optionTable += "<tr><td><table class='table'><thead><tr><th class='col-md-2 header_center'>Forklift No.</th><th class='col-md-5 header_center'>Operator</th><th class='col-md-5 header_center'>Comment</th></tr></thead><tbody>";
+
+                optionSnapshot.forEach(function(optionChildSnapshot){
+
+                    optionTable += "<tr align='center'><input type='hidden' name='hidden_forklift_no[]' value='" + optionChildSnapshot.val().forklift_no + "'><td><strong>" + optionChildSnapshot.val().forklift_no + "</strong></td><td><input type='text' name='update_operator[]' value='" + optionChildSnapshot.val().operator + "' class='form-control input_type'></td><td><input type='text' name='update_operator_comment[]' value='" + optionChildSnapshot.val().comment + "' class='form-control input_type'></td></tr>";
+
+                });
+
+                optionTable += "</tbody></table></td></tr>";
+
+                document.getElementById('id_fields').innerHTML = optionTable;
+
+            });
+        
+        }else if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4" || option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4"){
+
+            if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4"){
+                query_ext = option;
+            }else if(option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4"){
+                new_option = option.replace("new_","");
+                query_ext = "new/"+new_option;
+            }
+
+            document.getElementById('not_comment_section').style.display = "block";
+            document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
+
+            $('.button_add').show();
+
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/employee').once('value', function(employeeSnapshot){
+
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/helper').once('value', function(helperSnapshot){
+
+                    optionTable += "<thead><tr><th colspan='2' class='header_center'>Helper Name</th></thead><tbody>";
+
+                    helperSnapshot.forEach(function(helperChildSnapshot){
+
+                        optionTable += "<tr><td colspan='2'><input type='text' id='update_helper_name' class='form-control input_type' value='" + helperChildSnapshot.val().helper_name + "'></td></tr>";
+                    });
+
+                    optionTable += "</thead></tbody><br><br><thead><tr><th class='col-md-8 header_center'>Name</th><th class='col-md-1'></th></thead><tbody>";
+
+                    employeeSnapshot.forEach(function(employeeChildSnapshot){
+
+                        optionTable += "<tr><td><input type='text' name='update_employee_name[]' class='form-control input_type' value='" + employeeChildSnapshot.val().employee_name + "'></td><td><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + employeeChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
+
+                    });
+
+                    optionTable += "</tbody>";
+
+                    document.getElementById('id_fields').innerHTML = optionTable;
+
+                });
+            });
+
+        }else if(option == "absent_plant" || option == "absent_motorpool" || option == "absent_trucking" || option == "new_absent_plant" || option == "new_absent_motorpool" || option == "new_absent_trucking"){
+
+            if(option == "absent_plant" || option == "absent_motorpool" || option == "absent_trucking"){
+                new_option = option.replace("absent_","");
+                query_ext = "absent/"+new_option;
+            }else if(option == "new_absent_plant" || option == "new_absent_motorpool" || option == "new_absent_trucking"){
+                new_option = option.replace("new_absent_","");
+                query_ext = "new/absent/"+new_option;
+            }
+
+            document.getElementById('not_comment_section').style.display = "block";
+            document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
+
+            $('.button_add').show();
+
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(absentSnapshot){
+
+                optionTable += "<thead><tr><th class='col-md-3 header_center'>Name</th><th class='col-md-6 header_center'>Reason</th><th class='col-md-1'></th></tr></thead><tbody>";
+
+                absentSnapshot.forEach(function(absentChildSnapshot){
+
+                    optionTable += "<tr><td><input type='text' name='update_employee_name[]' class='form-control input_type' value='" + absentChildSnapshot.val().employee_name + "'></td><td><textarea name='update_employee_reason[]' class='form-control input_type' rows='2'>" + absentChildSnapshot.val().employee_comment + "</textarea></td><td><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + absentChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
+                });
+
+                optionTable += "</tbody>";
+
+                document.getElementById('id_fields').innerHTML = optionTable;
+
+            });
+
+        }
+    }
 
     function add_new_employee(){
 
@@ -140,19 +399,22 @@
         $rowno = $("#employee_table tr").length;
         $rowno = $rowno + 1;
 
-        if(option != "absent" && option != "tagapukpok" && option != "checker" && option != "others" && option != "new_absent" && option != "new_tagapukpok" && option != "new_checker"){
+        if(option == "kamador" || option == "loader" || option == "mechanic" || option == "new_kamador" || option == "new_loader" || option == "new_mechanic"){
 
             $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-5'><input type='text' name='update_employee_name[]' class='form-control input_type' required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
 
-        }else if(option == "absent" || option == "new_absent"){
-
-            $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-5'><input type='text' name='update_employee_name[]' class='form-control input_type' required></td><td class='col-md-4'><textarea name='update_employee_reason[]' style='text-transform: uppercase;' rows='3' class='form-control'></textarea></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
-
-        }else if(option == "tagapukpok" || option == "checker" || option == "others" || option == "new_tagapukpok" || option == "new_checker" || option == "new_others"){
+        }else if(option == "tagapukpok" || option == "checker" || option == "others" || option == "machine1" || option == "machine3" || option == "new_tagapukpok" || option == "new_checker" || option == "new_others" || option == "new_machine1" || option == "new_machine3"){
 
             $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-5'><input type='text' name='update_employee_name[]' class='form-control input_type' required></td><td class='col-md-5'><input type='text' name='update_employee_position[]' style='text-transform: uppercase;' class='form-control'></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
 
-        }   
+        }else if(option == "absent_plant" || option == "absent_motorpool" || option == "absent_trucking" || option == "new_absent_plant" || option == "new_absent_motorpool" || option == "new_absent_trucking"){
+
+            $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-3'><input type='text' name='update_employee_name[]' class='form-control input_type' required></td><td class='col-md-6'><textarea name='update_employee_reason[]' class='form-control input_type' rows='2' required></textarea></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
+        
+        }else if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4" || option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4"){
+
+            $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-8'><input type='text' name='update_employee_name[]' class='form-control input_type' required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
+        }
     }
 
 
@@ -160,307 +422,130 @@
         $('#'+rowno).remove();
     }
 
-    function tableData(plant){
-
-        if(option == "machine1" || option == "new_machine1"){
-            headline = "MACHINE1";
-        }else if(option == "machine3" || option == "new_machine3"){
-            headline = "MACHINE3";
-        }else if(option == "forklift_operator" || option == "new_forklift_operator"){
-            headline = "FORKLIFT OPERATOR";
-        }else if(option == "mechanic" || option == "new_mechanic"){
-            headline = "MECHANIC";
-        }else if(option == "nonskid1" || option == "new_nonskid1"){
-            headline = "NON-SKID 1";
-        }else if(option == "nonskid2" || option == "new_nonskid2"){
-            headline = "NON-SKID 2";
-        }else if(option == "nonskid3" || option == "new_nonskid3"){
-            headline = "NON-SKID 3";
-        }else if(option == "nonskid4" || option == "new_nonskid4"){
-            headline = "NON-SKID 4";
-        }else if(option == "tagapukpok" || option == "new_tagapukpok"){
-            headline = "TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG";
-        }else if(option == "checker" || option == "new_checker"){
-            headline = "CHECKER / FOREMAN / BATCHER / SUPERVISOR";
-        }else if(option == "kamador" || option == "new_kamador"){
-            headline = "KAMADOR";
-        }else if(option == "loader" || option == "new_loader"){
-            headline = "LOADER";
-        }else if(option == "others" || option == "new_others"){
-            headline = "OTHERS";
-        }else if(option == "absent" || option == "new_absent"){
-            headline = "ABSENT";
-        }else if(option == "comment" || option == "new_comment"){
-            headline = "COMMENT";
-        }else if(option == "trucking" || option == "new_trucking"){
-            headline = "TRUCKING";
-        }
-
-        if(option == "machine1" || option == "machine3" || option == "forklift_operator" || option == "mechanic" || option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4" || option == "kamador" || option == "loader"){
-
-            document.getElementById('table_header').innerHTML = "<tr><td class='col-md-1'><label for='update_employee_name'>Name</label></td></tr>";
-
-            document.getElementById('not_comment_section').style.display = "block";
-    
-            document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
-
-            firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).once('value', function(optionSnapshot){
-
-                optionSnapshot.forEach(function(optionChildSnapshot){
-
-                    optionTable += "<tr><td class='col-md-5'><input type='text' name='update_employee_name[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_name + "' class='form-control'></td> <td class='col-md-1'><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
-                });
-
-                document.getElementById('id_fields').innerHTML = optionTable;
-            });
-
-        }else if(option == "absent"){
-
-            document.getElementById('table_header').innerHTML = "<tr><td class='col-md-1'><label for='update_employee_name'>Name</label></td><td class='col-md-1'><label for='update_employee_name'>Reason</label></td></tr>";
-
-            document.getElementById('not_comment_section').style.display = "block";
-
-            document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
-
-            firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).once('value', function(optionSnapshot){
-
-                optionSnapshot.forEach(function(optionChildSnapshot){
-
-                    optionTable += "<tr><td class='col-md-5'><input type='text' name='update_employee_name[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_name + "' class='form-control'></td><td class='col-md-4'><textarea name='update_employee_reason[]' style='text-transform: uppercase;' rows='3' class='form-control'>" + optionChildSnapshot.val().reason + "</textarea></td><td class='col-md-1'><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
-                });
-
-                document.getElementById('id_fields').innerHTML = optionTable;
-            });
-
-        }else if(option == "comment"){
-
-            document.getElementById('comment_section').style.display = "block";
-
-            document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
-
-            firebase.database().ref('lineup/'+plant+'/'+currentDate).once('value', function(optionSnapshot){
-
-                optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;'>" + optionSnapshot.val().comment  + "</textarea></div>";
-
-                document.getElementById('id_comment_field').innerHTML = optionTable;
-            });
-        }else if(option == "tagapukpok" || option == "checker" || option == "others"){
-
-            document.getElementById('table_header').innerHTML = "<tr><td class='col-md-1'><label for='update_employee_name'>Name</label></td><td class='col-md-1'><label for='update_employee_name'>Position</label></td></tr>";
-
-            document.getElementById('not_comment_section').style.display = "block";
-
-            document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
-
-            firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).once('value', function(optionSnapshot){
-
-                optionSnapshot.forEach(function(optionChildSnapshot){
-
-                    optionTable += "<tr><td class='col-md-5'><input type='text' name='update_employee_name[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_name + "' class='form-control'></td><td class='col-md-5'><input type='text' name='update_employee_position[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_position + "' class='form-control'></td><td class='col-md-1'><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
-                });
-
-                document.getElementById('id_fields').innerHTML = optionTable;
-            });
-        }else if(option == "trucking"){
-
-            document.getElementById('table_header').innerHTML = "<tr align='center'><td class='col-md-1'><label for='update_employee_name'>Truck No.</label></td><td class='col-md-2'><label for='update_employee_name'>Driver</label></td><td class='col-md-2'><label for='update_employee_name'>Pahinante 1</label></td><td class='col-md-2'><label for='update_employee_name'>Pahinante 2</label></td><td class='col-md-2'><label for='update_employee_name'>Commment</label></td></tr>";
-
-            document.getElementById('not_comment_section').style.display = "block";
-            document.getElementById('button_add').style.display = "none";
-
-            document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
-
-            firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).once('value', function(optionSnapshot){
-
-                if(optionSnapshot.val() != null){
-
-                    optionSnapshot.forEach(function(optionChildSnapshot){
-
-                        optionTable += "<tr align='center'><td class='col-md-1'>" + optionChildSnapshot.val().truck_no + "</td><td class='col-md-2'><input type='hidden' name='hidden_trucking[]' value='" + optionChildSnapshot.val().truck_no + "'><textarea name='update_driver[]' style='text-transform: uppercase;' class='form-control'>" + optionChildSnapshot.val().driver + "</textarea></td><td class='col-md-2'><textarea name='update_pahinante1[]' style='text-transform: uppercase;' class='form-control'>" + optionChildSnapshot.val().pahinante1 + "</textarea></td><td class='col-md-2'><textarea name='update_pahinante2[]' style='text-transform: uppercase;' class='form-control'>" + optionChildSnapshot.val().pahinante2 + "</textarea></td><td class='col-md-2'><textarea name='update_comment[]' style='text-transform: uppercase;' class='form-control'>" + optionChildSnapshot.val().comment + "</textarea></td></tr>";
-
-                    });
-
-                    document.getElementById('id_fields').innerHTML = optionTable;
-
-                }else{
-
-                    firebase.database().ref('trucking_list/Bravo').once('value', function(truckingSnapshot){
-                        truckingSnapshot.forEach(function(truckingChildSnapshot){
-
-                            optionTable += "<tr align='center'><td class='col-md-1'>" + truckingChildSnapshot.val().item + "</td><td class='col-md-2'><input type='hidden' name='hidden_trucking[]' value='" + truckingChildSnapshot.val().item + "'><textarea name='update_driver[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_pahinante1[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_pahinante2[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_comment[]' style='text-transform: uppercase;' class='form-control'></textarea></td></tr>";
-                        });
-
-                        document.getElementById('id_fields').innerHTML = optionTable;
-                    });
-                }
-            });
-
-        }else if(option == "new_machine1" || option == "new_machine3" || option == "new_forklift_operator" || option == "new_mechanic" || option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4" || option == "new_kamador" || option == "new_loader"){
-
-            new_option = option.replace("new_","");
-
-            document.getElementById('table_header').innerHTML = "<tr><td class='col-md-1'><label for='update_employee_name'>Name</label></td></tr>";
-
-            document.getElementById('not_comment_section').style.display = "block";
-    
-            document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
-
-            firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/'+new_option).once('value', function(optionSnapshot){
-
-                optionSnapshot.forEach(function(optionChildSnapshot){
-
-                    optionTable += "<tr><td class='col-md-5'><input type='text' name='update_employee_name[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_name + "' class='form-control'></td> <td class='col-md-1'><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + new_option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
-                });
-
-                document.getElementById('id_fields').innerHTML = optionTable;
-            });
-
-        }else if(option == "new_absent"){
-
-            new_option = option.replace("new_","");
-
-            document.getElementById('table_header').innerHTML = "<tr><td class='col-md-1'><label for='update_employee_name'>Name</label></td><td class='col-md-1'><label for='update_employee_name'>Reason</label></td></tr>";
-
-            document.getElementById('not_comment_section').style.display = "block";
-
-            document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
-
-            firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/'+new_option).once('value', function(optionSnapshot){
-
-                optionSnapshot.forEach(function(optionChildSnapshot){
-
-                    optionTable += "<tr><td class='col-md-5'><input type='text' name='update_employee_name[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_name + "' class='form-control'></td><td class='col-md-4'><textarea name='update_employee_reason[]' style='text-transform: uppercase;' rows='3' class='form-control'>" + optionChildSnapshot.val().reason + "</textarea></td><td class='col-md-1'><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + new_option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
-                });
-
-                document.getElementById('id_fields').innerHTML = optionTable;
-            });
-
-        }else if(option == "new_comment"){
-
-            new_option = option.replace("new_","");
-
-            document.getElementById('comment_section').style.display = "block";
-
-            document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
-
-            firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new').once('value', function(optionSnapshot){
-
-                optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;'>" + optionSnapshot.val().comment  + "</textarea></div>";
-
-                document.getElementById('id_comment_field').innerHTML = optionTable;
-            });
-
-        }else if(option == "new_tagapukpok" || option == "new_checker" || option == "new_others"){
-
-            new_option = option.replace("new_","");
-
-            document.getElementById('table_header').innerHTML = "<tr><td class='col-md-1'><label for='update_employee_name'>Name</label></td><td class='col-md-1'><label for='update_employee_name'>Position</label></td></tr>";
-
-            document.getElementById('not_comment_section').style.display = "block";
-
-            document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
-
-            firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/'+new_option).once('value', function(optionSnapshot){
-
-                optionSnapshot.forEach(function(optionChildSnapshot){
-
-                    optionTable += "<tr><td class='col-md-5'><input type='text' name='update_employee_name[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_name + "' class='form-control'></td><td class='col-md-5'><input type='text' name='update_employee_position[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_position + "' class='form-control'></td><td class='col-md-1'><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + new_option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
-                });
-
-                document.getElementById('id_fields').innerHTML = optionTable;
-            });
-
-        }else if(option == "new_trucking"){
- 
-            new_option = option.replace("new_","");
-
-            document.getElementById('table_header').innerHTML = "<tr align='center'><td class='col-md-1'><label for='update_employee_name'>Truck No.</label></td><td class='col-md-2'><label for='update_employee_name'>Driver</label></td><td class='col-md-2'><label for='update_employee_name'>Pahinante 1</label></td><td class='col-md-2'><label for='update_employee_name'>Pahinante 2</label></td><td class='col-md-2'><label for='update_employee_name'>Commment</label></td></tr>";
-
-            document.getElementById('not_comment_section').style.display = "block";
-            document.getElementById('button_add').style.display = "none";
-
-            document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
-
-            firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/'+new_option).once('value', function(optionSnapshot){
-
-                if(optionSnapshot.val() != null){
-
-                    optionSnapshot.forEach(function(optionChildSnapshot){
-
-                        optionTable += "<tr align='center'><td class='col-md-1'>" + optionChildSnapshot.val().truck_no + "</td><td class='col-md-2'><input type='hidden' name='hidden_trucking[]' value='" + optionChildSnapshot.val().truck_no + "'><textarea name='update_driver[]' style='text-transform: uppercase;' class='form-control'>" + optionChildSnapshot.val().driver + "</textarea></td><td class='col-md-2'><textarea name='update_pahinante1[]' style='text-transform: uppercase;' class='form-control'>" + optionChildSnapshot.val().pahinante1 + "</textarea></td><td class='col-md-2'><textarea name='update_pahinante2[]' style='text-transform: uppercase;' class='form-control'>" + optionChildSnapshot.val().pahinante2 + "</textarea></td><td class='col-md-2'><textarea name='update_comment[]' style='text-transform: uppercase;' class='form-control'>" + optionChildSnapshot.val().comment + "</textarea></td></tr>";
-
-                    });
-
-                    document.getElementById('id_fields').innerHTML = optionTable;
-
-                }else{
-
-                    firebase.database().ref('trucking_list/Bravo').once('value', function(truckingSnapshot){
-                        truckingSnapshot.forEach(function(truckingChildSnapshot){
-
-                            optionTable += "<tr align='center'><td class='col-md-1'>" + truckingChildSnapshot.val().item + "</td><td class='col-md-2'><input type='hidden' name='hidden_trucking[]' value='" + truckingChildSnapshot.val().item + "'><textarea name='update_driver[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_pahinante1[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_pahinante2[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_comment[]' style='text-transform: uppercase;' class='form-control'></textarea></td></tr>";
-                        });
-
-                        document.getElementById('id_fields').innerHTML = optionTable;
-                    });
-
-                    
-                }
-            });
-
-        }
-    }
-
     function removeEmployee(position, key){
 
         event.preventDefault();
 
-        var remove_new = position.substring(0, 3);
+        if(position == "checker" || position == "machine1" || position == "machine3" || position == "others" || position == "tagapukpok" || position == "new_checker" || position == "new_machine1" || position == "new_machine3" || position == "new_others" || position == "new_tagapukpok"){
 
-        if(remove_new == "new"){
+            if(position == "checker" || position == "machine1" || position == "machine3" || position == "others" || position == "tagapukpok"){
+                query_ext = option;
+            }else if(position == "new_checker" || position == "new_machine1" || position == "new_machine3" || position == "new_others" || position == "new_tagapukpok"){
+                new_option = option.replace("new_","");
+                query_ext = "new/"+new_option;
+            }
+                // console.log('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/'+key);
+            if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/'+key).remove()){
 
-            new_option = option.replace("new_","");
-            if(firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/'+new_option+'/'+key).remove()){
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(snapshot){
 
-                firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/'+new_option).once('value', function(snapshot){
+                    if(snapshot.val() == null){
+
+                        var data = {
+                            employee_name: "N/A",
+                            employee_position: "N/A"
+                        }
+
+                        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).push(data);
+                        alert("Data has been removed");
+                        window.location.href='lineup.html';
+                    
+                    }else{
+                        alert("Data has been removed");
+                        location.reload();
+                    }
+                });
+            }
+
+        }else if(position == "kamador" || position == "loader" || position == "mechanic" || position == "new_kamador" || position == "new_loader" || position == "new_mechanic"){
+
+            if(position == "kamador" || position == "loader" || position == "mechanic"){
+                query_ext = position;
+            }else if(position == "new_kamador" || position == "new_loader" || position == "new_mechanic"){
+                new_option = position.replace("new_","");
+                query_ext = "new/"+new_option;
+            }
+
+            if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/'+key).remove()){
+
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(snapshot){
+
+                    if(snapshot.val() == null){
+
+                        var data = {
+                            employee_name: "N/A",
+                        }
+
+                        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).push(data);
+                        alert("Data has been removed");
+                        window.location.href='lineup.html';
+                    
+                    }else{
+                        alert("Data has been removed");
+                        location.reload();
+                    }
+                });
+            }
+
+        }else if(position == "absent_plant" || position == "absent_motorpool" || position == "absent_trucking" || position == "new_absent_plant" || position == "new_absent_motorpool" || position == "new_absent_trucking"){
+
+            if(position == "absent_plant" || position == "absent_motorpool" || position == "absent_trucking"){
+                new_option = position.replace("absent_","");
+                query_ext = "absent/"+new_option;
+            }else if(position == "new_absent_plant" || position == "new_absent_motorpool" || position == "new_absent_trucking"){
+                new_option = position.replace("new_absent_");
+                query_ext = "new/absent/"+new_option;
+            }
+
+            if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/'+key).remove()){
+
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(snapshot){
+
+                    if(snapshot.val() == null){
+
+                        var data = {
+                            employee_name: "N/A",
+                            reason: "N/A"
+                        }
+
+                        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).push(data);
+                        alert("Data has been removed");
+                        window.location.href='lineup.html';
+                    
+                    }else{
+                        alert("Data has been removed");
+                        location.reload();
+                    }
+                });
+            }
+        }else if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4" || option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4"){
+
+            if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4"){
+                query_ext = option;
+            }else if(option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4"){
+                new_option = option.replace("new_","");
+                query_ext = "new/"+new_option;
+            }
+
+            if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/employee/'+key).remove()){
+
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/employee').once('value', function(snapshot){
                     if(snapshot.val() == null){
 
                         var data = {
                             employee_name: "N/A"
                         }
 
-                        firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/'+new_option).push(data);
+                        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/employee').push(data);
                         alert("Data has been removed");
                         window.location.href='lineup.html';
-
+                        
                     }else{
                         alert("Data has been removed");
                         location.reload();
                     }
                 });
-            } 
-
-        }else{
-
-           if(firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+position+'/'+key).remove()){
-
-                firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+position).once('value', function(snapshot){
-                    if(snapshot.val() == null){
-
-                        var data = {
-                            employee_name: "N/A"
-                        }
-
-                        firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+position).push(data);
-                        alert("Data has been removed");
-                        window.location.href='lineup.html';
-
-                    }else{
-                        alert("Data has been removed");
-                        location.reload();
-                    }
-                });
-            } 
+            }
         }
     }
 
@@ -468,58 +553,79 @@
 
         event.preventDefault();
 
-        if(option == "absent"){
+        if(option == "absent_plant" || option == "absent_motorpool" || option == "absent_trucking" || option == "new_absent_plant" || option == "new_absent_motorpool" || option == "new_absent_trucking"){
+
+            if(option == "absent_plant" || option == "absent_motorpool" || option == "absent_trucking"){
+                new_option = option.replace("absent_","");
+                query_ext = "absent/"+new_option;
+            }else if(option == "new_absent_plant" || option == "new_absent_motorpool" || option == "new_absent_trucking"){
+                new_option = option.replace("new_absent_","");
+                query_ext = "new/absent/"+new_option;
+            }
 
             count = 0;
             var input_employee_name = $("input[name='update_employee_name[]']").map(function(){return $(this).val();}).get();
             var input_employee_reason = $("textarea[name='update_employee_reason[]']").map(function(){return $(this).val();}).get();
 
-            if(firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).remove()){
+            if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).remove()){
 
                 for(a = 0; a < input_employee_name.length; a++){
 
                     var employeeData = {
                         employee_name: input_employee_name[a].toUpperCase(),
-                        reason: input_employee_reason[a].toUpperCase()
+                        employee_comment: input_employee_reason[a].toUpperCase() || "N/A"
                     }
 
-                    firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).push(employeeData);
+                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).push(employeeData);
 
                     count++;
                 }
 
                 if(count == input_employee_name.length){
                     alert("Data updated successfully");
-                    window.location.href='lineup.html?date='+currentDate;
+                    window.location.href='lineup.html';
                 }
             }
+        }else if(option == "comment" || option == "new_comment"){
 
-        }else if(option == "comment"){
-
-            count = 0;
             var input_comment = document.getElementById('comment').value;
 
-            firebase.database().ref('lineup/'+plant+'/'+currentDate).once('value', function(commentSnapshot){
+            if(option == "comment"){
+                query_ext = option;
+            }else if(option == "new_comment"){
+                query_ext = "new/comment"
+            }
 
-                var commentData = {
-                    comment: input_comment.toUpperCase()
-                }
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(commentSnapshot){
+                commentSnapshot.forEach(function(commentChildSnapshot){
+                    var commentData = {
+                        comment_lineup_plant: input_comment.toUpperCase() || "N/A"
+                    }
+                    
+                    if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/'+commentChildSnapshot.key).update(commentData)){
 
-                if(firebase.database().ref('lineup/'+plant+'/'+currentDate).update(commentData)){
-
-                    alert("Data updated successfully");
-                    window.location.href='lineup.html?date='+currentDate;
-                }
+                        alert("Data updated successfully");
+                        window.location.href='lineup.html';
+                    }
+                });
             });
 
-        }else if(option == "tagapukpok" || option == "checker" || option == "others"){
+        }else if(option == "tagapukpok" || option == "checker" || option == "others" || option == "machine1" || option == "machine3" || option == "new_tagapukpok" || option == "new_checker" || option == "new_others" || option == "new_machine1" || option == "new_machine3"){
             
             count = 0;
 
             var input_employee_name = $("input[name='update_employee_name[]']").map(function(){return $(this).val();}).get();
             var input_employee_position = $("input[name='update_employee_position[]']").map(function(){return $(this).val();}).get();
 
-            if(firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).remove()){
+            if(option == "tagapukpok" || option == "checker" || option == "others" || option == "machine1" || option == "machine3"){
+                query_ext = option;
+            }else if(option == "new_tagapukpok" || option == "new_checker" || option == "new_others" || option == "new_machine1" || option == "new_machine3"){
+
+                new_option = option.replace("new_","");
+                query_ext = "new/"+new_option;
+            }
+
+            if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).remove()){
 
                 for(a = 0; a < input_employee_name.length; a++){
 
@@ -528,17 +634,17 @@
                         employee_position: input_employee_position[a].toUpperCase() || "N/A"
                     }
 
-                    firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).push(employeeData);
+                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).push(employeeData);
                     count++;
                 }
 
                 if(count == input_employee_name.length){
                     alert("Data updated successfully");
-                    window.location.href='lineup.html?date='+currentDate;
+                    window.location.href='lineup.html';
                 }
             }
 
-        }else if(option == "trucking"){
+        }else if(option == "trucking" || option == "new_trucking"){
 
             count = 0;
             var input_truck_no = $("input[name='hidden_trucking[]']").map(function(){return $(this).val();}).get();
@@ -547,7 +653,13 @@
             var input_pahinante2 = $("textarea[name='update_pahinante2[]']").map(function(){return $(this).val();}).get();
             var input_update_comment = $("textarea[name='update_comment[]']").map(function(){return $(this).val();}).get();
 
-            if(firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).remove()){
+            if(option == "trucking"){
+                query_ext = option;
+            }else if(option == "new_trucking"){
+                query_ext = "new/trucking";
+            }
+
+            if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).remove()){
 
                  for(a = 0; a < input_truck_no.length; a++){
 
@@ -559,174 +671,119 @@
                         comment: input_update_comment[a].toUpperCase()
                     }
 
-                    firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).push(truckingData);
+                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).push(truckingData);
                     count++;
                 }
 
                 if(count == input_truck_no.length){
                     alert("Data updated successfully");
-                    window.location.href='lineup.html?date='+currentDate;
+                    window.location.href='lineup.html';
                 }
             }
 
-        }else if(option == "machine1" || option == "machine3" || option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4" || option == "kamador" || option == "forklift_operator" || option == "mechanic"){
+        }else if(option == "forklift_operator" || option == "new_forklift_operator"){
 
             count = 0;
-            var input_employee_name = $("input[name='update_employee_name[]']").map(function(){return $(this).val();}).get();
 
-            if(firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).remove()){
+            var input_forklift_no = $("input[type='hidden'][name='hidden_forklift_no[]']").map(function(){return $(this).val();}).get();
+            var input_operator = $("input[name='update_operator[]']").map(function(){return $(this).val();}).get();
+            var input_operator_comment = $("input[name='update_operator_comment[]']").map(function(){return $(this).val();}).get();
 
-                for(a = 0; a < input_employee_name.length; a++){
+            if(option == "forklift_operator"){
+                query_ext = option;
+            }else if(option == "new_forklift_operator"){
+                query_ext = "new/forklift_operator";
+            }
 
-                    var employeeData = {
-                        employee_name: input_employee_name[a].toUpperCase()
+            if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).remove()){
+
+                 for(a = 0; a < input_forklift_no.length; a++){
+
+                    var forkliftData = {
+                        comment: input_operator_comment[a].toUpperCase() || "N/A",
+                        forklift_no: input_forklift_no[a],
+                        operator: input_operator[a].toUpperCase() || "N/A"
                     }
 
-                    firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).push(employeeData);
+                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).push(forkliftData);
+                    count++;
+                 }
+
+                 if(count == input_forklift_no.length){
+                    alert("Data updated successfully");
+                    window.location.href='lineup.html';
+                }
+
+            }
+
+        }else if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4" || option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4"){
+
+            if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4"){
+                query_ext = option;
+            }else if(option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4"){
+                new_option = option.replace("new_","");
+                query_ext = "new/"+new_option;
+            }
+
+            count = 0;
+
+            var input_employee_name = $("input[name='update_employee_name[]']").map(function(){return $(this).val();}).get();
+            var input_helper_name = document.getElementById("update_helper_name").value;
+
+            if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).remove()){
+
+                var helperData = {
+                    helper_name: input_helper_name.toUpperCase() || "N/A"
+                }
+
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/helper').push(helperData)
+
+                for(var a = 0; a < input_employee_name.length; a++){
+
+                    var employeeData = {
+                        employee_name: input_employee_name[a].toUpperCase() || "N/A"
+                    }
+
+                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/employee').push(employeeData);
                     count++;
                 }
 
                 if(count == input_employee_name.length){
                     alert("Data updated successfully");
-                    window.location.href='lineup.html?date='+currentDate;
+                    window.location.href='lineup.html';
                 }
             }
 
-        }else if(option == "new_absent"){
+        }else if(option == "kamador" || option == "loader" || option == "mechanic" || option == "new_kamador" || option == "new_loader" || option == "new_mechanic"){
 
-            new_option = option.replace("new_","");
+            if(option == "kamador" || option == "loader" || option == "mechanic"){
+                query_ext = option;
+            }else if(option == "new_kamador" || option == "new_loader" || option == "new_mechanic"){
+                new_option = option.replace("new_","");
+                query_ext = "new/"+new_option;
+            }
 
             count = 0;
-            var input_employee_name = $("input[name='update_employee_name[]']").map(function(){return $(this).val();}).get();
-            var input_employee_reason = $("textarea[name='update_employee_reason[]']").map(function(){return $(this).val();}).get();
 
-            if(firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/'+new_option).remove()){
+            var input_employee_name = $("input[name='update_employee_name[]']").map(function(){return $(this).val();}).get();
+
+            if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).remove()){
 
                 for(a = 0; a < input_employee_name.length; a++){
 
-                    var employeeData = {
-                        employee_name: input_employee_name[a].toUpperCase(),
-                        reason: input_employee_reason[a].toUpperCase()
+                    var kamadorData = {
+                        employee_name: input_employee_name[a].toUpperCase() || "N/A"
                     }
 
-                    firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/'+new_option).push(employeeData);
+                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).push(kamadorData);
                     count++;
-                }
+                 }
 
-                if(count == input_employee_name.length){
+                 if(count == input_employee_name.length){
                     alert("Data updated successfully");
-                    window.location.href='lineup.html?date='+currentDate;
+                    window.location.href='lineup.html';
                 }
             }
-
-        }else if(option == "new_comment"){
-
-            new_option = option.replace("new_","");
-
-            count = 0;
-            var input_comment = document.getElementById('comment').value;
-
-            firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new').once('value', function(commentSnapshot){
-
-                var commentData = {
-                    comment: input_comment.toUpperCase()
-                }
-
-                if(firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new').update(commentData)){
-
-                    alert("Data updated successfully");
-                    window.location.href='lineup.html?date='+currentDate;
-                }
-            });
-
-        }else if(option == "new_tagapukpok" || option == "new_checker" || option == "new_checker"){
-            
-            new_option = option.replace("new_","");
-
-            count = 0;
-            var input_employee_name = $("input[name='update_employee_name[]']").map(function(){return $(this).val();}).get();
-            var input_employee_position = $("input[name='update_employee_position[]']").map(function(){return $(this).val();}).get();
-
-            if(firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/'+new_option).remove()){
-
-                for(a = 0; a < input_employee_name.length; a++){
-
-                    var employeeData = {
-                        employee_name: input_employee_name[a].toUpperCase(),
-                        employee_position: input_employee_position[a].toUpperCase() || "N/A"
-                    }
-
-                    firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/'+new_option).push(employeeData);
-
-                    count++;
-                }
-
-                if(count == input_employee_name.length){
-                    alert("Data updated successfully");
-                    window.location.href='lineup.html?date='+currentDate;
-                }
-            }
-
-        }else if(option == "new_trucking"){
-
-            new_option = option.replace("new_","");
-
-            count = 0;
-            var input_truck_no = $("input[name='hidden_trucking[]']").map(function(){return $(this).val();}).get();
-            var input_driver = $("textarea[name='update_driver[]']").map(function(){return $(this).val();}).get();
-            var input_pahinante1 = $("textarea[name='update_pahinante1[]']").map(function(){return $(this).val();}).get();
-            var input_pahinante2 = $("textarea[name='update_pahinante2[]']").map(function(){return $(this).val();}).get();
-            var input_update_comment = $("textarea[name='update_comment[]']").map(function(){return $(this).val();}).get();
-
-            if(firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/'+new_option).remove()){
-
-                 for(a = 0; a < input_truck_no.length; a++){
-
-                    var truckingData = {
-                        truck_no: input_truck_no[a].toUpperCase(),
-                        driver: input_driver[a].toUpperCase(),
-                        pahinante1: input_pahinante1[a].toUpperCase(),
-                        pahinante2: input_pahinante2[a].toUpperCase(),
-                        comment: input_update_comment[a].toUpperCase()
-                    }
-
-                    firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/'+new_option).push(truckingData);
-
-                    count++;
-                }
-
-                if(count == input_truck_no.length){
-                    alert("Data updated successfully");
-                    window.location.href='lineup.html?date='+currentDate;
-                }
-            }
-
-        }else if(option == "new_machine1" || option == "new_machine3" || option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4" || option == "new_kamador" || option == "new_forklift_operator" || option == "new_mechanic"){
-
-            new_option = option.replace("new_","");
-
-            count = 0;
-            var input_employee_name = $("input[name='update_employee_name[]']").map(function(){return $(this).val();}).get();
-
-            if(firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/'+new_option).remove()){
-
-                for(a = 0; a < input_employee_name.length; a++){
-
-                    var employeeData = {
-                        employee_name: input_employee_name[a].toUpperCase()
-                    }
-
-                    firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/'+new_option).push(employeeData);
-
-                    count++;
-                }
-
-                if(count == input_employee_name.length){
-                    alert("Data updated successfully");
-                    window.location.href='lineup.html?date='+currentDate;
-                }
-            }
-
         }
     }
 
@@ -734,6 +791,12 @@
 <style>
 .input_type{
     text-transform: uppercase;
+}
+.header_center{
+    text-align: center;
+}
+.button_add{
+    display: none;
 }
 </style>
 </head>
@@ -785,12 +848,12 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <li class="">
+                    <!-- <li class="">
                         <a class="" href="transaction_log.html">
                             <i class="fa fa-list"></i>
                             <span>Transaction Log</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li class="">
                         <a class="" href="diesel.html">
                             <i class="fa fa-building"></i>
@@ -809,12 +872,12 @@
                             <span>Line Up</span>
                         </a>
                     </li>
-                    <!-- <li class="">
+                    <li class="">
                         <a class="" href="attendance.html">
                             <i class="icon_document"></i>
                             <span>Attendance</span>
                         </a>
-                    </li> -->
+                    </li>
                 </ul>
                 <!-- sidebar menu end-->
             </div>
@@ -825,7 +888,6 @@
             <section class="wrapper">  
                 <div class="row">
                     <div class="col-md-12">
-                        <!-- <h3 class="page-header"><i class="fa fa-building"></i> Purchase Order Update</h3> -->
                         <ol class="breadcrumb" id="id_breadcrumb">
                             <li id="li_attendance"></li>
                             <li id="li_attendance_update"></li>
@@ -833,47 +895,40 @@
                         <div class="row">
                             <div class="col-md-offset-2 col-md-8">
                                 <section class="panel">
-                                    <header class="panel-heading">
-                                    Update Form
-                                    </header>
+                                    <header class="panel-heading" id="header_text"></header>
                                     <header class="panel-heading" id="id_option" style="text-align: center;"></header>
                                     <div class="panel-body">
-                                        <div class="row">                                          
-                                            <form class="form-horizontal" role="form" id="form" onsubmit='if(confirm("Proceed?")){submitForm();}else{ event.preventDefault();}'>
-                                                <div id="not_comment_section" style="display: none;">
-                                                    <table id="table_header"></table>
-                                                    <div class="col-md-12">
-                                                        <div class="form-group">
-                                                            <table class="table" id="id_fields"></table>
-                                                            <table id="employee_table">
-                                                                <tr id="employee_row1"></tr>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                    <hr>
-                                                    <div class="row" id="button_add">
-                                                        <div class="col-md-offset-3 col-md-6">
-                                                            <button type="button" onclick="add_new_employee();" class="btn btn-primary btn-block"><strong>Add</strong></button>                                                        
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div id="comment_section" style="display: none;">
-                                                    <div id="id_comment_field"></div>
-                                                </div>
-                                                <hr>
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <div class="row">
-                                                            <!-- <div class="form-group"> -->
-                                                            <div class="col-md-offset-7 col-md-5">
-                                                                <input type="submit" name="submit" id="submit" value="Update" class="btn btn-primary" style="font-weight: bold;">
-                                                                <button type="button" class="btn btn-default" onclick="window.location.href='lineup.html';"><strong>Cancel</strong></button>
-                                                            <!-- </div> -->
+                                        <div class="row">    
+                                            <div class="col-md-12">                                      
+                                                <form class="form-horizontal" role="form" id="form" onsubmit='if(confirm("Proceed?")){submitForm();}else{ event.preventDefault();}'>
+                                                    <div id="not_comment_section" style="display: none;">
+                                                        <table class="table" id="id_fields"></table>
+                                                        <table class="table" id="employee_table">
+                                                            <tr id="employee_row1"></tr>
+                                                        </table>
+                                                        <div class="row button_add">
+                                                            <hr>
+                                                            <div class="col-md-offset-3 col-md-6">
+                                                                <button type="button" onclick="add_new_employee();" class="btn btn-primary btn-block"><strong>Add</strong></button>                                                        
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </form>
+                                                    <div id="comment_section" style="display: none;">
+                                                        <div id="id_comment_field"></div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-offset-7 col-md-5">
+                                                                    <input type="submit" name="submit" id="submit" value="Update" class="btn btn-primary" style="font-weight: bold;">
+                                                                    <button type="button" class="btn btn-default" onclick="window.location.href='lineup.html';"><strong>Cancel</strong></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                     <footer class="panel-footer">
