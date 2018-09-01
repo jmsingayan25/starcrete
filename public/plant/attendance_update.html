@@ -144,11 +144,11 @@
 
                 $(".button_add").show();
 
-                optionTable += "<thead><tr><th class='col-md-6 header_center'>Name</th><th class='col-md-1 header_center'>Time In</th><th class='col-md-1 header_center'>Time Out</th><th class='col-md-1'></th></tr></thead><tbody>";
+                optionTable += "<thead><tr><th class='col-md-6 header_center'>Name</th><th class='col-md-1 header_center'>Time In</th><th class='col-md-1 header_center'>Time Out (Yesterday)</th><th class='col-md-1'></th></tr></thead><tbody>";
 
                 officeSnapshot.forEach(function(officeChildSnapshot){
 
-                    optionTable += "<tr><td><input type='text' name='update_employee_name[]' class='form-control input_type' value='" + officeChildSnapshot.val().employee_name + "'></td><td><input type='time' name='update_employee_timein[]' class='form-control input_type' value='" + officeChildSnapshot.val().employee_timein + "' required></td><td><input type='time' name='update_employee_timeout[]' class='form-control input_type' value='" + officeChildSnapshot.val().employee_timeout + "' required></td><td class='col-md-1'><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + officeChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
+                    optionTable += "<tr><td><input type='text' name='update_employee_name[]' class='form-control input_type' value='" + officeChildSnapshot.val().employee_name + "'></td><td><input type='time' name='update_employee_timein[]' class='form-control input_type' value='" + officeChildSnapshot.val().employee_timein + "'></td><td><input type='time' name='update_employee_timeout[]' class='form-control input_type' value='" + officeChildSnapshot.val().employee_timeout + "'></td><td class='col-md-1'><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + officeChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
                 });
 
                 optionTable += "</tbody>";
@@ -315,7 +315,7 @@
                             day_count++;
                         });
 
-                        if(day_count != 2){
+                        if(day_count < 2){
 
                             optionTable += "<tr><td><input type='text' name='update_dayshift_guard[]' class='form-control input_type' value='N/A'></td><td><input type='text' name='update_dayshift_position[]' class='form-control input_type' value='N/A'></td></tr>";
                         }
@@ -329,7 +329,7 @@
                             night_count++;
                         });
 
-                        if(night_count != 2){
+                        if(night_count < 2){
 
                             optionTable += "<tr><td><input type='text' name='update_nightshift_guard[]' class='form-control input_type' value='N/A'></td><td><input type='text' name='update_nightshift_position[]' class='form-control input_type' value='N/A'></td></tr>";
                         }
@@ -887,12 +887,12 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <li class="">
+                    <!-- <li class="">
                         <a class="" href="transaction_log.html">
                             <i class="fa fa-list"></i>
                             <span>Transaction Log</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li class="">
                         <a class="" href="diesel.html">
                             <i class="fa fa-building"></i>
