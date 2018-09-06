@@ -89,12 +89,17 @@
 
 <script>
     
-    var getCurrentDate = getUrlParameter('date') || "9/1/18";
+    var getCurrentDate = getUrlParameter('date');
     var plant = getUrlParameter('plant');
-    var date_option = {year: "numeric", month: "long", day: "numeric"}
+    var date_option = {year: "numeric", month: "long", day: "numeric"};
     var currentDate = new Date(getCurrentDate).toLocaleDateString('en', date_option);
 
     $(document).ready(function(){
+
+        var currentDate1 = new Date(getCurrentDate);
+        var yesterdayDate = currentDate1.setDate(currentDate1.getDate() - 1);
+        yesterdayDate = new Date(yesterdayDate).toLocaleDateString('en');
+        $(".class_yesterday").text(yesterdayDate);
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -121,6 +126,19 @@
         document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-home'></i><a href='attendance.html?plant="+plant+"'>Attendance</a></li><li><i class='fa fa-file'></i><a href='attendance_form.html?plant="+plant+"'>Head Office Attendance Form</a></li>";
     });
 
+    function insertToEmployeeArray(){
+
+        var employee_array = [];
+
+        firebase.database().ref('employee_list/Head Office').once('value', function(listSnapshot){
+            listSnapshot.forEach(function(listChildSnapshot){
+                employee_array.push(listChildSnapshot.val().employee_name);
+            });
+
+            $('.employees').autocomplete({source: employee_array});
+        });
+    }
+
     function add_new_employee(type){
 
         event.preventDefault();
@@ -136,8 +154,18 @@
             $rowno = $("#employee_loopbook_table tr").length;
             $rowno = $rowno + 1;
             $("#employee_loopbook_table tr:last").after("<tr id='employee_loopbook_row" + $rowno + "'><td><input type='text' name='employee_loopbook_name[]' class='form-control input_type' required></td><td><input type='time' name='employee_loopbook_timein[]' class='form-control input_type'></td><td><input type='time' name='employee_loopbook_timeout[]' class='form-control input_type'></td><td><input type='text' name='employee_loopbook_remarks[]' class='form-control input_type'></td><td><button type='button' class='btn btn-danger btn-md' onclick=remove_loopbook_employee('employee_loopbook_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+
         }
-        
+
+        var employee_array = [];
+
+        firebase.database().ref('employee_list/Head Office').once('value', function(listSnapshot){
+            listSnapshot.forEach(function(listChildSnapshot){
+                employee_array.push(listChildSnapshot.val().employee_name);
+            });
+
+            $('.employees').autocomplete({source: employee_array});
+        });
     }
 
     function remove_office_employee(rowno){
@@ -221,9 +249,6 @@
             <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
             </div>
 
-            <!--logo start-->
-
-            <!--logo end-->
             <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
             <div class="top-nav notification-row">                
                 <!-- notificatoin dropdown start-->
@@ -329,7 +354,7 @@
                                                             <tr>
                                                                 <th class="col-md-5 header_text">Name</th>
                                                                 <th class="col-md-2 header_text">Time In</th>
-                                                                <th class="col-md-2 header_text">Time Out (Yesterday)</th>
+                                                                <th class="col-md-2 header_text">Time Out (<span class='class_yesterday'></span>)</th>
                                                                 <th class="col-md-2 header_text">Remarks</th>
                                                                 <th class="col-md-1"></th>
                                                             </tr>
@@ -360,7 +385,7 @@
                                                             <tr>
                                                                 <th class="col-md-5 header_text">Name</th>
                                                                 <th class="col-md-2 header_text">Time In</th>
-                                                                <th class="col-md-2 header_text">Time Out (Yesterday)</th>
+                                                                <th class="col-md-2 header_text">Time Out (<span class='class_yesterday'></span>)</th>
                                                                 <th class="col-md-2 header_text">Remarks</th>
                                                                 <th class="col-md-1"></th>
                                                             </tr>

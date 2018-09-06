@@ -39,6 +39,8 @@
     <link href="../css/xcharts.min.css" rel=" stylesheet">  
     <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
     <!-- javascripts -->
     <script src="../js/jquery.js"></script>
     <script src="../js/jquery-ui-1.10.4.min.js"></script>
@@ -89,8 +91,6 @@
 
     $(document).ready(function(){
 
-        // startTime();
-
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
 
@@ -106,6 +106,7 @@
 
                     displayForkliftList();
                     displayTruckingList();
+                    insertToEmployeeArray();
 
                     if(plant == 'Bravo'){
                         plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
@@ -137,8 +138,20 @@
             document.getElementById('header_form').innerHTML = "<h4><strong>PLANT LINE UP</strong></h4>";
             console.log("no data"); 
         }
-
     });
+
+    function insertToEmployeeArray(){
+
+        var employee_array = [];
+
+        firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            listSnapshot.forEach(function(listChildSnapshot){
+                employee_array.push(listChildSnapshot.val().employee_name);
+            });
+
+            $('.employees').autocomplete({source: employee_array});
+        });
+    }
 
     function displayForkliftList(){
 
@@ -147,8 +160,7 @@
         firebase.database().ref('forklift_list/'+plant).once('value', function(forkliftSnapshot){
             forkliftSnapshot.forEach(function(forkliftChildSnapshot){
 
-                // console.log(forkliftChildSnapshot.val());
-                forkliftTbody += "<tr><td class='col-md-3' style='text-align: center;'><strong>" + forkliftChildSnapshot.val().item + "</strong></td><input type='hidden' name='hidden_forklift[]' value='" + forkliftChildSnapshot.val().item + "'><td class='col-md-4'><input type='text' name='forklift_operator_name[]' class='form-control input_type'></td><td class='col-md-5'><input type='text' name='forklift_comment[]' class='form-control input_type'></td></tr>";
+                forkliftTbody += "<tr><td class='col-md-3' style='text-align: center;'><strong>" + forkliftChildSnapshot.val().item + "</strong></td><input type='hidden' name='hidden_forklift[]' value='" + forkliftChildSnapshot.val().item + "'><td class='col-md-4'><input type='text' name='forklift_operator_name[]' class='form-control input_type employees'></td><td class='col-md-5'><input type='text' name='forklift_comment[]' class='form-control input_type'></td></tr>";
             });
 
             document.getElementById('forkliftList').innerHTML = forkliftTbody;
@@ -162,7 +174,7 @@
         firebase.database().ref('trucking_list/'+plant).once('value', function(truckingSnapshot){
             truckingSnapshot.forEach(function(truckingChildSnapshot){
 
-                truckingTbody += "<tr style='text-align: center;'><td><strong>" + truckingChildSnapshot.val().item + "</strong></td><input type='hidden' name='hidden_trucking[]' value='" + truckingChildSnapshot.val().item + "'><td><textarea name='driver[]' rows='2' class='form-control input_type'></textarea></td><td><textarea name='pahinante1[]'rows='2' class='form-control input_type'></textarea></td><td><textarea name='pahinante2[]'rows='2' class='form-control input_type'></textarea></td><td><textarea name='trucking_reason[]' rows='2' class='form-control input_type'></textarea></td></tr>";
+                truckingTbody += "<tr style='text-align: center;'><td><strong>" + truckingChildSnapshot.val().item + "</strong></td><input type='hidden' name='hidden_trucking[]' value='" + truckingChildSnapshot.val().item + "'><td><textarea name='driver[]' rows='2' class='form-control input_type employees'></textarea></td><td><textarea name='pahinante1[]'rows='2' class='form-control input_type employees'></textarea></td><td><textarea name='pahinante2[]'rows='2' class='form-control input_type employees'></textarea></td><td><textarea name='trucking_reason[]' rows='2' class='form-control input_type'></textarea></td></tr>";
             });
 
             document.getElementById('truckingList').innerHTML = truckingTbody;
@@ -628,6 +640,9 @@
 .input_type{
     text-transform: uppercase;
 }
+.header_line{
+    text-align: center;
+}
 </style>
 </head>
 <body>
@@ -636,7 +651,6 @@
             <div class="toggle-nav">
             <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
             </div>
-
             <!--logo start-->
 
             <!--logo end-->
@@ -744,6 +758,9 @@
                                 <div class="col-md-2">
                                     <input type="date" name="date_selected" id="date_selected" class="form-control" required>
                                 </div>
+                                <div class="col-md-9">
+                                    <button type="button" class="btn btn-md btn-primary pull-right" onclick="window.location.href='employee_form.html'"><span class="fa fa-plus"></span> <strong>Add Employee</strong></button>
+                                </div>
                             </div>
                         </header>
                         <div class="panel-body">
@@ -772,20 +789,20 @@
                                                 <div class="col-md-12"> 
                                                     <table id="office_table" align="center">
                                                         <tr>
-                                                            <td class="col-md-7">
+                                                            <td class="col-md-7 header_line">
                                                                 <label for="employee_name">Name</label>
                                                             </td>
-                                                            <td class="col-md-1">
+                                                            <td class="col-md-1 header_line">
                                                                 <label for="employee_timein">Time In</label>
                                                             </td>
-                                                            <td class="col-md-1">
+                                                            <td class="col-md-1 header_line">
                                                                 <label for="employee_timeout">Time Out (Yesterday)</label>
                                                             </td>
                                                             <td class="col-md-1"></td>
                                                         </tr>
                                                         <tr id="office_row1" style="text-align: center;">
                                                             <td>
-                                                                <input type="text" name="employee_name[]" class="form-control input_type">
+                                                                <input type="text" name="employee_name[]" class="form-control input_type employees">
                                                             </td>
                                                             <td>
                                                                 <input type="time" name="employee_timein[]" class="form-control input_type">
@@ -829,16 +846,16 @@
                                                                         <div class="col-md-12"> 
                                                                             <table id="plant_table" align="center">
                                                                                 <tr>
-                                                                                    <td class="col-md-2">
+                                                                                    <td class="col-md-2 header_line">
                                                                                         <label for="plant_employee_name">Name</label>
                                                                                     </td>
-                                                                                    <td class="col-md-4">
+                                                                                    <td class="col-md-4 header_line">
                                                                                         <label for="plant_comment">Comment</label>
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr id="plant_employee_row1" style="text-align: center;">
                                                                                     <td>
-                                                                                        <input type="text" name="plant_employee_name[]" class="form-control input_type">
+                                                                                        <input type="text" name="plant_employee_name[]" class="form-control input_type employees">
                                                                                     </td>
                                                                                     <td>
                                                                                         <textarea name="plant_comment[]" class="form-control input_type" rows="2"></textarea>
@@ -867,16 +884,16 @@
                                                                        <div class="col-md-12"> 
                                                                             <table id="motorpool_table" align="center">
                                                                                 <tr>
-                                                                                    <td class="col-md-2">
+                                                                                    <td class="col-md-2 header_line">
                                                                                         <label for="motorpool_employee_name">Name</label>
                                                                                     </td>
-                                                                                    <td class="col-md-4">
+                                                                                    <td class="col-md-4 header_line">
                                                                                         <label for="motorpool_comment">Comment</label>
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr id="motorpool_employee_row1" style="text-align: center;">
                                                                                     <td>
-                                                                                        <input type="text" name="motorpool_employee_name[]" class="form-control input_type">
+                                                                                        <input type="text" name="motorpool_employee_name[]" class="form-control input_type employees">
                                                                                     </td>
                                                                                     <td>
                                                                                         <textarea name="motorpool_comment[]" class="form-control input_type" rows="2"></textarea>
@@ -905,16 +922,16 @@
                                                                         <div class="col-md-12"> 
                                                                             <table id="trucking_table" align="center">
                                                                                 <tr>
-                                                                                    <td class="col-md-2">
+                                                                                    <td class="col-md-2 header_line">
                                                                                         <label for="trucking_employee_name">Name</label>
                                                                                     </td>
-                                                                                    <td class="col-md-4">
+                                                                                    <td class="col-md-4 header_line">
                                                                                         <label for="trucking_comment">Comment</label>
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr id="trucking_employee_row1" style="text-align: center;">
                                                                                     <td>
-                                                                                        <input type="text" name="trucking_employee_name[]" class="form-control input_type">
+                                                                                        <input type="text" name="trucking_employee_name[]" class="form-control input_type employees">
                                                                                     </td>
                                                                                     <td>
                                                                                         <textarea name="trucking_comment[]" class="form-control input_type" rows="2"></textarea>
@@ -960,13 +977,13 @@
                                                                 <div class="col-md-12"> 
                                                                     <table id="new_employee_table" align="center">
                                                                         <tr>
-                                                                            <td class="col-md-10">
+                                                                            <td class="col-md-10 header_line">
                                                                                 <label for="new_employee_name">Name</label>
                                                                             </td>
                                                                         </tr>
                                                                         <tr id="new_employee_row1" style="text-align: center;">
                                                                             <td>
-                                                                                <input type="text" name="new_employee_name[]" class="form-control input_type">
+                                                                                <input type="text" name="new_employee_name[]" class="form-control input_type employees">
                                                                             </td>
                                                                             <td class="col-md-5">
                                                                                 <button type="button" onclick="add_employee_row('new_employee');" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
@@ -992,13 +1009,13 @@
                                                                 <div class="col-md-offset-2 col-md-10"> 
                                                                     <table id="machine1_table">
                                                                         <tr>
-                                                                            <td class="col-md-7">Name</td>
-                                                                            <td class="col-md-4">Position</td>
+                                                                            <td class="col-md-7 header_line">Name</td>
+                                                                            <td class="col-md-4 header_line">Position</td>
                                                                             <td class="col-md-1"></td>
                                                                         </tr>
                                                                         <tr id="machine1_row1">
                                                                             <td>
-                                                                                <input type="text" name="machine1_name[]" class="form-control input_type">
+                                                                                <input type="text" name="machine1_name[]" class="form-control input_type employees">
                                                                             </td>
                                                                             <td>
                                                                                 <input type="text" name="machine1_position[]" class="form-control input_type">
@@ -1027,13 +1044,13 @@
                                                                 <div class="col-md-offset-2 col-md-10"> 
                                                                     <table id="machine3_table">
                                                                         <tr>
-                                                                            <td class="col-md-7">Name</td>
-                                                                            <td class="col-md-4">Position</td>
+                                                                            <td class="col-md-7 header_line">Name</td>
+                                                                            <td class="col-md-4 header_line">Position</td>
                                                                             <td class="col-md-1"></td>
                                                                         </tr>
                                                                         <tr id="machine3_row1">
                                                                             <td>
-                                                                                <input type="text" name="machine3_name[]" class="form-control input_type">
+                                                                                <input type="text" name="machine3_name[]" class="form-control input_type employees">
                                                                             </td>
                                                                             <td>
                                                                                 <input type="text" name="machine3_position[]" class="form-control input_type">
@@ -1062,21 +1079,21 @@
                                                                 <div class="col-md-12"> 
                                                                     <table id="nonskid1_table" align="center">
                                                                         <tr>
-                                                                            <td class="col-md-6">
+                                                                            <td class="col-md-6 header_line">
                                                                                 <label for="nonskid1_name">Name</label>
                                                                             </td>
                                                                             <td class="col-md-1"></td>
-                                                                            <td class="col-md-5">Helper</td>
+                                                                            <td class="col-md-5 header_line">Helper</td>
                                                                         </tr>
                                                                         <tr id="nonskid1_row1">
                                                                             <td>
-                                                                                <input type="text" name="nonskid1_name[]" class="form-control input_type">
+                                                                                <input type="text" name="nonskid1_name[]" class="form-control input_type employees">
                                                                             </td>
                                                                             <td>
                                                                                 <button type="button" onclick="add_employee_row('nonskid1');" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
                                                                             </td>
                                                                             <td>
-                                                                                <input type="text" id="nonskid1_helper_name" class="form-control input_type">
+                                                                                <input type="text" id="nonskid1_helper_name" class="form-control input_type employees">
                                                                             </td>
                                                                         </tr>                                            
                                                                     </table>
@@ -1099,21 +1116,21 @@
                                                                 <div class="col-md-12"> 
                                                                     <table id="nonskid2_table" align="center">
                                                                         <tr>
-                                                                            <td class="col-md-6">
+                                                                            <td class="col-md-6 header_line">
                                                                                 <label for="nonskid2_name">Name</label>
                                                                             </td>
                                                                             <td class="col-md-1"></td>
-                                                                            <td class="col-md-5">Helper</td>
+                                                                            <td class="col-md-5 header_line">Helper</td>
                                                                         </tr>
                                                                         <tr id="nonskid2_row1">
                                                                             <td>
-                                                                                <input type="text" name="nonskid2_name[]" class="form-control input_type">
+                                                                                <input type="text" name="nonskid2_name[]" class="form-control input_type employees">
                                                                             </td>
                                                                             <td>
                                                                                 <button type="button" onclick="add_employee_row('nonskid2');" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
                                                                             </td>
                                                                             <td>
-                                                                                <input type="text" id="nonskid2_helper_name" class="form-control input_type">
+                                                                                <input type="text" id="nonskid2_helper_name" class="form-control input_type employees">
                                                                             </td>
                                                                         </tr>
                                                                     </table>
@@ -1136,21 +1153,21 @@
                                                                 <div class="col-md-12"> 
                                                                     <table id="nonskid3_table" align="center">
                                                                         <tr>
-                                                                            <td class="col-md-6">
+                                                                            <td class="col-md-6 header_line">
                                                                                 <label for="nonskid3_name">Name</label>
                                                                             </td>
                                                                             <td class="col-md-1"></td>
-                                                                            <td class="col-md-5">Helper</td>
+                                                                            <td class="col-md-5 header_line">Helper</td>
                                                                         </tr>
                                                                         <tr id="nonskid3_row1">
                                                                             <td>
-                                                                                <input type="text" name="nonskid3_name[]" class="form-control input_type">
+                                                                                <input type="text" name="nonskid3_name[]" class="form-control input_type employees">
                                                                             </td>
                                                                             <td>
                                                                                 <button type="button" onclick="add_employee_row('nonskid3');" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
                                                                             </td>
                                                                             <td>
-                                                                                <input type="text" id="nonskid3_helper_name" class="form-control input_type">
+                                                                                <input type="text" id="nonskid3_helper_name" class="form-control input_type employees">
                                                                             </td>
                                                                         </tr>
                                                                     </table>
@@ -1173,21 +1190,21 @@
                                                                 <div class="col-md-12"> 
                                                                     <table id="nonskid4_table" align="center">
                                                                         <tr>
-                                                                            <td class="col-md-6">
+                                                                            <td class="col-md-6 header_line">
                                                                                 <label for="nonskid4_name">Name</label>
                                                                             </td>
                                                                             <td class="col-md-1"></td>
-                                                                            <td class="col-md-5">Helper</td>
+                                                                            <td class="col-md-5 header_line">Helper</td>
                                                                         </tr>
                                                                         <tr id="nonskid4_row1">
                                                                             <td>
-                                                                                <input type="text" name="nonskid4_name[]" class="form-control input_type">
+                                                                                <input type="text" name="nonskid4_name[]" class="form-control input_type employees">
                                                                             </td>
                                                                             <td>
                                                                                 <button type="button" onclick="add_employee_row('nonskid4');" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
                                                                             </td>
                                                                             <td>
-                                                                                <input type="text" id="nonskid4_helper_name" class="form-control input_type">
+                                                                                <input type="text" id="nonskid4_helper_name" class="form-control input_type employees">
                                                                             </td>
                                                                         </tr>
                                                                     </table>
@@ -1219,17 +1236,17 @@
                                                             <div class="row">
                                                                 <table id="tagapukpok_table" align="center">
                                                                     <tr>
-                                                                        <td class="col-md-6">
+                                                                        <td class="col-md-6 header_line">
                                                                             <label for="tagapukpok_name">Name</label>
                                                                         </td>
-                                                                        <td class="col-md-5">
+                                                                        <td class="col-md-5 header_line">
                                                                             <label for="tagapukpok_position">Position</label>
                                                                         </td>
                                                                         <td class="col-md-1"></td>
                                                                     </tr>
                                                                     <tr id="tagapukpok_row1" style="text-align: center;">
                                                                         <td>
-                                                                            <input type="text" name="tagapukpok_name[]" class="form-control input_type">
+                                                                            <input type="text" name="tagapukpok_name[]" class="form-control input_type employees">
                                                                         </td>
                                                                         <td>
                                                                             <input type="text" name="tagapukpok_position[]" class="form-control input_type">
@@ -1256,17 +1273,17 @@
                                                             <div class="row">
                                                                 <table id="checker_table" align="center">
                                                                     <tr>
-                                                                        <td class="col-md-6">
+                                                                        <td class="col-md-6 header_line">
                                                                             <label for="checker_name">Name</label>
                                                                         </td>
-                                                                        <td class="col-md-5">
+                                                                        <td class="col-md-5 header_line">
                                                                             <label for="checker_position">Position</label>
                                                                         </td>
                                                                         <td class="col-md-1"></td>
                                                                     </tr>
                                                                     <tr id="checker_row1" style="text-align: center;">
                                                                         <td>
-                                                                            <input type="text" name="checker_name[]" class="form-control input_type">
+                                                                            <input type="text" name="checker_name[]" class="form-control input_type employees">
                                                                         </td>
                                                                         <td>
                                                                             <input type="text" name="checker_position[]" class="form-control input_type">
@@ -1305,13 +1322,13 @@
                                                             <div class="row">
                                                                 <table id="kamador_table" align="center">
                                                                     <tr>
-                                                                        <td class="col-md-5">
+                                                                        <td class="col-md-5 header_line">
                                                                             <label for="kamador_name">Name</label>
                                                                         </td>
                                                                         <td class="col-md-1"></td>
                                                                     </tr>
                                                                     <tr id="kamador_row1" style="text-align: center;">
-                                                                        <td><input type="text" name="kamador_name[]" class="form-control input_type"></td>
+                                                                        <td><input type="text" name="kamador_name[]" class="form-control input_type employees"></td>
                                                                         <td>
                                                                             <button type="button" onclick="add_employee_row('kamador');" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
                                                                         </td>
@@ -1334,13 +1351,13 @@
                                                             <div class="row">
                                                                 <table id="mechanic_table" align="center">
                                                                     <tr>
-                                                                        <td class="col-md-5">
+                                                                        <td class="col-md-5 header_line">
                                                                             <label for="mechanic_name">Name</label>
                                                                         </td>
                                                                         <td class="col-md-1"></td>
                                                                     </tr>
                                                                     <tr id="mechanic_row1" style="text-align: center;">
-                                                                        <td><input type="text" name="mechanic_name[]" class="form-control input_type"></td>
+                                                                        <td><input type="text" name="mechanic_name[]" class="form-control input_type employees"></td>
                                                                         <td>
                                                                             <button type="button" onclick="add_employee_row('mechanic');" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
                                                                         </td>
@@ -1363,13 +1380,13 @@
                                                             <div class="row">
                                                                 <table id="loader_table" align="center">
                                                                     <tr>
-                                                                        <td class="col-md-5">
+                                                                        <td class="col-md-5 header_line">
                                                                             <label for="loader_name">Name</label>
                                                                         </td>
                                                                         <td class="col-md-1"></td>
                                                                     </tr>
                                                                     <tr id="loader_row1" style="text-align: center;">
-                                                                        <td><input type="text" name="loader_name[]" class="form-control input_type"></td>
+                                                                        <td><input type="text" name="loader_name[]" class="form-control input_type employees"></td>
                                                                         <td>
                                                                             <button type="button" onclick="add_employee_row('loader');" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
                                                                         </td>
@@ -1392,16 +1409,16 @@
                                                             <div class="row">
                                                                 <table id="others_table" align="center">
                                                                     <tr>
-                                                                        <td class="col-md-6">
+                                                                        <td class="col-md-6 header_line">
                                                                             <label for="others_name">Name</label>
                                                                         </td>
-                                                                        <td class="col-md-5">
+                                                                        <td class="col-md-5 header_line">
                                                                             <label for="others_position">Position</label>
                                                                         </td>
                                                                         <td class="col-md-1"></td>
                                                                     </tr>
                                                                     <tr id="other_row1" style="text-align: center;">
-                                                                        <td><input type="text" name="others_name[]" class="form-control input_type"></td>
+                                                                        <td><input type="text" name="others_name[]" class="form-control input_type employees"></td>
                                                                         <td><input type="text" name="others_position[]" class="form-control input_type"></td>
                                                                         <td>
                                                                             <button type="button" onclick="add_employee_row('others');" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
@@ -1429,11 +1446,11 @@
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
-                                                                <th class="col-md-2" style="text-align: center;">TRUCK NO.</th>
-                                                                <th class="col-md-2" style="text-align: center;">DRIVER</th>
-                                                                <th class="col-md-2" style="text-align: center;">PAHINANTE 1</th>
-                                                                <th class="col-md-2" style="text-align: center;">PAHINANTE 2</th>
-                                                                <th class="col-md-3" style="text-align: center;">COMMENT</th>
+                                                                <th class="col-md-2 header_line">TRUCK NO.</th>
+                                                                <th class="col-md-2 header_line">DRIVER</th>
+                                                                <th class="col-md-2 header_line">PAHINANTE 1</th>
+                                                                <th class="col-md-2 header_line">PAHINANTE 2</th>
+                                                                <th class="col-md-3 header_line">COMMENT</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody id="truckingList">
@@ -1457,9 +1474,9 @@
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
-                                                                <th class="col-md-2" style="text-align: center;">FORKLIFT NO.</th>
-                                                                <th class="col-md-2" style="text-align: center;">OPERATOR</th>
-                                                                <th class="col-md-2" style="text-align: center;">COMMENT</th>
+                                                                <th class="col-md-2 header_line">FORKLIFT NO.</th>
+                                                                <th class="col-md-2 header_line">OPERATOR</th>
+                                                                <th class="col-md-2 header_line">COMMENT</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody id="forkliftList"></tbody>
@@ -1493,15 +1510,15 @@
                                                                 <div class="col-md-12"> 
                                                                     <table id="guard_day_table">
                                                                         <tr>
-                                                                            <td class="col-md-7">
+                                                                            <td class="col-md-7 header_line">
                                                                                 <label for="guard_day_name">Name</label>
                                                                             </td>
-                                                                            <td class="col-md-4">Position</td>
+                                                                            <td class="col-md-4 header_line">Position</td>
                                                                             <td class="col-md-1"></td>
                                                                         </tr>
                                                                         <tr id="guard_day_row1">
                                                                             <td>
-                                                                                <input type="text" name="guard_day_name[]" class="form-control input_type">
+                                                                                <input type="text" name="guard_day_name[]" class="form-control input_type employees">
                                                                             </td>
                                                                             <td>
                                                                                 <input type="text" name="guard_day_position[]" class="form-control input_type">
@@ -1526,15 +1543,15 @@
                                                                 <div class="col-md-12"> 
                                                                     <table id="guard_night_table">
                                                                         <tr>
-                                                                            <td class="col-md-7">
+                                                                            <td class="col-md-7 header_line">
                                                                                 <label for="guard_night_name">Name</label>
                                                                             </td>
-                                                                            <td class="col-md-4">Position</td>
+                                                                            <td class="col-md-4 header_line">Position</td>
                                                                             <td class="col-md-1"></td>
                                                                         </tr>
                                                                         <tr id="guard_night_row1">
                                                                             <td>
-                                                                                <input type="text" name="guard_night_name[]" class="form-control input_type">
+                                                                                <input type="text" name="guard_night_name[]" class="form-control input_type employees">
                                                                             </td>
                                                                             <td>
                                                                                 <input type="text" name="guard_night_position[]" class="form-control input_type">
