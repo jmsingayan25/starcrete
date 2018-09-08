@@ -159,6 +159,7 @@
         var yesterdayDate = currentDate1.setDate(currentDate1.getDate() - 1);
         yesterdayDate = new Date(yesterdayDate).toLocaleDateString('en');
         $(".class_yesterday").text(yesterdayDate);
+        $(".class_today").text(passcurrentDate);
 
         document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <br> Result: <span id='id_record'></span> <br> <span id='id_schedule'></span></th>";
 
@@ -835,7 +836,7 @@
                                                                         <thead>
                                                                             <tr class="header_line">
                                                                                 <th class="col-md-3" style="text-align: center;">NAME</th>
-                                                                                <th class="col-md-3" style="text-align: center;">TIME IN</th>
+                                                                                <th class="col-md-3" style="text-align: center;">TIME IN  (<span class='class_today'></span>)</th>
                                                                                 <th class="col-md-3" style="text-align: center;">TIME OUT (<span class='class_yesterday'></span>)</th>
                                                                             </tr>
                                                                         </thead>
@@ -1038,7 +1039,7 @@
                                                         <thead>
                                                             <tr class="header_line">
                                                                 <th class="col-md-3" style="text-align: center;">NAME</th>
-                                                                <th class="col-md-3" style="text-align: center;">TIME IN</th>
+                                                                <th class="col-md-3" style="text-align: center;">TIME IN  (<span class='class_today'></span>)</th>
                                                                 <th class="col-md-3" style="text-align: center;">TIME OUT (<span class='class_yesterday'></span>)</th>
                                                             </tr>
                                                         </thead>
