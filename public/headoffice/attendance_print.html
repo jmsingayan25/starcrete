@@ -106,11 +106,13 @@
     var myTableComment = "";
     var yesterdayDate = currentDate1.setDate(currentDate1.getDate() - 1);
     yesterdayDate = new Date(yesterdayDate).toLocaleDateString('en');
+    todayDate = new Date(currentDate).toLocaleDateString('en');
     
     $(document).ready(function(){
 
         // document.getElementById('id_yesterday').innerHTML = yesterdayDate;
         $(".class_yesterday").text(yesterdayDate);
+        $(".class_today").text(todayDate);
 
         document.getElementById('page_header').innerHTML = plant + " ATTENDANCE";
 
@@ -355,12 +357,15 @@
 
             if(headofficeSnapshot.val() != null){
 
+                $('.no_data_text').hide();
+                $('.office_table').show();
+
                 var officeRow = "";
                 var loopbookRow = "";
 
                 firebase.database().ref('attendance/Head Office/'+currentDate+'/headoffice').once('value', function(noteSnapshot){
 
-                    document.getElementById('note_id').innerHTML = "<tr><td colspan='2'>" + noteSnapshot.val().note + "</td></tr>";
+                    document.getElementById('note_id').innerHTML = "<td colspan='2'>" + noteSnapshot.val().note + "</td>";
                 });
 
                 firebase.database().ref('attendance/Head Office/'+currentDate+'/headoffice/office').once('value', function(officeSnapshot){
@@ -392,7 +397,6 @@
                             officeRow += "<td>" + employee_remarks + "</td></tr>";
 
                         }
-                    
                     });
 
                     document.getElementById('office_list').innerHTML = officeRow;
@@ -417,7 +421,7 @@
                             loopbookRow += "<tr><td>" + employee_name + "</td>";
                             loopbookRow += "<td>" + employee_timein + "</td>";
                             loopbookRow += "<td>" + employee_timeout + "</td>";
-                            loopbookRow += "<td>" + employee_remarks + "</td><td>LATE</td></tr>";
+                            loopbookRow += "<td>" + employee_remarks + "</td></tr>";
 
                         }else{
 
@@ -427,12 +431,13 @@
                             loopbookRow += "<td>" + employee_remarks + "</td></tr>";
 
                         }
-                        
-
                     });
 
                     document.getElementById('loopbook_list').innerHTML = loopbookRow;
                 });
+            }else{
+                $('.no_data_text').show();
+                $('.office_table').hide();
             }
         });
     });
@@ -442,7 +447,8 @@
 @media print{
     table{
         font-size: 10px;
-        white-space: nowrap;
+        width:100%; 
+        table-layout: fixed;
     }
     table td{
         word-wrap: break-word;
@@ -455,6 +461,11 @@
     .badge {
         padding: 2px 6px;
         border: 1px solid #000;
+    }
+
+    tr td{
+      padding: 2px !important;
+      margin: 2px !important;
     }
 }
 
@@ -469,10 +480,10 @@
                     <h3 class="page-header" id="page_header"></h3>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <section class="panel">
-                        <table class="table table-bordered table-stripped table-condensed" cellpadding="0" cellspacing="0">
+            <section class="panel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered table-condensed" cellpadding="0" cellspacing="0">
                             <tbody>
                                 <tr id="id_date"></tr>
                                 <tr>
@@ -491,7 +502,7 @@
                                             <tbody>
                                                 <tr>
                                                     <th class="col-md-3" style="text-align: center;">NAME</th>
-                                                    <th class="col-md-3" style="text-align: center;">TIME IN</th>
+                                                    <th class="col-md-3" style="text-align: center;">TIME IN  (<span class='class_today'></span>)</th>
                                                     <th class="col-md-3" style="text-align: center;">TIME OUT (<span class='class_yesterday'></span>)</th>
                                                 </tr>
                                             </tbody>
@@ -553,12 +564,10 @@
                             </tbody>
                             <tbody id="row_comment"></tbody>
                         </table>
-                    </section>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <section class="panel">
+                <div class="row">
+                    <div class="col-md-12">
                         <table class="table table-bordered">
                             <tbody>
                                 <tr>
@@ -567,7 +576,12 @@
                                     </td>
                                 </tr>
                             </tbody>
-                            <tbody>
+                            <tbody class="no_data_text">
+                                <tr>
+                                    <td colspan="2" style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h6><p class='text-muted'>No data found</p></h6></td>
+                                </tr>
+                            </tbody>
+                            <tbody class="office_table">
                                 <tr>
                                     <td>
                                        <table class="table table-bordered table-stripped">
@@ -584,7 +598,7 @@
                                             </thead>
                                             <tbody id="office_list">
                                                 <tr>
-                                                    <td colspan="4" style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td>
+                                                    <td colspan="4" style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h6><p class='text-muted'>No data found</p></h6></td>
                                                 </tr>
                                             </tbody>
                                         </table> 
@@ -604,27 +618,23 @@
                                             </thead>
                                             <tbody id="loopbook_list">
                                                 <tr>
-                                                    <td colspan="4" style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td>
+                                                    <td colspan="4" style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h6><p class='text-muted'>No data found</p></h6></td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </td>
                                 </tr>
-                            </tbody>
-                            <tbody>
                                 <tr>
                                     <td colspan="2"><strong>NOTE</strong></td>
                                 </tr>
-                            </tbody>
-                            <tbody id="note_id">
-                                <tr>
-                                    <td colspan="2" style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td>     
+                                <tr id="note_id">
+                                    <td colspan="2" style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h6><p class='text-muted'>No data found</p></h6></td>
                                 </tr>
                             </tbody>
                         </table>
-                    </section>
+                    </div>
                 </div>
-            </div>
+            </section>
         </section>
     </div>
 </body>

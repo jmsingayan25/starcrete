@@ -441,14 +441,26 @@
 @media print{
     table{
         font-size: 10px;
+        width:100%; 
+        table-layout: fixed;
     }
     #printPageButton{
         display: none;
+    }
+    table td{
+        word-wrap: break-word;
+
     }
     .badge{
         padding: 2px 6px;
         border: 1px solid #000;
     }
+
+    tr td{
+      padding: 2px !important;
+      margin: 2px !important;
+    }
+}
 </style>
 </head>
 <body>

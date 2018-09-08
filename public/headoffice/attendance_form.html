@@ -121,7 +121,7 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
-        document.getElementById('header_date').innerHTML = "Attendance Form for " + currentDate;
+        document.getElementById('header_date').innerHTML = "Attendance Form for " + currentDate + "<button type='button' class='btn btn-md btn-primary pull-right' onclick=\"window.location.href='employee_form.html?plant=Bravo'\"><span class='fa fa-list'></span> <strong>List of Employees</strong></button>";
 
         document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-home'></i><a href='attendance.html?plant="+plant+"'>Attendance</a></li><li><i class='fa fa-file'></i><a href='attendance_form.html?plant="+plant+"'>Head Office Attendance Form</a></li>";
     });
@@ -340,7 +340,7 @@
                     <form onsubmit="if(confirm('Proceed?')){ submitForm(); }else{ event.preventDefault(); }">
                         <div class="col-md-offset-2 col-md-8">
                             <section class="panel">
-                                <header class="panel-heading" id="header_date"></header>
+                                <header class="panel-heading" id="header_date" style="padding-top: 10px; padding-bottom: 10px;"></header>
                                 <div class="panel-body">
                                     <div class="row">
                                         <div class="col-md-12">
