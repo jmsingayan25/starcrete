@@ -106,12 +106,24 @@
     var myTableComment = "";
     var yesterdayDate = currentDate1.setDate(currentDate1.getDate() - 1);
     yesterdayDate = new Date(yesterdayDate).toLocaleDateString('en');
+    yesterdayFullDate = new Date(yesterdayDate).toLocaleDateString('en', option);
     todayDate = new Date(currentDate).toLocaleDateString('en');
     
     $(document).ready(function(){
+        
+        firebase.database().ref('attendance/'+plant+'/'+yesterdayFullDate).once('value', function(yesterdayData){
 
-        // document.getElementById('id_yesterday').innerHTML = yesterdayDate;
-        $(".class_yesterday").text(yesterdayDate);
+            if(yesterdayData.val() != null){
+
+                $(".class_yesterday").text(yesterdayDate);
+            }else{
+
+                var beforeYesterdayDate = currentDate1.setDate(currentDate1.getDate() - 1);
+                beforeYesterdayDate = new Date(beforeYesterdayDate).toLocaleDateString('en');
+                $(".class_yesterday").text(beforeYesterdayDate);
+            }
+        });
+
         $(".class_today").text(todayDate);
 
         document.getElementById('page_header').innerHTML = plant + " ATTENDANCE";

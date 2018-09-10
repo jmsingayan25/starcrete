@@ -89,12 +89,7 @@
     var date_option = {year: "numeric", month: "long", day: "numeric"}
     var currentDate = new Date(getCurrentDate).toLocaleDateString('en', date_option);
     var currentDate1 = new Date(getCurrentDate);
-    var optionTable = "";
-
-    var yesterdayDate = currentDate1.setDate(currentDate1.getDate() - 1);
-    yesterdayDate = new Date(yesterdayDate).toLocaleDateString('en');
-    
-    
+    var optionTable = "";    
 
     $(document).ready(function(){
 
@@ -168,7 +163,24 @@
 
                 document.getElementById('id_table_view').innerHTML = optionTable;
 
-                document.getElementById('id_yesterday').innerHTML = yesterdayDate;
+                var yesterdayDate = currentDate1.setDate(currentDate1.getDate() - 1);
+                yesterdayDate = new Date(yesterdayDate).toLocaleDateString('en');
+                yesterdayFullDate = new Date(yesterdayDate).toLocaleDateString('en', option);
+                
+                firebase.database().ref('attendance/'+plant+'/'+yesterdayFullDate).once('value', function(yesterdayData){
+
+                    if(yesterdayData.val() != null){
+
+                        document.getElementById('id_yesterday').innerHTML = yesterdayDate;
+                    }else{
+
+                        var beforeYesterdayDate = currentDate1.setDate(currentDate1.getDate() - 1);
+                        beforeYesterdayDate = new Date(beforeYesterdayDate).toLocaleDateString('en');
+                        document.getElementById('id_yesterday').innerHTML = beforeYesterdayDate;
+                    }
+                });
+
+                
             });
 
         }else if(option == "office_note"){
