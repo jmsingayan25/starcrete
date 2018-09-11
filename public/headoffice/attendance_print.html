@@ -146,8 +146,8 @@
                     document.getElementById('id_schedule').innerHTML = "Schedule: " + schedSnapshot.val().schedule;
                 });
 
-                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/office').once('value', function(officeSnapshot){
-                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/new_employee').once('value', function(newEmployeeSnapshot){
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/office').orderByChild('employee_name').once('value', function(officeSnapshot){
+                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/new_employee').orderByChild('employee_name').once('value', function(newEmployeeSnapshot){
 
                         officeSnapshot.forEach(function(officeChildSnapshot){
 
@@ -166,14 +166,14 @@
                     });
                 });
 
-                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid1/employee').once('value', function(nonskid1Snapshot){
-                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid2/employee').once('value', function(nonskid2Snapshot){
-                        firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid3/employee').once('value', function(nonskid3Snapshot){
-                            firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid4/employee').once('value', function(nonskid4Snapshot){
-                                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid1/helper').once('value', function(nonskid1HelperSnapshot){
-                                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid2/helper').once('value', function(nonskid2HelperSnapshot){
-                                        firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid3/helper').once('value', function(nonskid3HelperSnapshot){
-                                            firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid4/helper').once('value', function(nonskid4HelperSnapshot){
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid1/employee').orderByChild('employee_name').once('value', function(nonskid1Snapshot){
+                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid2/employee').orderByChild('employee_name').once('value', function(nonskid2Snapshot){
+                        firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid3/employee').orderByChild('employee_name').once('value', function(nonskid3Snapshot){
+                            firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid4/employee').orderByChild('employee_name').once('value', function(nonskid4Snapshot){
+                                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid1/helper').orderByChild('employee_name').once('value', function(nonskid1HelperSnapshot){
+                                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid2/helper').orderByChild('employee_name').once('value', function(nonskid2HelperSnapshot){
+                                        firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid3/helper').orderByChild('employee_name').once('value', function(nonskid3HelperSnapshot){
+                                            firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid4/helper').orderByChild('employee_name').once('value', function(nonskid4HelperSnapshot){
 
                                                 myTableNonskid += "<tr><td colspan='1'>";
 
@@ -288,9 +288,9 @@
                     });
                 });
 
-                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/absent/plant').once('value', function(plantSnapshot){
-                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/absent/motorpool').once('value', function(motorpoolSnapshot){
-                        firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/absent/trucking').once('value', function(truckingSnapshot){
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/absent/plant').orderByChild('employee_name').once('value', function(plantSnapshot){
+                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/absent/motorpool').orderByChild('employee_name').once('value', function(motorpoolSnapshot){
+                        firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/absent/trucking').orderByChild('employee_name').once('value', function(truckingSnapshot){
 
                             plantCount = 0;
                             motorpoolCount = 0;
@@ -380,7 +380,7 @@
                     document.getElementById('note_id').innerHTML = "<td colspan='2'>" + noteSnapshot.val().note + "</td>";
                 });
 
-                firebase.database().ref('attendance/Head Office/'+currentDate+'/headoffice/office').once('value', function(officeSnapshot){
+                firebase.database().ref('attendance/Head Office/'+currentDate+'/headoffice/office').orderByChild('employee_name').once('value', function(officeSnapshot){
                     officeSnapshot.forEach(function(officeChildSnapshot){
 
                         var employee_name = officeChildSnapshot.val().employee_name;
@@ -396,14 +396,14 @@
 
                         if(employee_timein_seconds > timein_seconds){
 
-                            officeRow += "<tr><td>" + employee_name + "</td>";
+                            officeRow += "<tr class='header_line1'><td>" + employee_name + "</td>";
                             officeRow += "<td>" + employee_timein + "</td>";
                             officeRow += "<td>" + employee_timeout + "</td>";
                             officeRow += "<td>" + employee_remarks + "</td></tr>";
 
                         }else{
 
-                            officeRow += "<tr><td>" + employee_name + "</td>";
+                            officeRow += "<tr class='header_line1'><td>" + employee_name + "</td>";
                             officeRow += "<td>" + employee_timein + "</td>";
                             officeRow += "<td>" + employee_timeout + "</td>";
                             officeRow += "<td>" + employee_remarks + "</td></tr>";
@@ -414,7 +414,7 @@
                     document.getElementById('office_list').innerHTML = officeRow;
                 });
 
-                firebase.database().ref('attendance/Head Office/'+currentDate+'/headoffice/loopbook').once('value', function(loopbookSnapshot){
+                firebase.database().ref('attendance/Head Office/'+currentDate+'/headoffice/loopbook').orderByChild('employee_name').once('value', function(loopbookSnapshot){
                     loopbookSnapshot.forEach(function(loopbookChildSnapshot){
 
                         var employee_name = loopbookChildSnapshot.val().employee_name;
@@ -430,14 +430,14 @@
 
                         if(employee_timein_seconds > timein_seconds){
 
-                            loopbookRow += "<tr><td>" + employee_name + "</td>";
+                            loopbookRow += "<tr class='header_line1'><td>" + employee_name + "</td>";
                             loopbookRow += "<td>" + employee_timein + "</td>";
                             loopbookRow += "<td>" + employee_timeout + "</td>";
                             loopbookRow += "<td>" + employee_remarks + "</td></tr>";
 
                         }else{
 
-                            loopbookRow += "<tr><td>" + employee_name + "</td>";
+                            loopbookRow += "<tr class='header_line1'><td>" + employee_name + "</td>";
                             loopbookRow += "<td>" + employee_timein + "</td>";
                             loopbookRow += "<td>" + employee_timeout + "</td>";
                             loopbookRow += "<td>" + employee_remarks + "</td></tr>";
@@ -456,7 +456,17 @@
 
 </script>
 <style>
+.header_line th, .header_line1 td{
+    text-align: center;
+}
+
+@media all {
+    .page-break { display: none; }
+}
+
 @media print{
+
+    .page-break { display: block; page-break-before: always; }
     table{
         font-size: 10px;
         width:100%; 
@@ -514,7 +524,7 @@
                                             <tbody>
                                                 <tr>
                                                     <th class="col-md-3" style="text-align: center;">NAME</th>
-                                                    <th class="col-md-3" style="text-align: center;">TIME IN  (<span class='class_today'></span>)</th>
+                                                    <th class="col-md-3" style="text-align: center;">TIME IN (<span class='class_today'></span>)</th>
                                                     <th class="col-md-3" style="text-align: center;">TIME OUT (<span class='class_yesterday'></span>)</th>
                                                 </tr>
                                             </tbody>
@@ -578,6 +588,7 @@
                         </table>
                     </div>
                 </div>
+                <!-- <div class="page-break"></div> -->
                 <div class="row">
                     <div class="col-md-12">
                         <table class="table table-bordered">
@@ -587,23 +598,19 @@
                                         <strong>HEAD OFFICE ATTENDANCE</strong>
                                     </td>
                                 </tr>
-                            </tbody>
-                            <tbody class="no_data_text">
-                                <tr>
+                                <tr class="no_data_text">
                                     <td colspan="2" style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h6><p class='text-muted'>No data found</p></h6></td>
                                 </tr>
-                            </tbody>
-                            <tbody class="office_table">
-                                <tr>
+                                <tr class="office_table">
                                     <td>
                                        <table class="table table-bordered table-stripped">
                                             <thead>
                                                 <tr>
                                                     <th colspan="4">OFFICE</th>
                                                 </tr>
-                                                <tr>
+                                                <tr class="header_line">
                                                     <th class="col-md-7">NAME</th>
-                                                    <th class="col-md-2">TIME IN</th>
+                                                    <th class="col-md-2">TIME IN (<span class='class_today'></span>)</th>
                                                     <th class="col-md-2">TIME OUT (<span class='class_yesterday'></span>)</th>
                                                     <th class="col-md-1">REMARKS</th>
                                                 </tr>
@@ -621,9 +628,9 @@
                                                 <tr>
                                                     <th colspan="4">LOOPBOOK</th>
                                                 </tr>
-                                                <tr>
+                                                <tr class="header_line">
                                                     <th class="col-md-7">NAME</th>
-                                                    <th class="col-md-2">TIME IN</th>
+                                                    <th class="col-md-2">TIME IN (<span class='class_today'></span>)</th>
                                                     <th class="col-md-2">TIME OUT (<span class='class_yesterday'></span>)</th>
                                                     <th class="col-md-1">REMARKS</th>
                                                 </tr>

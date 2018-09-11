@@ -126,10 +126,10 @@
                     document.getElementById('id_schedule').innerHTML = "Schedule: " + schedSnapshot.val().schedule;
                 });
 
-                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/machine1').once('value', function(machine1Snapshot){
-                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/machine3').once('value', function(machine3Snapshot){
-                        firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/forklift_operator').once('value', function(forkliftSnapshot){
-                            firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/mechanic').once('value', function(mechanicSnapshot){
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/machine1').orderByChild('employee_name').once('value', function(machine1Snapshot){
+                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/machine3').orderByChild('employee_name').once('value', function(machine3Snapshot){
+                        firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/forklift_operator').orderByChild('employee_name').once('value', function(forkliftSnapshot){
+                            firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/mechanic').orderByChild('employee_name').once('value', function(mechanicSnapshot){
                         
                                 machine1Count = 0;
                                 machine3Count = 0;
@@ -194,14 +194,14 @@
                     });
                 });
 
-                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid1/employee').once('value', function(nonskid1Snapshot){
-                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid2/employee').once('value', function(nonskid2Snapshot){
-                        firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid3/employee').once('value', function(nonskid3Snapshot){
-                            firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid4/employee').once('value', function(nonskid4Snapshot){
-                                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid1/helper').once('value', function(nonskid1HelperSnapshot){
-                                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid2/helper').once('value', function(nonskid2HelperSnapshot){
-                                        firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid3/helper').once('value', function(nonskid3HelperSnapshot){
-                                            firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid4/helper').once('value', function(nonskid4HelperSnapshot){
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid1/employee').orderByChild('employee_name').once('value', function(nonskid1Snapshot){
+                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid2/employee').orderByChild('employee_name').once('value', function(nonskid2Snapshot){
+                        firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid3/employee').orderByChild('employee_name').once('value', function(nonskid3Snapshot){
+                            firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid4/employee').orderByChild('employee_name').once('value', function(nonskid4Snapshot){
+                                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid1/helper').orderByChild('employee_name').once('value', function(nonskid1HelperSnapshot){
+                                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid2/helper').orderByChild('employee_name').once('value', function(nonskid2HelperSnapshot){
+                                        firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid3/helper').orderByChild('employee_name').once('value', function(nonskid3HelperSnapshot){
+                                            firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid4/helper').orderByChild('employee_name').once('value', function(nonskid4HelperSnapshot){
 
                                                 myTableRow2 += "<tr><td>";
 
@@ -262,8 +262,8 @@
                     });
                 });
 
-                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/tagapukpok').once('value', function(tagapukpokSnapshot){
-                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/checker').once('value', function(checkerSnapshot){
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/tagapukpok').orderByChild('employee_name').once('value', function(tagapukpokSnapshot){
+                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/checker').orderByChild('employee_name').once('value', function(checkerSnapshot){
 
                         tagapukpokCount = 0;
                         checkerCount = 0;
@@ -298,8 +298,8 @@
                     });
                 });
 
-                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/kamador').once('value', function(kamadorSnapshot){
-                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/loader').once('value', function(loaderSnapshot){
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/kamador').orderByChild('employee_name').once('value', function(kamadorSnapshot){
+                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/loader').orderByChild('employee_name').once('value', function(loaderSnapshot){
                         
                         kamadorCount = 0;
                         loaderCount = 0;
@@ -333,10 +333,10 @@
                     });
                 });
 
-                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/absent/motorpool').once('value', function(absentMotorpoolSnapshot){
-                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/absent/plant').once('value', function(absentPlantSnapshot){
-                        firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/absent/trucking').once('value', function(absentTruckingSnapshot){
-                            firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/others').once('value', function(othersSnapshot){
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/absent/motorpool').orderByChild('employee_name').once('value', function(absentMotorpoolSnapshot){
+                    firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/absent/plant').orderByChild('employee_name').once('value', function(absentPlantSnapshot){
+                        firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/absent/trucking').orderByChild('employee_name').once('value', function(absentTruckingSnapshot){
+                            firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/others').orderByChild('employee_name').once('value', function(othersSnapshot){
 
                                 absentCount = 0;
                                 othersCount = 0;
