@@ -172,8 +172,6 @@
 
         firebase.database().ref('attendance/'+plant+'/'+currentDate).once('value', function(tableContentSnapshot){
 
-            console.log(tableContentSnapshot.val());
-
             if(tableContentSnapshot.val() != null){
 
                 $('.button-link').show();
@@ -199,7 +197,7 @@
                                 myTableRow1 += "<tr><td>";
 
                                 machine1Snapshot.forEach(function(machine1ChildSnapshot){
-                                    myTableRow1 += "<div class='row'><div class='col-md-12'>" + machine1ChildSnapshot.val().employee_name + " - " + machine1ChildSnapshot.val().employee_position + "</div></div>";
+                                    myTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + machine1ChildSnapshot.val().employee_name + "</strong> - " + machine1ChildSnapshot.val().employee_position + "</div></div>";
 
                                     if(machine1ChildSnapshot.val().employee_name != "N/A"){
                                         machine1Count++;
@@ -210,7 +208,7 @@
 
                                 myTableRow1 += "</td><td>";
                                 machine3Snapshot.forEach(function(machine3ChildSnapshot){
-                                    myTableRow1 += "<div class='row'><div class='col-md-12'>" + machine3ChildSnapshot.val().employee_name + " - " + machine3ChildSnapshot.val().employee_position + "</div></div>";
+                                    myTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + machine3ChildSnapshot.val().employee_name + "</strong> - " + machine3ChildSnapshot.val().employee_position + "</div></div>";
 
                                     if(machine3ChildSnapshot.val().employee_name != "N/A"){
                                         machine3Count++;
@@ -222,7 +220,7 @@
                                 myTableRow1 += "</td><td>";
                                 forkliftSnapshot.forEach(function(forkliftChildSnapshot){
                                     if(forkliftChildSnapshot.val().operator != "N/A"){
-                                        myTableRow1 += "<div class='row'><div class='col-md-12'>" + forkliftChildSnapshot.val().operator + "</div></div>";
+                                        myTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + forkliftChildSnapshot.val().operator + "</strong></div></div>";
 
                                         forkliftCount++;
                                     }
@@ -236,7 +234,7 @@
 
                                 myTableRow1 += "</td><td>";
                                 mechanicSnapshot.forEach(function(mechanicChildSnapshot){
-                                    myTableRow1 += "<div class='row'><div class='col-md-12'>" + mechanicChildSnapshot.val().employee_name + "</div></div>";
+                                    myTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + mechanicChildSnapshot.val().employee_name + "</strong></div></div>";
 
                                     if(mechanicChildSnapshot.val().employee_name != "N/A"){
                                         mechanicCount++;
@@ -265,46 +263,46 @@
                                                 myTableRow2 += "<tr><td>";
 
                                                 nonskid1Snapshot.forEach(function(nonskid1ChildSnapshot){
-                                                    myTableRow2 += "<div class='row'><div class='col-md-12'>" + nonskid1ChildSnapshot.val().employee_name + "</div></div>";
+                                                    myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + nonskid1ChildSnapshot.val().employee_name + "</strong></div></div>";
                                                 });
 
                                                 myTableRow2 += "</td><td>";
                                                 nonskid2Snapshot.forEach(function(nonskid2ChildSnapshot){
-                                                    myTableRow2 += "<div class='row'><div class='col-md-12'>" + nonskid2ChildSnapshot.val().employee_name + "</div></div>";
+                                                    myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + nonskid2ChildSnapshot.val().employee_name + "</strong></div></div>";
                                                 });
 
                                                 myTableRow2 += "</td><td>";
                                                 nonskid3Snapshot.forEach(function(nonskid3ChildSnapshot){
-                                                    myTableRow2 += "<div class='row'><div class='col-md-12'>" + nonskid3ChildSnapshot.val().employee_name + "</div></div>";
+                                                    myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + nonskid3ChildSnapshot.val().employee_name + "</strong></div></div>";
                                                 });
 
                                                 myTableRow2 += "</td><td>";
                                                 nonskid4Snapshot.forEach(function(nonskid4ChildSnapshot){
-                                                    myTableRow2 += "<div class='row'><div class='col-md-12'>" + nonskid4ChildSnapshot.val().employee_name + "</div></div>";
+                                                    myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + nonskid4ChildSnapshot.val().employee_name + "</strong></div></div>";
                                                 });
 
                                                 myTableRow2 += "</td></tr><tr><td>";
 
                                                 nonskid1HelperSnapshot.forEach(function(nonskid1HelperChildSnapshot){
-                                                    myTableRow2 += "Helper: " + nonskid1HelperChildSnapshot.val().helper_name;
+                                                    myTableRow2 += "Helper: <strong>" + nonskid1HelperChildSnapshot.val().helper_name + "</strong>";
                                                 });
 
                                                 myTableRow2 += "</td><td>";
 
                                                 nonskid2HelperSnapshot.forEach(function(nonskid2HelperChildSnapshot){
-                                                    myTableRow2 += "Helper: " + nonskid2HelperChildSnapshot.val().helper_name;
+                                                    myTableRow2 += "Helper: <strong>" + nonskid2HelperChildSnapshot.val().helper_name + "</strong>";
                                                 });
 
                                                 myTableRow2 += "</td><td>";
 
                                                 nonskid3HelperSnapshot.forEach(function(nonskid3HelperChildSnapshot){
-                                                    myTableRow2 += "Helper: " + nonskid3HelperChildSnapshot.val().helper_name;
+                                                    myTableRow2 += "Helper: <strong>" + nonskid3HelperChildSnapshot.val().helper_name + "</strong>";
                                                 });
 
                                                 myTableRow2 += "</td><td>";
 
                                                 nonskid4HelperSnapshot.forEach(function(nonskid4HelperChildSnapshot){
-                                                    myTableRow2 += "Helper: " + nonskid4HelperChildSnapshot.val().helper_name;
+                                                    myTableRow2 += "Helper: <strong>" + nonskid4HelperChildSnapshot.val().helper_name + "</strong>";
                                                 });
 
                                                 myTableRow2 += "</td></tr>";
@@ -330,7 +328,7 @@
                         myTableRow3 += "<tr><td colspan='2'>";
 
                         tagapukpokSnapshot.forEach(function(tagapukpokChildSnapshot){
-                            myTableRow3 += "<div class='row'><div class='col-md-12'>" + tagapukpokChildSnapshot.val().employee_name + " - " + tagapukpokChildSnapshot.val().employee_position + "</div></div>";
+                            myTableRow3 += "<div class='row'><div class='col-md-12'><strong>" + tagapukpokChildSnapshot.val().employee_name + "</strong> - " + tagapukpokChildSnapshot.val().employee_position + "</div></div>";
                         
                             if(tagapukpokChildSnapshot.val().employee_name != "N/A"){
                                 tagapukpokCount++;
@@ -341,7 +339,7 @@
 
                         myTableRow3 += "</td><td colspan='2'>";
                         checkerSnapshot.forEach(function(checkerChildSnapshot){
-                            myTableRow3 += "<div class='row'><div class='col-md-12'>" + checkerChildSnapshot.val().employee_name + " - " + checkerChildSnapshot.val().employee_position + "</div></div>";
+                            myTableRow3 += "<div class='row'><div class='col-md-12'><strong>" + checkerChildSnapshot.val().employee_name + "</strong> - " + checkerChildSnapshot.val().employee_position + "</div></div>";
 
                             if(checkerChildSnapshot.val().employee_name != "N/A"){
                                 checkerCount++;
@@ -366,7 +364,7 @@
                         myTableRow4 += "<tr><td colspan='2'>";
 
                         kamadorSnapshot.forEach(function(kamadorChildSnapshot){
-                            myTableRow4 += "<div class='row'><div class='col-md-12'>" + kamadorChildSnapshot.val().employee_name + "</div></div>";
+                            myTableRow4 += "<div class='row'><div class='col-md-12'><strong>" + kamadorChildSnapshot.val().employee_name + "</strong></div></div>";
 
                             if(kamadorChildSnapshot.val().employee_name != "N/A"){
                                 kamadorCount++;
@@ -377,7 +375,7 @@
 
                         myTableRow4 += "</td><td colspan='2'>";
                         loaderSnapshot.forEach(function(loaderChildSnapshot){
-                            myTableRow4 += "<div class='row'><div class='col-md-12'>" + loaderChildSnapshot.val().employee_name + "</div></div>";
+                            myTableRow4 += "<div class='row'><div class='col-md-12'><strong>" + loaderChildSnapshot.val().employee_name + "</strong></div></div>";
 
                             if(loaderChildSnapshot.val().employee_name != "N/A"){
                                 loaderCount++;
@@ -404,7 +402,7 @@
                                 myTableRow5 += "<tr><td colspan='2'>";
 
                                 othersSnapshot.forEach(function(othersChildSnapshot){
-                                    myTableRow5 += "<div class='row'><div class='col-md-12'>" + othersChildSnapshot.val().employee_name + " - " + othersChildSnapshot.val().employee_position + "</div></div>";
+                                    myTableRow5 += "<div class='row'><div class='col-md-12'><strong>" + othersChildSnapshot.val().employee_name + "</strong> - " + othersChildSnapshot.val().employee_position + "</div></div>";
 
                                     if(othersChildSnapshot.val().employee_name != "N/A"){
                                         othersCount++;
@@ -417,7 +415,7 @@
                                 absentMotorpoolSnapshot.forEach(function(absentMotorpoolChildSnapshot){
 
                                     if(absentMotorpoolChildSnapshot.val().employee_name != "N/A"){
-                                        myTableRow5 += "<div class='row'><div class='col-md-12'>" + absentMotorpoolChildSnapshot.val().employee_name + " - " + absentMotorpoolChildSnapshot.val().employee_comment + "</div></div>";
+                                        myTableRow5 += "<div class='row'><div class='col-md-12'><strong>" + absentMotorpoolChildSnapshot.val().employee_name + "</strong> - " + absentMotorpoolChildSnapshot.val().employee_comment + "</div></div>";
 
                                         absentCount++;
                                     }
@@ -427,7 +425,7 @@
                                 absentPlantSnapshot.forEach(function(absentPlantChildSnapshot){
 
                                     if(absentPlantChildSnapshot.val().employee_name != "N/A"){
-                                        myTableRow5 += "<div class='row'><div class='col-md-12'>" + absentPlantChildSnapshot.val().employee_name + " - " + absentPlantChildSnapshot.val().employee_comment + "</div></div>";
+                                        myTableRow5 += "<div class='row'><div class='col-md-12'><strong>" + absentPlantChildSnapshot.val().employee_name + "</strong> - " + absentPlantChildSnapshot.val().employee_comment + "</div></div>";
 
                                         absentCount++;
                                     }
@@ -437,7 +435,7 @@
                                 absentTruckingSnapshot.forEach(function(absentTruckingChildSnapshot){
 
                                     if(absentTruckingChildSnapshot.val().employee_name != "N/A"){
-                                        myTableRow5 += "<div class='row'><div class='col-md-12'>" + absentTruckingChildSnapshot.val().employee_name + " - " + absentTruckingChildSnapshot.val().employee_comment + "</div></div>";
+                                        myTableRow5 += "<div class='row'><div class='col-md-12'><strong>" + absentTruckingChildSnapshot.val().employee_name + "</strong> - " + absentTruckingChildSnapshot.val().employee_comment + "</div></div>";
 
                                         absentCount++;
                                     }
@@ -537,7 +535,7 @@
                                         myNewTableRow1 += "<tr><td>";
 
                                         machine1Snapshot.forEach(function(machine1ChildSnapshot){
-                                            myNewTableRow1 += "<div class='row'><div class='col-md-12'>" + machine1ChildSnapshot.val().employee_name + " - " + machine1ChildSnapshot.val().employee_position + "</div></div>";
+                                            myNewTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + machine1ChildSnapshot.val().employee_name + "</strong> - " + machine1ChildSnapshot.val().employee_position + "</div></div>";
 
                                             if(machine1ChildSnapshot.val().employee_name != "N/A"){
                                                 machine1Count++;
@@ -548,7 +546,7 @@
 
                                         myNewTableRow1 += "</td><td>";
                                         machine3Snapshot.forEach(function(machine3ChildSnapshot){
-                                            myNewTableRow1 += "<div class='row'><div class='col-md-12'>" + machine3ChildSnapshot.val().employee_name + " - " + machine3ChildSnapshot.val().employee_position + "</div></div>";
+                                            myNewTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + machine3ChildSnapshot.val().employee_name + "</strong> - " + machine3ChildSnapshot.val().employee_position + "</div></div>";
 
                                             if(machine3ChildSnapshot.val().employee_name != "N/A"){
                                                 machine3Count++;
@@ -560,7 +558,7 @@
                                         myNewTableRow1 += "</td><td>";
                                         forkliftSnapshot.forEach(function(forkliftChildSnapshot){
                                             if(forkliftChildSnapshot.val().operator != "N/A"){
-                                                myNewTableRow1 += "<div class='row'><div class='col-md-12'>" + forkliftChildSnapshot.val().operator + "</div></div>";
+                                                myNewTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + forkliftChildSnapshot.val().operator + "</strong></div></div>";
                                                 
                                                 forkliftCount++;
                                             }
@@ -574,7 +572,7 @@
 
                                         myNewTableRow1 += "</td><td>";
                                         mechanicSnapshot.forEach(function(mechanicChildSnapshot){
-                                            myNewTableRow1 += "<div class='row'><div class='col-md-12'>" + mechanicChildSnapshot.val().employee_name + "</div></div>";
+                                            myNewTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + mechanicChildSnapshot.val().employee_name + "</strong></div></div>";
 
                                             if(mechanicChildSnapshot.val().employee_name != "N/A"){
                                                 mechanicCount++;
@@ -603,46 +601,46 @@
                                                         myNewTableRow2 += "<tr><td>";
 
                                                         nonskid1Snapshot.forEach(function(nonskid1ChildSnapshot){
-                                                            myNewTableRow2 += "<div class='row'><div class='col-md-12'>" + nonskid1ChildSnapshot.val().employee_name + "</div></div>";
+                                                            myNewTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + nonskid1ChildSnapshot.val().employee_name + "</strong></div></div>";
                                                         });
 
                                                         myNewTableRow2 += "</td><td>";
                                                         nonskid2Snapshot.forEach(function(nonskid2ChildSnapshot){
-                                                            myNewTableRow2 += "<div class='row'><div class='col-md-12'>" + nonskid2ChildSnapshot.val().employee_name + "</div></div>";
+                                                            myNewTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + nonskid2ChildSnapshot.val().employee_name + "</strong></div></div>";
                                                         });
 
                                                         myNewTableRow2 += "</td><td>";
                                                         nonskid3Snapshot.forEach(function(nonskid3ChildSnapshot){
-                                                            myNewTableRow2 += "<div class='row'><div class='col-md-12'>" + nonskid3ChildSnapshot.val().employee_name + "</div></div>";
+                                                            myNewTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + nonskid3ChildSnapshot.val().employee_name + "</strong></div></div>";
                                                         });
 
                                                         myNewTableRow2 += "</td><td>";
                                                         nonskid4Snapshot.forEach(function(nonskid4ChildSnapshot){
-                                                            myNewTableRow2 += "<div class='row'><div class='col-md-12'>" + nonskid4ChildSnapshot.val().employee_name + "</div></div>";
+                                                            myNewTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + nonskid4ChildSnapshot.val().employee_name + "</strong></div></div>";
                                                         });
 
                                                         myNewTableRow2 += "</td></tr><tr><td>";
 
                                                         nonskid1HelperSnapshot.forEach(function(nonskid1HelperChildSnapshot){
-                                                            myNewTableRow2 += "Helper: " + nonskid1HelperChildSnapshot.val().helper_name;
+                                                            myNewTableRow2 += "Helper: <strong>" + nonskid1HelperChildSnapshot.val().helper_name + "</strong>";
                                                         });
 
                                                         myNewTableRow2 += "</td><td>";
 
                                                         nonskid2HelperSnapshot.forEach(function(nonskid2HelperChildSnapshot){
-                                                            myNewTableRow2 += "Helper: " + nonskid2HelperChildSnapshot.val().helper_name;
+                                                            myNewTableRow2 += "Helper: <strong>" + nonskid2HelperChildSnapshot.val().helper_name + "</strong>";
                                                         });
 
                                                         myNewTableRow2 += "</td><td>";
 
                                                         nonskid3HelperSnapshot.forEach(function(nonskid3HelperChildSnapshot){
-                                                            myNewTableRow2 += "Helper: " + nonskid3HelperChildSnapshot.val().helper_name;
+                                                            myNewTableRow2 += "Helper: <strong>" + nonskid3HelperChildSnapshot.val().helper_name + "</strong>";
                                                         });
 
                                                         myNewTableRow2 += "</td><td>";
 
                                                         nonskid4HelperSnapshot.forEach(function(nonskid4HelperChildSnapshot){
-                                                            myNewTableRow2 += "Helper: " + nonskid4HelperChildSnapshot.val().helper_name;
+                                                            myNewTableRow2 += "Helper: <strong>" + nonskid4HelperChildSnapshot.val().helper_name + "</strong>";
                                                         });
 
                                                         myNewTableRow2 += "</td></tr>";
@@ -668,7 +666,7 @@
                                 myNewTableRow3 += "<tr><td colspan='2'>";
 
                                 tagapukpokSnapshot.forEach(function(tagapukpokChildSnapshot){
-                                    myNewTableRow3 += "<div class='row'><div class='col-md-12'>" + tagapukpokChildSnapshot.val().employee_name + " - " + tagapukpokChildSnapshot.val().employee_position +  "</div></div>";
+                                    myNewTableRow3 += "<div class='row'><div class='col-md-12'><strong>" + tagapukpokChildSnapshot.val().employee_name + "</strong> - " + tagapukpokChildSnapshot.val().employee_position +  "</div></div>";
 
                                     if(tagapukpokChildSnapshot.val().employee_name != "N/A"){
                                         tagapukpokCount++;
@@ -679,7 +677,7 @@
 
                                 myNewTableRow3 += "</td><td colspan='2'>";
                                 checkerSnapshot.forEach(function(checkerChildSnapshot){
-                                    myNewTableRow3 += "<div class='row'><div class='col-md-12'>" + checkerChildSnapshot.val().employee_name + " - " + checkerChildSnapshot.val().employee_position +  "</div></div>";
+                                    myNewTableRow3 += "<div class='row'><div class='col-md-12'><strong>" + checkerChildSnapshot.val().employee_name + "</strong> - " + checkerChildSnapshot.val().employee_position +  "</div></div>";
 
                                     if(checkerChildSnapshot.val().employee_name != "N/A"){
                                         checkerCount++;
@@ -704,7 +702,7 @@
                                 myNewTableRow4 += "<tr><td colspan='2'>";
 
                                 kamadorSnapshot.forEach(function(kamadorChildSnapshot){
-                                    myNewTableRow4 += "<div class='row'><div class='col-md-12'>" + kamadorChildSnapshot.val().employee_name + "</div></div>";
+                                    myNewTableRow4 += "<div class='row'><div class='col-md-12'><strong>" + kamadorChildSnapshot.val().employee_name + "</strong></div></div>";
                                 
                                     if(kamadorChildSnapshot.val().employee_name != "N/A"){
                                         kamadorCount++;
@@ -715,7 +713,7 @@
 
                                 myNewTableRow4 += "</td><td colspan='2'>";
                                 loaderSnapshot.forEach(function(loaderChildSnapshot){
-                                    myNewTableRow4 += "<div class='row'><div class='col-md-12'>" + loaderChildSnapshot.val().employee_name + "</div></div>";
+                                    myNewTableRow4 += "<div class='row'><div class='col-md-12'><strong>" + loaderChildSnapshot.val().employee_name + "</strong></div></div>";
 
                                     if(loaderChildSnapshot.val().employee_name != "N/A"){
                                         loaderCount++;
@@ -742,7 +740,7 @@
                                         myNewTableRow5 += "<tr><td colspan='2'>";
 
                                         othersSnapshot.forEach(function(othersChildSnapshot){
-                                            myNewTableRow5 += "<div class='row'><div class='col-md-12'>" + othersChildSnapshot.val().employee_name + " - " + othersChildSnapshot.val().employee_position + "</div></div>";
+                                            myNewTableRow5 += "<div class='row'><div class='col-md-12'><strong>" + othersChildSnapshot.val().employee_name + "</strong> - " + othersChildSnapshot.val().employee_position + "</div></div>";
 
                                             if(othersChildSnapshot.val().employee_name != "N/A"){
                                                 othersCount++;
@@ -755,7 +753,7 @@
                                         absentMotorpoolSnapshot.forEach(function(absentMotorpoolChildSnapshot){
 
                                             if(absentMotorpoolChildSnapshot.val().employee_name != "N/A"){
-                                                myNewTableRow5 += "<div class='row'><div class='col-md-12'>" + absentMotorpoolChildSnapshot.val().employee_name + " - " + absentMotorpoolChildSnapshot.val().employee_comment + "</div></div>";
+                                                myNewTableRow5 += "<div class='row'><div class='col-md-12'><strong>" + absentMotorpoolChildSnapshot.val().employee_name + "</strong> - " + absentMotorpoolChildSnapshot.val().employee_comment + "</div></div>";
 
                                                 absentCount++;
                                             }
@@ -764,7 +762,7 @@
                                         absentPlantSnapshot.forEach(function(absentPlantChildSnapshot){
 
                                             if(absentPlantChildSnapshot.val().employee_name != "N/A"){
-                                                myNewTableRow5 += "<div class='row'><div class='col-md-12'>" + absentPlantChildSnapshot.val().employee_name + " - " + absentPlantChildSnapshot.val().employee_comment + "</div></div>";
+                                                myNewTableRow5 += "<div class='row'><div class='col-md-12'><strong>" + absentPlantChildSnapshot.val().employee_name + "</strong> - " + absentPlantChildSnapshot.val().employee_comment + "</div></div>";
 
                                                 absentCount++;
                                             }
@@ -773,7 +771,7 @@
                                         absentTruckingSnapshot.forEach(function(absentTruckingChildSnapshot){
 
                                             if(absentTruckingChildSnapshot.val().employee_name != "N/A"){
-                                                myNewTableRow5 += "<div class='row'><div class='col-md-12'>" + absentTruckingChildSnapshot.val().employee_name + " - " + absentTruckingChildSnapshot.val().employee_comment + "</div></div>";
+                                                myNewTableRow5 += "<div class='row'><div class='col-md-12'><strong>" + absentTruckingChildSnapshot.val().employee_name + "</strong> - " + absentTruckingChildSnapshot.val().employee_comment + "</div></div>";
 
                                                 absentCount++;
                                             }

@@ -349,7 +349,7 @@
 
                             plantSnapshot.forEach(function(plantChildSnapshot){
 
-                                myTableAbsent += "<div class='row'><div class='col-md-12'>" + plantChildSnapshot.val().employee_name + " - " + plantChildSnapshot.val().employee_comment + "</div></div>";
+                                myTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + plantChildSnapshot.val().employee_name + "</strong> - " + plantChildSnapshot.val().employee_comment + "</div></div>";
 
                                 if(plantChildSnapshot.val().employee_name != "N/A"){
                                     plantCount++;
@@ -362,7 +362,7 @@
 
                             motorpoolSnapshot.forEach(function(motorpoolChildSnapshot){
 
-                                myTableAbsent += "<div class='row'><div class='col-md-12'>" + motorpoolChildSnapshot.val().employee_name + " - " + motorpoolChildSnapshot.val().employee_comment + "</div></div>";
+                                myTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + motorpoolChildSnapshot.val().employee_name + "</strong> - " + motorpoolChildSnapshot.val().employee_comment + "</div></div>";
 
                                 if(motorpoolChildSnapshot.val().employee_name != "N/A"){
                                     motorpoolCount++;
@@ -375,7 +375,7 @@
 
                             truckingSnapshot.forEach(function(truckingChildSnapshot){
 
-                                myTableAbsent += "<div class='row'><div class='col-md-12'>" + truckingChildSnapshot.val().employee_name + " - " + truckingChildSnapshot.val().employee_comment + "</div></div>";
+                                myTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + truckingChildSnapshot.val().employee_name + "</strong> - " + truckingChildSnapshot.val().employee_comment + "</div></div>";
 
                                 if(truckingChildSnapshot.val().employee_name != "N/A"){
                                     truckingCount++;
