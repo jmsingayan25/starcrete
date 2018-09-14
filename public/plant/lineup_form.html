@@ -139,6 +139,50 @@
         }
     });
 
+    function displayYesterday(date){
+
+        var getSelectedDate = new Date(date).toLocaleDateString('en');
+        var getSelectedDate1 = new Date(date);
+        var date_option = {year: "numeric", month: "long", day: "numeric"}
+        var yesterdayDate = getSelectedDate1.setDate(getSelectedDate1.getDate() - 1);
+        yesterdayDate = new Date(yesterdayDate).toLocaleDateString('en');
+        yesterdayFullDate = new Date(yesterdayDate).toLocaleDateString('en', date_option);
+
+        firebase.database().ref('attendance/'+plant+'/'+yesterdayFullDate).once('value', function(yesterdayData){
+
+            document.getElementById('id_today').innerHTML = "<br>(" + getSelectedDate + ")";
+            
+            if(yesterdayData.val() != null){
+
+                document.getElementById('id_yesterday').innerHTML = "<br>(" + yesterdayDate + ")";
+                
+            }else{
+
+                value = 0;
+                todayTime = getSelectedDate1.getTime();
+
+                firebase.database().ref('attendance/'+plant).once('value', function(lastDateData){
+                    lastDateData.forEach(function(lastDateChildData){
+
+                        time = new Date(lastDateChildData.key).getTime();
+
+                        if(time > value && time != todayTime && time < todayTime){
+                            value = time;
+                        }
+                    });
+
+                    timedate = new Date(value);
+                    beforeYesterdayDate = timedate.toLocaleDateString('en');
+                    document.getElementById('id_yesterday').innerHTML = "<br>(" + beforeYesterdayDate + ")";
+
+                });
+
+                // var beforeYesterdayDate = getSelectedDate1.setDate(getSelectedDate1.getDate() - 1);
+                // beforeYesterdayDate = new Date(beforeYesterdayDate).toLocaleDateString('en');
+            }
+        });
+    }
+
     function insertToEmployeeArray(){
 
         var employee_array = [];
@@ -755,7 +799,7 @@
                                     Date:
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="date" name="date_selected" id="date_selected" class="form-control" required>
+                                    <input type="date" name="date_selected" id="date_selected" class="form-control" onblur="displayYesterday(this.value)" required>
                                 </div>
                                 <div class="col-md-9">
                                     <button type="button" class="btn btn-md btn-primary pull-right" onclick="window.location.href='employee_form.html'"><span class="fa fa-list"></span> <strong>List of Employees</strong></button>
@@ -792,10 +836,10 @@
                                                                 <label for="employee_name">Name</label>
                                                             </td>
                                                             <td class="col-md-1 header_line">
-                                                                <label for="employee_timein">Time In</label>
+                                                                <label for="employee_timein">Time In <span id="id_today"></span></label>
                                                             </td>
                                                             <td class="col-md-1 header_line">
-                                                                <label for="employee_timeout">Time Out (Yesterday)</label>
+                                                                <label for="employee_timeout">Time Out <span id="id_yesterday"></span></label>
                                                             </td>
                                                             <td class="col-md-1"></td>
                                                         </tr>

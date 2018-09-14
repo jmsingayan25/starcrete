@@ -187,7 +187,7 @@
 
             $('.button_add').show();
 
-            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(optionSnapshot){
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).orderByChild('employee_name').once('value', function(optionSnapshot){
 
                 optionTable += "<thead><tr><th class='col-md-5 header_center'>Name</th><th class='col-md-1'></th></tr></thead><tbody>";
 
@@ -236,7 +236,7 @@
 
             $('.button_add').show();
 
-            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(optionSnapshot){
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).orderByChild('employee_name').once('value', function(optionSnapshot){
 
                 optionTable += "<thead><tr><td class='col-md-1 header_center'>Name</td><td class='col-md-1 header_center'>Position</td></tr></thead><tbody>";
 
@@ -281,7 +281,7 @@
 
                 }else{
 
-                    firebase.database().ref('trucking_list/Bravo').once('value', function(truckingSnapshot){
+                    firebase.database().ref('trucking_list/'+plant).once('value', function(truckingSnapshot){
                         truckingSnapshot.forEach(function(truckingChildSnapshot){
 
                             optionTable += "<tr align='center'><td class='col-md-1'>" + truckingChildSnapshot.val().item + "</td><td class='col-md-2'><input type='hidden' name='hidden_trucking[]' value='" + truckingChildSnapshot.val().item + "'><textarea name='update_driver[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_pahinante1[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_pahinante2[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_comment[]' style='text-transform: uppercase;' class='form-control'></textarea></td></tr>";
@@ -333,9 +333,9 @@
 
             $('.button_add').show();
 
-            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/employee').once('value', function(employeeSnapshot){
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/employee').orderByChild('employee_name').once('value', function(employeeSnapshot){
 
-                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/helper').once('value', function(helperSnapshot){
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/helper').orderByChild('employee_name').once('value', function(helperSnapshot){
 
                     optionTable += "<thead><tr><th colspan='2' class='header_center'>Helper Name</th></thead><tbody>";
 
@@ -374,7 +374,7 @@
 
             $('.button_add').show();
 
-            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(absentSnapshot){
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).orderByChild('employee_name').once('value', function(absentSnapshot){
 
                 optionTable += "<thead><tr><th class='col-md-3 header_center'>Name</th><th class='col-md-6 header_center'>Reason</th><th class='col-md-1'></th></tr></thead><tbody>";
 
@@ -388,7 +388,6 @@
                 document.getElementById('id_fields').innerHTML = optionTable;
 
             });
-
         }
     }
 

@@ -143,11 +143,11 @@
                 query_ext = "new/office";
             }
 
-            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(officeSnapshot){
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).orderByChild('employee_name').once('value', function(officeSnapshot){
 
                 $(".button_add").show();
 
-                optionTable += "<thead><tr><th class='col-md-6 header_center'>Name</th><th class='col-md-1 header_center'>Time In (<span id='id_today'></span>)</th><th class='col-md-1 header_center'>Time Out (<span id='id_yesterday'></span>)</th><th class='col-md-1'></th></tr></thead><tbody>";
+                optionTable += "<thead><tr><th class='col-md-6 header_center'>Name</th><th class='col-md-1 header_center'>Time In <span id='id_today'></span></th><th class='col-md-1 header_center'>Time Out <span id='id_yesterday'></span></th><th class='col-md-1'></th></tr></thead><tbody>";
 
                 officeSnapshot.forEach(function(officeChildSnapshot){
 
@@ -158,23 +158,38 @@
 
                 document.getElementById('id_table_view').innerHTML = optionTable;
 
-                document.getElementById('id_today').innerHTML = todayDate;
-
                 var yesterdayDate = currentDate1.setDate(currentDate1.getDate() - 1);
                 yesterdayDate = new Date(yesterdayDate).toLocaleDateString('en');
                 yesterdayFullDate = new Date(yesterdayDate).toLocaleDateString('en', date_option);
                 
                 firebase.database().ref('attendance/'+plant+'/'+yesterdayFullDate).once('value', function(yesterdayData){
 
+                    document.getElementById('id_today').innerHTML = "<br>(" + todayDate + ")";
+                    
                     if(yesterdayData.val() != null){
 
-                        document.getElementById('id_yesterday').innerHTML = yesterdayDate;
+                        document.getElementById('id_yesterday').innerHTML = "<br>(" + yesterdayDate + ")";
                         
                     }else{
 
-                        var beforeYesterdayDate = currentDate1.setDate(currentDate1.getDate() - 1);
-                        beforeYesterdayDate = new Date(beforeYesterdayDate).toLocaleDateString('en');
-                        document.getElementById('id_yesterday').innerHTML = beforeYesterdayDate;
+                        value = 0;
+                        todayTime = currentDate1.getTime();
+
+                        firebase.database().ref('attendance/'+plant).once('value', function(lastDateData){
+                            lastDateData.forEach(function(lastDateChildData){
+
+                                time = new Date(lastDateChildData.key).getTime();
+
+                                if(time > value && time != todayTime && time < todayTime){
+                                    value = time;
+                                }
+                            });
+
+                            timedate = new Date(value);
+                            beforeYesterdayDate = timedate.toLocaleDateString('en');
+                            document.getElementById('id_yesterday').innerHTML = "<br>(" + beforeYesterdayDate + ")";
+
+                        });
                     }
                 });
             });
@@ -189,7 +204,7 @@
                 query_ext = "new/new_employee";
             }
 
-            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(optionSnapshot){
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).orderByChild('employee_name').once('value', function(optionSnapshot){
 
                 $(".button_add").show();
 
@@ -231,9 +246,9 @@
 
             document.getElementById('id_option').innerHTML = header_name + " DETAILS";
 
-            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/employee').once('value', function(employeeSnapshot){
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/employee').orderByChild('employee_name').once('value', function(employeeSnapshot){
 
-                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/helper').once('value', function(helperSnapshot){
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/helper').orderByChild('employee_name').once('value', function(helperSnapshot){
 
                     optionTable += "<thead><tr><th colspan='2' class='header_center'>Helper Name</th></thead><tbody>";
 
@@ -379,7 +394,7 @@
 
             }
 
-            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/'+query_ext).once('value', function(absentSnapshot){
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/'+query_ext).orderByChild('employee_name').once('value', function(absentSnapshot){
 
                 $(".button_add").show();
 

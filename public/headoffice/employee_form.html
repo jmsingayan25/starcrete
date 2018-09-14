@@ -90,6 +90,7 @@
 <script>
 
     var plant = getUrlParameter('plant');
+    var getCurrentDate = getUrlParameter('date');
 
     $(document).ready(function(){
 
@@ -155,6 +156,8 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+
+        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-home'></i><a href='attendance.html?plant=Bravo'>Attendance</a></li><li><i class='fa fa-file'></i><a href='attendance_form.html?plant=Bravo&date=" + getCurrentDate + "'>Head Office Attendance Form</a></li><li><i class='icon_document'></i><a href='employee_form.html?plant=Bravo'>Employee Form</a></li>";
 
     });
 
@@ -367,10 +370,7 @@
                  <!--overview start-->
                 <div class="row">
                     <div class="col-md-12">
-                        <ol class="breadcrumb">
-                            <li><i class="icon_document"></i><a href="attendance.html?plant=Bravo">Attendance</a></li>                   
-                            <li><i class="icon_document"></i><a href="employee_form.html?plant=Bravo">Employee Form</a></li>                       
-                        </ol>
+                        <ol class="breadcrumb" id="id_breadcrumb"></ol>
                     </div>
                 </div>
                 <div class="row">
