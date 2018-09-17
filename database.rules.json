@@ -5,13 +5,13 @@
     ".read": true,
     ".write": true,
     "users": {
-      // "$uid": {
-      //   ".read": "$uid === auth.uid",
-      //   ".write": "$uid === auth.uid"
-      // }
-      ".indexOn": ["firstname", "lastname"],
-      ".read": true,
-      ".write": true
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid"
+      }
+      // ".indexOn": ["firstname", "lastname"],
+      // ".read": true,
+      // ".write": true
     },
     "purchase_order":{
       // "$uid": {
@@ -71,12 +71,33 @@
         ".indexOn": ["date", "reverseDate", "po_no_key"]
       }
     },
-    // "incoming_diesel": {
-    //  // "$uid": {
-    //     ".read": true,
-    //     ".write": true,
-    //     ".indexOn": ["date", "reverseDate"]
-    //  // }
-    // }
+    "incoming_diesel": {
+      "$uid": {
+         ".read": true,
+         ".write": true,
+         ".indexOn": ["reverseDate"]
+      }
+    },
+    "attendance": {
+      "$uid": {
+        ".read": true,
+        ".write": true,
+        ".indexOn": ["employee_name"]
+      }
+    },
+    "employee_list": {
+      "$uid": {
+        ".read": true,
+        ".write": true,
+        ".indexOn": ["employee_name"]
+      }
+    },
+    "diesel_category": {
+      "$uid": {
+        ".read": true,
+        ".write": true,
+        ".indexOn": ["reverseDate"]
+      }
+    }
   }
 }

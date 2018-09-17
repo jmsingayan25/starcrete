@@ -164,16 +164,37 @@
 
             if(yesterdayData.val() != null){
 
-                $(".class_yesterday").text(yesterdayDate);
+                $(".class_yesterday").text("(" + yesterdayDate + ")");
             }else{
 
-                var beforeYesterdayDate = currentDate1.setDate(currentDate1.getDate() - 1);
-                beforeYesterdayDate = new Date(beforeYesterdayDate).toLocaleDateString('en');
-                $(".class_yesterday").text(beforeYesterdayDate);
+                // var beforeYesterdayDate = currentDate1.setDate(currentDate1.getDate() - 1);
+                // beforeYesterdayDate = new Date(beforeYesterdayDate).toLocaleDateString('en');
+                // $(".class_yesterday").text(beforeYesterdayDate);
+
+                value = 0;
+                todayTime = new Date(currentDate1).getTime();
+
+                firebase.database().ref('attendance/'+plant).once('value', function(lastDateData){
+                    lastDateData.forEach(function(lastDateChildData){
+
+                        time = new Date(lastDateChildData.key).getTime();
+
+                        if(time > value && time != todayTime && time < todayTime){
+                            value = time;
+                        }
+                    });
+
+                    if(value != 0){
+                        timedate = new Date(value);
+                        beforeYesterdayDate = timedate.toLocaleDateString('en');
+                        // document.getElementById('id_yesterday').innerHTML = "(" + beforeYesterdayDate + ")";
+                        $(".class_yesterday").text("(" + beforeYesterdayDate + ")");
+                    }
+                });
             }
         });
         
-        $(".class_today").text(passcurrentDate);
+        $(".class_today").text("(" + passcurrentDate + ")");
 
         document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <br> Result: <span id='id_record'></span> <br> <span id='id_schedule'></span></th>";
 
@@ -850,8 +871,8 @@
                                                                         <thead>
                                                                             <tr class="header_line">
                                                                                 <th class="col-md-3" style="text-align: center;">NAME</th>
-                                                                                <th class="col-md-3" style="text-align: center;">TIME IN  (<span class='class_today'></span>)</th>
-                                                                                <th class="col-md-3" style="text-align: center;">TIME OUT (<span class='class_yesterday'></span>)</th>
+                                                                                <th class="col-md-3" style="text-align: center;">TIME IN <span class='class_today'></span></th>
+                                                                                <th class="col-md-3" style="text-align: center;">TIME OUT <span class='class_yesterday'></span></th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody id="row_office_list" class="row_list_class"></tbody>
@@ -1053,8 +1074,8 @@
                                                         <thead>
                                                             <tr class="header_line">
                                                                 <th class="col-md-3" style="text-align: center;">NAME</th>
-                                                                <th class="col-md-3" style="text-align: center;">TIME IN  (<span class='class_today'></span>)</th>
-                                                                <th class="col-md-3" style="text-align: center;">TIME OUT (<span class='class_yesterday'></span>)</th>
+                                                                <th class="col-md-3" style="text-align: center;">TIME IN <span class='class_today'></span></th>
+                                                                <th class="col-md-3" style="text-align: center;">TIME OUT <span class='class_yesterday'></span></th>
                                                             </tr>
                                                         </thead>
                                                         <tbody id="new_row_office_list" class="row_new_list_class"></tbody>

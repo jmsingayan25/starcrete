@@ -148,7 +148,8 @@
             }
         });
 
-        tableData(plant);
+        // tableData(plant);
+        submitForm();
         startTime();
         
         firebase.auth().onAuthStateChanged(function(user) {
@@ -176,6 +177,201 @@
         document.getElementById('page_header').innerHTML = plant + " PARTS TRANSACTION";
     });
 
+    // function submitForm(){
+
+    //     event.preventDefault();
+        
+    //     $(".se-pre-con").fadeIn("fast");
+
+    //     var myTbody = "";
+    //     var search_text = document.getElementById('search').value;
+    //     var search_date = document.getElementById('search_date').value;
+    //     var search_option = document.getElementById('search_option').value;
+
+    //     firebase.database().ref('parts/'+plant).orderByChild('reverseDate').on('child_added', function(partsSnapshot){
+    //         // partsSnapshot.forEach(function(partsChildSnapshot){
+
+    //         var text_supplier = partsSnapshot.val().supplier.toLowerCase();
+    //         var text_item = partsSnapshot.val().item.toLowerCase();
+    //         var text_po_no = partsSnapshot.val().po_no.toLowerCase();
+    //         var all_text = text_supplier + " " + text_item + " " + text_po_no;
+
+    //         supplier = partsSnapshot.val().supplier;
+    //         quantity = Number(partsSnapshot.val().quantity).toLocaleString('en') + " pcs";
+    //         item = partsSnapshot.val().item;
+    //         price = Number(partsSnapshot.val().price).toLocaleString('en');
+    //         total = Number(partsSnapshot.val().total).toLocaleString('en');
+    //         po_no = partsSnapshot.val().po_no;
+    //         date = partsSnapshot.val().date;
+
+    //         if(search_text != "" && search_option == "" && search_date == ""){
+    //             search = searchMatch(search_text, all_text);
+
+    //             if(search != null){
+    //                 myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
+    //                 myTbody += "<td><strong>" + item + "</strong></td>";
+    //                 myTbody += "<td><strong>" + quantity + "</strong></td>";
+    //                 myTbody += "<td><strong>P" + price + "</strong></td>";
+    //                 myTbody += "<td><strong>P" + total + "</strong></td>";
+    //                 myTbody += "<td><strong>" + po_no + "</strong></td>";
+    //                 myTbody += "<td><strong>" + date + "</strong></td></tr>";
+    //             }
+
+    //         }else if(search_text != "" && search_option != "" && search_date == ""){
+                
+    //             if(search_option == 'item'){
+    //                 text_option = text_item;
+    //             }else if(search_option == 'po_no'){
+    //                 text_option = text_po_no;
+    //             }else{
+    //                 text_option = text_supplier;
+    //             }
+
+    //             search = searchMatch(search_text, text_option);
+
+    //             if(search != null){
+    //                 myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
+    //                 myTbody += "<td><strong>" + item + "</strong></td>";
+    //                 myTbody += "<td><strong>" + quantity + "</strong></td>";
+    //                 myTbody += "<td><strong>P" + price + "</strong></td>";
+    //                 myTbody += "<td><strong>P" + total + "</strong></td>";
+    //                 myTbody += "<td><strong>" + po_no + "</strong></td>";
+    //                 myTbody += "<td><strong>" + date + "</strong></td></tr>";
+    //             }
+
+    //         }else if(search_text != "" && search_option != "" && search_date != ""){
+
+    //             search_date = new Date(search_date).toLocaleDateString('en');
+    //             if(search_date == date){
+
+    //                 if(search_option == 'item'){
+    //                     text_option = text_item;
+    //                 }else if(search_option == 'po_no'){
+    //                     text_option = text_po_no;
+    //                 }else{
+    //                     text_option = text_supplier;
+    //                 }
+
+    //                 search = searchMatch(search_text, text_option);
+
+    //                 if(search != null){
+    //                     myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
+    //                     myTbody += "<td><strong>" + item + "</strong></td>";
+    //                     myTbody += "<td><strong>" + quantity + "</strong></td>";
+    //                     myTbody += "<td><strong>P" + price + "</strong></td>";
+    //                     myTbody += "<td><strong>P" + total + "</strong></td>";
+    //                     myTbody += "<td><strong>" + po_no + "</strong></td>";
+    //                     myTbody += "<td><strong>" + date + "</strong></td></tr>";
+    //                 }
+    //             }
+
+    //         }else if(search_text != "" && search_option == "" && search_date != ""){
+
+    //             search_date = new Date(search_date).toLocaleDateString('en');
+    //             if(search_date == date){
+
+    //                 search = searchMatch(search_text, all_text);
+
+    //                 if(search != null){
+    //                     myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
+    //                     myTbody += "<td><strong>" + item + "</strong></td>";
+    //                     myTbody += "<td><strong>" + quantity + "</strong></td>";
+    //                     myTbody += "<td><strong>P" + price + "</strong></td>";
+    //                     myTbody += "<td><strong>P" + total + "</strong></td>";
+    //                     myTbody += "<td><strong>" + po_no + "</strong></td>";
+    //                     myTbody += "<td><strong>" + date + "</strong></td></tr>";
+    //                 }
+    //             }
+
+    //         }else if((search_text == "" && search_option == "" && search_date != "") || (search_text == "" && search_option != "" && search_date != "")){
+            
+    //             search_date = new Date(search_date).toLocaleDateString('en');
+    //             if(search_date == date){
+
+    //                 myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
+    //                 myTbody += "<td><strong>" + item + "</strong></td>";
+    //                 myTbody += "<td><strong>" + quantity + "</strong></td>";
+    //                 myTbody += "<td><strong>P" + price + "</strong></td>";
+    //                 myTbody += "<td><strong>P" + total + "</strong></td>";
+    //                 myTbody += "<td><strong>" + po_no + "</strong></td>";
+    //                 myTbody += "<td><strong>" + date + "</strong></td></tr>";
+    //             }
+    //         }else{
+              
+    //             myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
+    //             myTbody += "<td><strong>" + item + "</strong></td>";
+    //             myTbody += "<td><strong>" + quantity + "</strong></td>";
+    //             myTbody += "<td><strong>P" + price + "</strong></td>";
+    //             myTbody += "<td><strong>P" + total + "</strong></td>";
+    //             myTbody += "<td><strong>" + po_no + "</strong></td>";
+    //             myTbody += "<td><strong>" + date + "</strong></td></tr>";
+    //         }
+    //     });
+
+    //     if(myTbody == ""){
+                
+    //         myTbody = "<tr><td colspan='7' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+    //         document.getElementById('printPo').style.display = 'none';
+    //         document.getElementById("partsList").innerHTML = myTbody;
+
+    //         $(".se-pre-con").fadeOut("slow");
+
+    //     }else{
+
+    //         document.getElementById('printPo').style.display = 'inline';
+    //         document.getElementById("partsList").innerHTML = myTbody;
+
+    //         $(".se-pre-con").fadeOut("slow");
+    //     }
+    // }
+
+    // function tableData(plant){
+
+    // 	var myTbody = "";
+
+    //     document.getElementById("partsList").innerHTML = "<tr><td colspan='7' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
+
+    // 	firebase.database().ref('parts/'+plant).on('value', function(partsSnapshot){
+    // 		// console.log(partsSnapshot.val());
+
+    // 		if(partsSnapshot.val() == null){
+
+    // 			myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+    //             document.getElementById('partsList').innerHTML = myTbody;
+    //             $(".se-pre-con").fadeOut("slow");
+                
+    // 		}
+    // 	})
+
+    // 	firebase.database().ref('parts/'+plant).orderByChild('reverseDate').on('child_added', function(partsSnapshot){
+    //         // partsSnapshot.forEach(function(partsChildSnapshot){
+    //             // console.log(partsSnapshot.key, partsSnapshot.val());
+    //             supplier = partsSnapshot.val().supplier;
+    //             quantity = Number(partsSnapshot.val().quantity).toLocaleString('en') + " pcs";
+    //             item = partsSnapshot.val().item;
+    //             price = Number(partsSnapshot.val().price).toLocaleString('en');
+    //             total = Number(partsSnapshot.val().total).toLocaleString('en');
+    //             po_no = partsSnapshot.val().po_no;
+    //             date = partsSnapshot.val().date;
+
+    //             myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
+    //             myTbody += "<td><strong>" + item + "</strong></td>";
+    //             myTbody += "<td><strong>" + quantity + "</strong></td>";
+    //             myTbody += "<td><strong>P" + price + "</strong></td>";
+    //             myTbody += "<td><strong>P" + total + "</strong></td>";
+    //             myTbody += "<td><strong>" + po_no + "</strong></td>";
+    //             myTbody += "<td><strong>" + date + "</strong></td></tr>";
+
+    //             document.getElementById('printPo').style.display = 'inline';
+    //             document.getElementById('partsList').innerHTML = myTbody;
+
+    //             $(".se-pre-con").fadeOut("slow");
+    //         // });
+    // 	});
+    // }
+
     function submitForm(){
 
         event.preventDefault();
@@ -187,62 +383,37 @@
         var search_date = document.getElementById('search_date').value;
         var search_option = document.getElementById('search_option').value;
 
-        firebase.database().ref('parts/'+plant).orderByChild('reverseDate').on('child_added', function(partsSnapshot){
-            // partsSnapshot.forEach(function(partsChildSnapshot){
+        firebase.database().ref('parts/'+plant).orderByChild('reverseDate').once('value', function(partsSnapshot){
+            partsSnapshot.forEach(function(partsChildSnapshot){
 
-            var text_supplier = partsSnapshot.val().supplier.toLowerCase();
-            var text_item = partsSnapshot.val().item.toLowerCase();
-            var text_po_no = partsSnapshot.val().po_no.toLowerCase();
-            var all_text = text_supplier + " " + text_item + " " + text_po_no;
+                var text_supplier = partsChildSnapshot.val().supplier.toLowerCase();
+                var text_item = partsChildSnapshot.val().item.toLowerCase();
+                var text_po_no = partsChildSnapshot.val().po_no.toLowerCase();
+                var all_text = text_supplier + " " + text_item + " " + text_po_no;
 
-            supplier = partsSnapshot.val().supplier;
-            quantity = Number(partsSnapshot.val().quantity).toLocaleString('en') + " pcs";
-            item = partsSnapshot.val().item;
-            price = Number(partsSnapshot.val().price).toLocaleString('en');
-            total = Number(partsSnapshot.val().total).toLocaleString('en');
-            po_no = partsSnapshot.val().po_no;
-            date = partsSnapshot.val().date;
+                supplier = partsChildSnapshot.val().supplier;
+                quantity = Number(partsChildSnapshot.val().quantity).toLocaleString('en') + " pcs";
+                item = partsChildSnapshot.val().item;
+                price = Number(partsChildSnapshot.val().price).toLocaleString('en');
+                total = Number(partsChildSnapshot.val().total).toLocaleString('en');
+                po_no = partsChildSnapshot.val().po_no;
+                date = partsChildSnapshot.val().date;
 
-            if(search_text != "" && search_option == "" && search_date == ""){
-                search = searchMatch(search_text, all_text);
+                if(search_text != "" && search_option == "" && search_date == ""){
+                    search = searchMatch(search_text, all_text);
 
-                if(search != null){
-                    myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
-                    myTbody += "<td><strong>" + item + "</strong></td>";
-                    myTbody += "<td><strong>" + quantity + "</strong></td>";
-                    myTbody += "<td><strong>P" + price + "</strong></td>";
-                    myTbody += "<td><strong>P" + total + "</strong></td>";
-                    myTbody += "<td><strong>" + po_no + "</strong></td>";
-                    myTbody += "<td><strong>" + date + "</strong></td></tr>";
-                }
+                    if(search != null){
+                        myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
+                        myTbody += "<td><strong>" + item + "</strong></td>";
+                        myTbody += "<td><strong>" + quantity + "</strong></td>";
+                        myTbody += "<td><strong>P" + price + "</strong></td>";
+                        myTbody += "<td><strong>P" + total + "</strong></td>";
+                        myTbody += "<td><strong>" + po_no + "</strong></td>";
+                        myTbody += "<td><strong>" + date + "</strong></td></tr>";
+                    }
 
-            }else if(search_text != "" && search_option != "" && search_date == ""){
-                
-                if(search_option == 'item'){
-                    text_option = text_item;
-                }else if(search_option == 'po_no'){
-                    text_option = text_po_no;
-                }else{
-                    text_option = text_supplier;
-                }
-
-                search = searchMatch(search_text, text_option);
-
-                if(search != null){
-                    myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
-                    myTbody += "<td><strong>" + item + "</strong></td>";
-                    myTbody += "<td><strong>" + quantity + "</strong></td>";
-                    myTbody += "<td><strong>P" + price + "</strong></td>";
-                    myTbody += "<td><strong>P" + total + "</strong></td>";
-                    myTbody += "<td><strong>" + po_no + "</strong></td>";
-                    myTbody += "<td><strong>" + date + "</strong></td></tr>";
-                }
-
-            }else if(search_text != "" && search_option != "" && search_date != ""){
-
-                search_date = new Date(search_date).toLocaleDateString('en');
-                if(search_date == date){
-
+                }else if(search_text != "" && search_option != "" && search_date == ""){
+                    
                     if(search_option == 'item'){
                         text_option = text_item;
                     }else if(search_option == 'po_no'){
@@ -262,16 +433,56 @@
                         myTbody += "<td><strong>" + po_no + "</strong></td>";
                         myTbody += "<td><strong>" + date + "</strong></td></tr>";
                     }
-                }
 
-            }else if(search_text != "" && search_option == "" && search_date != ""){
+                }else if(search_text != "" && search_option != "" && search_date != ""){
 
-                search_date = new Date(search_date).toLocaleDateString('en');
-                if(search_date == date){
+                    search_date = new Date(search_date).toLocaleDateString('en');
+                    if(search_date == date){
 
-                    search = searchMatch(search_text, all_text);
+                        if(search_option == 'item'){
+                            text_option = text_item;
+                        }else if(search_option == 'po_no'){
+                            text_option = text_po_no;
+                        }else{
+                            text_option = text_supplier;
+                        }
 
-                    if(search != null){
+                        search = searchMatch(search_text, text_option);
+
+                        if(search != null){
+                            myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
+                            myTbody += "<td><strong>" + item + "</strong></td>";
+                            myTbody += "<td><strong>" + quantity + "</strong></td>";
+                            myTbody += "<td><strong>P" + price + "</strong></td>";
+                            myTbody += "<td><strong>P" + total + "</strong></td>";
+                            myTbody += "<td><strong>" + po_no + "</strong></td>";
+                            myTbody += "<td><strong>" + date + "</strong></td></tr>";
+                        }
+                    }
+
+                }else if(search_text != "" && search_option == "" && search_date != ""){
+
+                    search_date = new Date(search_date).toLocaleDateString('en');
+                    if(search_date == date){
+
+                        search = searchMatch(search_text, all_text);
+
+                        if(search != null){
+                            myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
+                            myTbody += "<td><strong>" + item + "</strong></td>";
+                            myTbody += "<td><strong>" + quantity + "</strong></td>";
+                            myTbody += "<td><strong>P" + price + "</strong></td>";
+                            myTbody += "<td><strong>P" + total + "</strong></td>";
+                            myTbody += "<td><strong>" + po_no + "</strong></td>";
+                            myTbody += "<td><strong>" + date + "</strong></td></tr>";
+                        }
+                    }
+
+                }else if((search_text == "" && search_option == "" && search_date != "") || (search_text == "" && search_option != "" && search_date != "")){
+                
+                    search_date = new Date(search_date).toLocaleDateString('en');
+                    if(search_date == date){
+
                         myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
                         myTbody += "<td><strong>" + item + "</strong></td>";
                         myTbody += "<td><strong>" + quantity + "</strong></td>";
@@ -280,13 +491,8 @@
                         myTbody += "<td><strong>" + po_no + "</strong></td>";
                         myTbody += "<td><strong>" + date + "</strong></td></tr>";
                     }
-                }
-
-            }else if((search_text == "" && search_option == "" && search_date != "") || (search_text == "" && search_option != "" && search_date != "")){
-            
-                search_date = new Date(search_date).toLocaleDateString('en');
-                if(search_date == date){
-
+                }else{
+                  
                     myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
                     myTbody += "<td><strong>" + item + "</strong></td>";
                     myTbody += "<td><strong>" + quantity + "</strong></td>";
@@ -295,80 +501,25 @@
                     myTbody += "<td><strong>" + po_no + "</strong></td>";
                     myTbody += "<td><strong>" + date + "</strong></td></tr>";
                 }
-            }else{
-              
-                myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
-                myTbody += "<td><strong>" + item + "</strong></td>";
-                myTbody += "<td><strong>" + quantity + "</strong></td>";
-                myTbody += "<td><strong>P" + price + "</strong></td>";
-                myTbody += "<td><strong>P" + total + "</strong></td>";
-                myTbody += "<td><strong>" + po_no + "</strong></td>";
-                myTbody += "<td><strong>" + date + "</strong></td></tr>";
-            }
-        });
+            });
 
-        if(myTbody == ""){
-                
-            myTbody = "<tr><td colspan='7' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+            if(myTbody == ""){
+                    
+                myTbody = "<tr><td colspan='7' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
-            document.getElementById('printPo').style.display = 'none';
-            document.getElementById("partsList").innerHTML = myTbody;
+                document.getElementById('printPo').style.display = 'none';
+                document.getElementById("partsList").innerHTML = myTbody;
 
-            $(".se-pre-con").fadeOut("slow");
-
-        }else{
-
-            document.getElementById('printPo').style.display = 'inline';
-            document.getElementById("partsList").innerHTML = myTbody;
-
-            $(".se-pre-con").fadeOut("slow");
-        }
-    }
-
-    function tableData(plant){
-
-    	var myTbody = "";
-
-        document.getElementById("partsList").innerHTML = "<tr><td colspan='7' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
-
-    	firebase.database().ref('parts/'+plant).on('value', function(partsSnapshot){
-    		// console.log(partsSnapshot.val());
-
-    		if(partsSnapshot.val() == null){
-
-    			myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-
-                document.getElementById('partsList').innerHTML = myTbody;
                 $(".se-pre-con").fadeOut("slow");
-                
-    		}
-    	})
 
-    	firebase.database().ref('parts/'+plant).orderByChild('reverseDate').on('child_added', function(partsSnapshot){
-            // partsSnapshot.forEach(function(partsChildSnapshot){
-                // console.log(partsSnapshot.key, partsSnapshot.val());
-                supplier = partsSnapshot.val().supplier;
-                quantity = Number(partsSnapshot.val().quantity).toLocaleString('en') + " pcs";
-                item = partsSnapshot.val().item;
-                price = Number(partsSnapshot.val().price).toLocaleString('en');
-                total = Number(partsSnapshot.val().total).toLocaleString('en');
-                po_no = partsSnapshot.val().po_no;
-                date = partsSnapshot.val().date;
-
-                myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
-                myTbody += "<td><strong>" + item + "</strong></td>";
-                myTbody += "<td><strong>" + quantity + "</strong></td>";
-                myTbody += "<td><strong>P" + price + "</strong></td>";
-                myTbody += "<td><strong>P" + total + "</strong></td>";
-                myTbody += "<td><strong>" + po_no + "</strong></td>";
-                myTbody += "<td><strong>" + date + "</strong></td></tr>";
+            }else{
 
                 document.getElementById('printPo').style.display = 'inline';
-                document.getElementById('partsList').innerHTML = myTbody;
+                document.getElementById("partsList").innerHTML = myTbody;
 
                 $(".se-pre-con").fadeOut("slow");
-            // });
-    	});
+            }
+        });
     }
 
     function startTime() {
