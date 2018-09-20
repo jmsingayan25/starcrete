@@ -97,9 +97,11 @@
     $(document).ready(function(){
 
         var currentDate1 = new Date(getCurrentDate);
+        var todayDate = new Date(getCurrentDate).toLocaleDateString('en');
         var yesterdayDate = currentDate1.setDate(currentDate1.getDate() - 1);
         yesterdayDate = new Date(yesterdayDate).toLocaleDateString('en');
-        $(".class_yesterday").text(yesterdayDate);
+        $(".class_yesterday").text("(" + yesterdayDate + ")");
+        $(".class_today").text("(" + todayDate + ")");
 
         insertToEmployeeArray();
 
@@ -355,8 +357,8 @@
                                                         <thead>
                                                             <tr>
                                                                 <th class="col-md-5 header_text">Name</th>
-                                                                <th class="col-md-2 header_text">Time In</th>
-                                                                <th class="col-md-2 header_text">Time Out (<span class='class_yesterday'></span>)</th>
+                                                                <th class="col-md-2 header_text">Time In <span class="class_today"></span></th>
+                                                                <th class="col-md-2 header_text">Time Out <span class='class_yesterday'></span></th>
                                                                 <th class="col-md-2 header_text">Remarks</th>
                                                                 <th class="col-md-1"></th>
                                                             </tr>
@@ -386,8 +388,8 @@
                                                         <thead>
                                                             <tr>
                                                                 <th class="col-md-5 header_text">Name</th>
-                                                                <th class="col-md-2 header_text">Time In</th>
-                                                                <th class="col-md-2 header_text">Time Out (<span class='class_yesterday'></span>)</th>
+                                                                <th class="col-md-2 header_text">Time In <span class="class_today"></span></th>
+                                                                <th class="col-md-2 header_text">Time Out <span class='class_yesterday'></span></th>
                                                                 <th class="col-md-2 header_text">Remarks</th>
                                                                 <th class="col-md-1"></th>
                                                             </tr>

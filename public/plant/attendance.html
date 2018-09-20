@@ -378,7 +378,7 @@
 
                             plantSnapshot.forEach(function(plantChildSnapshot){
 
-                                myTableAbsent += "<div class='row'><div class='col-md-12'>" + plantChildSnapshot.val().employee_name + " - " + plantChildSnapshot.val().employee_comment + "</div></div>";
+                                myTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + plantChildSnapshot.val().employee_name + "</strong> - " + plantChildSnapshot.val().employee_comment + "</div></div>";
 
                                 if(plantChildSnapshot.val().employee_name != "N/A"){
                                     plantCount++;
@@ -391,7 +391,7 @@
 
                             motorpoolSnapshot.forEach(function(motorpoolChildSnapshot){
 
-                                myTableAbsent += "<div class='row'><div class='col-md-12'>" + motorpoolChildSnapshot.val().employee_name + " - " + motorpoolChildSnapshot.val().employee_comment + "</div></div>";
+                                myTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + motorpoolChildSnapshot.val().employee_name + "</strong> - " + motorpoolChildSnapshot.val().employee_comment + "</div></div>";
 
                                 if(motorpoolChildSnapshot.val().employee_name != "N/A"){
                                     motorpoolCount++;
@@ -404,7 +404,7 @@
 
                             truckingSnapshot.forEach(function(truckingChildSnapshot){
 
-                                myTableAbsent += "<div class='row'><div class='col-md-12'>" + truckingChildSnapshot.val().employee_name + " - " + truckingChildSnapshot.val().employee_comment + "</div></div>";
+                                myTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + truckingChildSnapshot.val().employee_name + "</strong> - " + truckingChildSnapshot.val().employee_comment + "</div></div>";
 
                                 if(truckingChildSnapshot.val().employee_name != "N/A"){
                                     truckingCount++;
@@ -616,7 +616,7 @@
 
                                     plantSnapshot.forEach(function(plantChildSnapshot){
 
-                                        myNewTableAbsent += "<div class='row'><div class='col-md-12'>" + plantChildSnapshot.val().employee_name + " - " + plantChildSnapshot.val().employee_comment + "</div></div>";
+                                        myNewTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + plantChildSnapshot.val().employee_name + "</strong> - " + plantChildSnapshot.val().employee_comment + "</div></div>";
 
                                         if(plantChildSnapshot.val().employee_name != "N/A"){
                                             plantCount++;
@@ -629,7 +629,7 @@
 
                                     motorpoolSnapshot.forEach(function(motorpoolChildSnapshot){
 
-                                        myNewTableAbsent += "<div class='row'><div class='col-md-12'>" + motorpoolChildSnapshot.val().employee_name + " - " + motorpoolChildSnapshot.val().employee_comment + "</div></div>";
+                                        myNewTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + motorpoolChildSnapshot.val().employee_name + "</strong> - " + motorpoolChildSnapshot.val().employee_comment + "</div></div>";
 
                                         if(motorpoolChildSnapshot.val().employee_name != "N/A"){
                                             motorpoolCount++;
@@ -642,7 +642,7 @@
 
                                     truckingSnapshot.forEach(function(truckingChildSnapshot){
 
-                                        myNewTableAbsent += "<div class='row'><div class='col-md-12'>" + truckingChildSnapshot.val().employee_name + " - " + truckingChildSnapshot.val().employee_comment + "</div></div>";
+                                        myNewTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + truckingChildSnapshot.val().employee_name + "</strong> - " + truckingChildSnapshot.val().employee_comment + "</div></div>";
 
                                         if(truckingChildSnapshot.val().employee_name != "N/A"){
                                             truckingCount++;
@@ -840,6 +840,23 @@
                                                     <table class="table table-bordered table-stripped">
                                                         <thead>
                                                             <tr class="header_line">
+                                                                <th colspan="2">
+                                                                    NOTE
+                                                                    <div class="btn-group pull-right button-link">
+                                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                                        </a>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li id="link_note_update"></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </th>
+                                                                <th colspan="2"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="row_comment" class="row_list_class"></tbody>
+                                                        <thead>
+                                                            <tr class="header_line">
                                                                 <th colspan="3">
                                                                     OFFICE
                                                                     <div class="btn-group pull-right button-link">
@@ -1006,23 +1023,6 @@
                                                                 </td>
                                                             </tr>
                                                         </tbody>
-                                                        <thead>
-                                                            <tr class="header_line">
-                                                                <th colspan="2">
-                                                                    NOTE
-                                                                    <div class="btn-group pull-right button-link">
-                                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
-                                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
-                                                                        </a>
-                                                                        <ul class="dropdown-menu">
-                                                                            <li id="link_note_update"></li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </th>
-                                                                <th colspan="2"></th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="row_comment" class="row_list_class"></tbody>
                                                     </table>
                                                 </td>
                                             </tr>
