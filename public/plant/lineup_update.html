@@ -90,6 +90,7 @@
     var date_option = {year: "numeric", month: "long", day: "numeric"}
     var currentDate = new Date(getCurrentDate).toLocaleDateString('en', date_option);
     var optionTable = "";
+    var passDate = new Date(getCurrentDate).toLocaleDateString('en');
 
     $(document).ready(function(){
 
@@ -114,6 +115,9 @@
                     }
 
                     tableData(plant);
+                    displayNotif();
+                    refreshNotif();
+                    
                     document.getElementById('id_plant_name').innerHTML = plant_name;
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
 
@@ -552,6 +556,63 @@
 
         event.preventDefault();
 
+        if(option == "machine1" || option == "new_machine1"){
+            headline = "MACHINE 1 SECTION";
+        }else if(option == "machine3" || option == "new_machine3"){
+            headline = "MACHINE 3 SECTION";
+        }else if(option == "forklift_operator" || option == "new_forklift_operator"){
+            headline = "FORKLIFT OPERATOR SECTION";
+        }else if(option == "mechanic" || option == "new_mechanic"){
+            headline = "MECHANIC SECTION";
+        }else if(option == "nonskid1" || option == "new_nonskid1"){
+            headline = "NON-SKID 1 SECTION";
+        }else if(option == "nonskid2" || option == "new_nonskid2"){
+            headline = "NON-SKID 2 SECTION";
+        }else if(option == "nonskid3" || option == "new_nonskid3"){
+            headline = "NON-SKID 3 SECTION";
+        }else if(option == "nonskid4" || option == "new_nonskid4"){
+            headline = "NON-SKID 4 SECTION";
+        }else if(option == "tagapukpok" || option == "new_tagapukpok"){
+            headline = "TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG SECTION";
+        }else if(option == "checker" || option == "new_checker"){
+            headline = "CHECKER / FOREMAN / BATCHER / SUPERVISOR SECTION";
+        }else if(option == "kamador" || option == "new_kamador"){
+            headline = "KAMADOR SECTION";
+        }else if(option == "loader" || option == "new_loader"){
+            headline = "LOADER SECTION";
+        }else if(option == "others" || option == "new_others"){
+            headline = "OTHERS SECTION";
+        }else if(option == "absent_plant" || option == "new_absent_plant"){
+            headline = "ABSENT IN PLANT SECTION";
+        }else if(option == "absent_motorpool" || option == "new_absent_motorpool"){
+            headline = "ABSENT IN MOTORPOOL SECTION";
+        }else if(option == "absent_trucking" || option == "new_absent_trucking"){
+            headline = "ABSENT IN TRUCKING SECTION";
+        }else if(option == "comment" || option == "new_comment"){
+            headline = "COMMENT SECTION";
+        }else if(option == "trucking" || option == "new_trucking"){
+            headline = "TRUCKING SECTION";
+        }
+
+        var currentSystemDate = new Date().toLocaleDateString('en');
+        var currentTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        var timeStamp = new Date().getTime();
+        timeStamp = timeStamp * -1;
+        message = plant + " had updated the " + headline + " in Line Up Page";
+
+        notifData = {
+            time: currentTime,
+            date: currentSystemDate,
+            message: message,
+            isRead: 1,
+            reverseDate: timeStamp,
+            fromOffice: plant,
+            toOffice: "Head Office",
+            page: "lineup.html?plant="+plant+"&date="+passDate
+        }
+
+        firebase.database().ref('notification').push(notifData);
+
         if(option == "absent_plant" || option == "absent_motorpool" || option == "absent_trucking" || option == "new_absent_plant" || option == "new_absent_motorpool" || option == "new_absent_trucking"){
 
             if(option == "absent_plant" || option == "absent_motorpool" || option == "absent_trucking"){
@@ -786,6 +847,61 @@
         }
     }
 
+    function displayNotif(){
+
+        var myList = "";
+        count = 0;
+
+        firebase.database().ref('notification').orderByChild('reverseDate').once('value', function(notifSnapshot){
+
+            if(notifSnapshot.val() != null){
+
+                notifSnapshot.forEach(function(notifChildSnapshot){
+
+                    if(notifChildSnapshot.val().toOffice == plant){
+
+                        date = notifChildSnapshot.val().date;
+                        fromOffice = notifChildSnapshot.val().fromOffice;
+                        message = notifChildSnapshot.val().message;
+                        page = notifChildSnapshot.val().page;
+                        // page = "#";
+                        time = notifChildSnapshot.val().time;
+                        key = notifChildSnapshot.key;
+
+                        if(notifChildSnapshot.val().isRead == 1){
+
+                             myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\"><span class='subject'><span class='from'>From " + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date + "</span></span></a></li>";
+
+                             count++;
+
+                        }else if(notifChildSnapshot.val().isRead == 0){
+
+                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\" style='color: #595959;'><span class='subject'><span class='from'>From " + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date + "</span></span></a></li>";
+
+                        }
+                    }
+                });
+
+                document.getElementById('id_notif_list').innerHTML = myList;
+
+                if(count != 0){
+                    document.getElementById('id_badge').innerHTML = "<span class='badge bg-important'>" + count + "</span>";
+                }
+            }
+
+            $('.class_notif').text(count);
+        });
+    }
+
+    function visitSite(key){
+
+        notifData = {
+            isRead: 0
+        }
+
+        firebase.database().ref('notification/'+key).update(notifData);
+    }
+
 </script>
 <style>
 .input_type{
@@ -813,6 +929,23 @@
             <div class="top-nav notification-row">                
                 <!-- notificatoin dropdown start-->
                 <ul class="nav pull-right top-menu">
+
+                    <!-- inbox notificatoin start-->
+                    <li id="mail_notificatoin_bar" class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <i class="icon-envelope-l"></i>
+                            <span id="id_badge"></span>
+                        </a>
+                        <ul class="dropdown-menu extended inbox" style="max-height: 500px; overflow-y: auto">
+                            <div class="notify-arrow notify-arrow-blue"></div>
+                            <li>
+                                <p class="blue">You have <span class="class_notif"></span> new messages</p>
+                            </li>
+                            <span id="id_notif_list"></span>
+                        </ul>
+                    </li>
+                    <!-- inbox notificatoin end -->
+
                     <!-- user login dropdown start-->
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">

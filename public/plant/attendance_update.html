@@ -109,6 +109,8 @@
                     }
 
                     tableData(plant);
+                    displayNotif();
+                    refreshNotif();
 
                     if(plant == 'Bravo'){
                         plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
@@ -593,6 +595,62 @@
 
         event.preventDefault();
 
+        if(option == "office" || option == "new_office"){
+            headline = "OFFICE SECTION";
+        }else if(option == "new_employee" || option == "new_employee_hired"){
+            headline = "NEW EMPLOYEE SECTION";
+        }else if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4" || option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4"){
+
+            if(option == "nonskid1" || option == "new_nonskid1"){
+                headline = "NON-SKID 1 SECTION";
+            }else if(option == "nonskid2" || option == "new_nonskid2"){
+                headline = "NON-SKID 2 SECTION";
+            }else if(option == "nonskid3" || option == "new_nonskid3"){
+                headline = "NON-SKID 3 SECTION";
+            }else if(option == "nonskid4" || option == "new_nonskid4"){
+                headline = "NON-SKID 4 SECTION";
+            }
+
+        }else if(option == "truck" || option == "new_truck"){
+            headline = "TRUCKING SECTION";
+        }else if(option == "forklift_operator" || option == "new_forklift_operator"){
+            headline = "FORKLIFT OPERATOR SECTION";
+        }else if(option == "guard" || option == "new_guard"){
+            headline = "GUARD SECTION";
+        }else if(option == "plant" || option == "motorpool" || option == "trucking" || option == "new_plant" || option == "new_motorpool" || option == "new_trucking"){
+
+            if(option == "plant" || option == "new_plant"){
+                headline = "ABSENT IN PLANT SECTION";
+            }else if(option == "motorpool" || option == "new_motorpool"){
+                headline = "ABSENT IN MOTORPOOL SECTION";
+            }else if(option == "trucking" || option == "new_trucking"){
+                headline = "ABSENT IN TRUCKING SECTION";
+            }
+
+        }else if(option == "note" || option == "new_note"){
+            headline = "NOTE SECTION";
+        }
+
+        var currentSystemDate = new Date().toLocaleDateString('en');
+        var currentTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        var timeStamp = new Date().getTime();
+        timeStamp = timeStamp * -1;
+
+        message = plant + " had updated the " + headline + " in Attendance Page";
+
+        notifData = {
+            time: currentTime,
+            date: currentSystemDate,
+            message: message,
+            isRead: 1,
+            reverseDate: timeStamp,
+            fromOffice: plant,
+            toOffice: "Head Office",
+            page: "attendance.html?plant="+plant+"&date="+todayDate
+        }
+
+        firebase.database().ref('notification').push(notifData);
+
         count = 0;
         if(option == "office" || option == "new_office"){
 
@@ -863,6 +921,61 @@
         }
     }
 
+    function displayNotif(){
+
+        var myList = "";
+        count = 0;
+
+        firebase.database().ref('notification').orderByChild('reverseDate').once('value', function(notifSnapshot){
+
+            if(notifSnapshot.val() != null){
+
+                notifSnapshot.forEach(function(notifChildSnapshot){
+
+                    if(notifChildSnapshot.val().toOffice == plant){
+
+                        date = notifChildSnapshot.val().date;
+                        fromOffice = notifChildSnapshot.val().fromOffice;
+                        message = notifChildSnapshot.val().message;
+                        page = notifChildSnapshot.val().page;
+                        // page = "#";
+                        time = notifChildSnapshot.val().time;
+                        key = notifChildSnapshot.key;
+
+                        if(notifChildSnapshot.val().isRead == 1){
+
+                             myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\"><span class='subject'><span class='from'>From " + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date + "</span></span></a></li>";
+
+                             count++;
+
+                        }else if(notifChildSnapshot.val().isRead == 0){
+
+                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\" style='color: #595959;'><span class='subject'><span class='from'>From " + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date + "</span></span></a></li>";
+
+                        }
+                    }
+                });
+
+                document.getElementById('id_notif_list').innerHTML = myList;
+
+                if(count != 0){
+                    document.getElementById('id_badge').innerHTML = "<span class='badge bg-important'>" + count + "</span>";
+                }
+            }
+
+            $('.class_notif').text(count);
+        });
+    }
+
+    function visitSite(key){
+
+        notifData = {
+            isRead: 0
+        }
+
+        firebase.database().ref('notification/'+key).update(notifData);
+    }
+
 </script>
 <style>
 .input_type{
@@ -890,6 +1003,23 @@
             <div class="top-nav notification-row">                
                 <!-- notificatoin dropdown start-->
                 <ul class="nav pull-right top-menu">
+
+                    <!-- inbox notificatoin start-->
+                    <li id="mail_notificatoin_bar" class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <i class="icon-envelope-l"></i>
+                            <span id="id_badge"></span>
+                        </a>
+                        <ul class="dropdown-menu extended inbox" style="max-height: 500px; overflow-y: auto">
+                            <div class="notify-arrow notify-arrow-blue"></div>
+                            <li>
+                                <p class="blue">You have <span class="class_notif"></span> new messages</p>
+                            </li>
+                            <span id="id_notif_list"></span>
+                        </ul>
+                    </li>
+                    <!-- inbox notificatoin end -->
+
                     <!-- user login dropdown start-->
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">

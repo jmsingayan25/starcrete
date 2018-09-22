@@ -107,6 +107,8 @@
                     displayForkliftList();
                     displayTruckingList();
                     insertToEmployeeArray();
+                    displayNotif();
+                    refreshNotif();
 
                     if(plant == 'Bravo'){
                         plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
@@ -230,6 +232,7 @@
 
         var date_of_attendance = document.getElementById('date_selected').value;
         var option = {year: "numeric", month: "long", day: "numeric"};
+        var passDate = new Date(date_of_attendance).toLocaleDateString('en');
         date_of_attendance = new Date(date_of_attendance).toLocaleDateString('en', option);
 
         var time_start = document.getElementById('time_start_selected').value;
@@ -295,6 +298,12 @@
 
         var input_note_lineup = document.getElementById('note_lineup').value;
         var input_note_attendance = document.getElementById('note_attendance').value;
+
+        var currentSystemDate = new Date().toLocaleDateString('en');
+        var currentTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        var timeStamp = new Date().getTime();
+        timeStamp = timeStamp * -1;
+        message = "Line Up details for " + passDate + " is available.";
 
         if(date_newSet == ""){
             query_ext = "";
@@ -666,10 +675,78 @@
         }
         /*END GUARD EMPLOYEE*/
 
+        notifData = {
+            time: currentTime,
+            date: currentSystemDate,
+            message: message,
+            isRead: 1,
+            reverseDate: timeStamp,
+            fromOffice: plant,
+            toOffice: "Head Office",
+            page: "lineup.html?plant="+plant+"&date="+passDate
+        }
+
+        firebase.database().ref('notification').push(notifData);
+
         if(count == input_nightshift_name.length){
             alert("Line Up recorded");
             window.location='lineup.html';
         }        
+    }
+
+    function displayNotif(){
+
+        var myList = "";
+        count = 0;
+
+        firebase.database().ref('notification').orderByChild('reverseDate').once('value', function(notifSnapshot){
+
+            if(notifSnapshot.val() != null){
+
+                notifSnapshot.forEach(function(notifChildSnapshot){
+
+                    if(notifChildSnapshot.val().toOffice == plant){
+
+                        date = notifChildSnapshot.val().date;
+                        fromOffice = notifChildSnapshot.val().fromOffice;
+                        message = notifChildSnapshot.val().message;
+                        page = notifChildSnapshot.val().page;
+                        // page = "#";
+                        time = notifChildSnapshot.val().time;
+                        key = notifChildSnapshot.key;
+
+                        if(notifChildSnapshot.val().isRead == 1){
+
+                             myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\"><span class='subject'><span class='from'>From " + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date + "</span></span></a></li>";
+
+                             count++;
+
+                        }else if(notifChildSnapshot.val().isRead == 0){
+
+                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\" style='color: #595959;'><span class='subject'><span class='from'>From " + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date + "</span></span></a></li>";
+
+                        }
+                    }
+                });
+
+                document.getElementById('id_notif_list').innerHTML = myList;
+
+                if(count != 0){
+                    document.getElementById('id_badge').innerHTML = "<span class='badge bg-important'>" + count + "</span>";
+                }
+            }
+
+            $('.class_notif').text(count);
+        });
+    }
+
+    function visitSite(key){
+
+        notifData = {
+            isRead: 0
+        }
+
+        firebase.database().ref('notification/'+key).update(notifData);
     }
 
 </script>
@@ -701,6 +778,23 @@
             <div class="top-nav notification-row">                
                 <!-- notificatoin dropdown start-->
                 <ul class="nav pull-right top-menu">
+
+                    <!-- inbox notificatoin start-->
+                    <li id="mail_notificatoin_bar" class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <i class="icon-envelope-l"></i>
+                            <span id="id_badge"></span>
+                        </a>
+                        <ul class="dropdown-menu extended inbox" style="max-height: 500px; overflow-y: auto">
+                            <div class="notify-arrow notify-arrow-blue"></div>
+                            <li>
+                                <p class="blue">You have <span class="class_notif"></span> new messages</p>
+                            </li>
+                            <span id="id_notif_list"></span>
+                        </ul>
+                    </li>
+                    <!-- inbox notificatoin end -->
+
                     <!-- user login dropdown start-->
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
