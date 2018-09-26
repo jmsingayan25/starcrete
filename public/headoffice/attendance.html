@@ -148,7 +148,8 @@
         var myTableComment = "";
 
         var input_date = document.getElementById('input_date').value;
-        var option = {year: "numeric", month: "long", day: "numeric"}
+        var option = {year: "numeric", month: "long", day: "numeric"};
+        var option1 = {weekday: 'long', year: "numeric", month: "long", day: "numeric"};
 
         if(input_date != ''){
             var passcurrentDate = new Date(input_date).toLocaleDateString('en');
@@ -169,6 +170,7 @@
             if(yesterdayData.val() != null){
 
                 $(".class_yesterday").text("(" + yesterdayDate + ")");
+                
             }else{
 
                 // var beforeYesterdayDate = currentDate1.setDate(currentDate1.getDate() - 1);
@@ -200,7 +202,7 @@
 
         $(".class_today").text("(" + passcurrentDate + ")");
 
-        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <button class='btn btn-success btn-print' onclick=\"return tablePrint('old');\" style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button> <br>  Plant: " + plant + " <br> <span id='id_time'></span></th>";
+        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + new Date(currentDate).toLocaleDateString('en', option1) + " <button class='btn btn-success btn-print' onclick=\"return tablePrint('old');\" style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button> <br>  Plant: " + plant + " <br> <span id='id_time'></span></th>";
 
         document.getElementById('link_headoffice_update').innerHTML = "<a href='attendance_update.html?option=comment&date=" + passcurrentDate + "&plant=" + plant + "'>Update</a>";
 

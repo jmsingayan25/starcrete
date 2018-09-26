@@ -154,6 +154,7 @@
 
         var input_date = document.getElementById('input_date').value;
         var option = {year: "numeric", month: "long", day: "numeric"}
+        var option1 = {weekday: 'long', year: "numeric", month: "long", day: "numeric"};
 
         if(input_date != ''){
             var passcurrentDate = new Date(input_date).toLocaleDateString('en');
@@ -205,7 +206,7 @@
         
         $(".class_today").text("(" + passcurrentDate + ")");
 
-        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <br> <span id='id_schedule'></span></th>";
+        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + new Date(currentDate).toLocaleDateString('en', option1) + " <br> <span id='id_schedule'></span></th>";
 
         document.getElementById('link_office_update').innerHTML = "<a href='attendance_update.html?option=office&date=" + passcurrentDate + "'>Update</a>";
         document.getElementById('link_new_employee_update').innerHTML = "<a href='attendance_update.html?option=new_employee&date=" + passcurrentDate + "'>Update</a>";

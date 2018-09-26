@@ -138,8 +138,8 @@
         var myTableRow7 = "";
 
         input_date = document.getElementById('input_date').value;
-
         var option = {year: "numeric", month: "long", day: "numeric"}
+        var option1 = {weekday: 'long', year: "numeric", month: "long", day: "numeric"};
 
         if(input_date != ''){
             var passcurrentDate = new Date(input_date).toLocaleDateString('en');
@@ -149,7 +149,7 @@
             var currentDate = new Date().toLocaleDateString('en', option);
         }
 
-        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <button class='btn btn-success btn-md btn-print' onclick=\"tablePrint('old');\" style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button> <br> Plant: " + plant + " <br> <span id='id_time'></span> </th>";
+        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + new Date(currentDate).toLocaleDateString('en', option1) + " <button class='btn btn-success btn-md btn-print' onclick=\"tablePrint('old');\" style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button> <br> Plant: " + plant + " <br> <span id='id_time'></span> </th>";
 
         document.getElementById('link_comment_update').innerHTML = "<a href='lineup_update.html?plant=" + plant + "&option=comment&date=" + passcurrentDate + "'>Update</a>";
 

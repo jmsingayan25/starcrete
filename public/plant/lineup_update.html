@@ -115,6 +115,7 @@
                     }
 
                     tableData(plant);
+                    insertToEmployeeArray();
                     displayNotif();
                     refreshNotif();
                     
@@ -136,6 +137,19 @@
         document.getElementById('header_text').innerHTML = "Update Form for " + currentDate;
 
     });
+
+    function insertToEmployeeArray(){
+
+        var employee_array = [];
+
+        firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            listSnapshot.forEach(function(listChildSnapshot){
+                employee_array.push(listChildSnapshot.val().employee_name);
+            });
+
+            $('.employees').autocomplete({source: employee_array});
+        });
+    }
 
     function tableData(plant){
 
@@ -197,7 +211,7 @@
 
                 optionSnapshot.forEach(function(optionChildSnapshot){
 
-                    optionTable += "<tr><td><input type='text' name='update_employee_name[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_name + "' class='form-control'></td> <td><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
+                    optionTable += "<tr><td><input type='text' name='update_employee_name[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_name + "' class='form-control employees'></td> <td><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
                 });
 
                 optionTable += "</tbody>";
@@ -246,7 +260,7 @@
 
                 optionSnapshot.forEach(function(optionChildSnapshot){
 
-                    optionTable += "<tr><td class='col-md-5'><input type='text' name='update_employee_name[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_name + "' class='form-control'></td><td class='col-md-5'><input type='text' name='update_employee_position[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_position + "' class='form-control'></td><td class='col-md-1'><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
+                    optionTable += "<tr><td class='col-md-5'><input type='text' name='update_employee_name[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_name + "' class='form-control employees'></td><td class='col-md-5'><input type='text' name='update_employee_position[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_position + "' class='form-control'></td><td class='col-md-1'><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
                 });
 
                 optionTable += "</tbody>";
@@ -273,11 +287,11 @@
 
                     optionSnapshot.forEach(function(optionChildSnapshot){
 
-                        optionTable += "<tr align='center'><td class='col-md-1'>" + optionChildSnapshot.val().truck_no + "</td><td class='col-md-2'><input type='hidden' name='hidden_trucking[]' value='" + optionChildSnapshot.val().truck_no + "'><textarea name='update_driver[]' style='text-transform: uppercase;' class='form-control'>" + optionChildSnapshot.val().driver + "</textarea></td><td class='col-md-2'><textarea name='update_pahinante1[]' style='text-transform: uppercase;' class='form-control'>" + optionChildSnapshot.val().pahinante1 + "</textarea></td><td class='col-md-2'><textarea name='update_pahinante2[]' style='text-transform: uppercase;' class='form-control'>" + optionChildSnapshot.val().pahinante2 + "</textarea></td><td class='col-md-2'><textarea name='update_comment[]' style='text-transform: uppercase;' class='form-control'>" + optionChildSnapshot.val().comment + "</textarea></td></tr>";
+                        optionTable += "<tr align='center'><td class='col-md-1'>" + optionChildSnapshot.val().truck_no + "</td><td class='col-md-2'><input type='hidden' name='hidden_trucking[]' value='" + optionChildSnapshot.val().truck_no + "'><textarea name='update_driver[]' style='text-transform: uppercase;' class='form-control employees'>" + optionChildSnapshot.val().driver + "</textarea></td><td class='col-md-2'><textarea name='update_pahinante1[]' style='text-transform: uppercase;' class='form-control employees'>" + optionChildSnapshot.val().pahinante1 + "</textarea></td><td class='col-md-2'><textarea name='update_pahinante2[]' style='text-transform: uppercase;' class='form-control employees'>" + optionChildSnapshot.val().pahinante2 + "</textarea></td><td class='col-md-2'><textarea name='update_comment[]' style='text-transform: uppercase;' class='form-control'>" + optionChildSnapshot.val().comment + "</textarea></td></tr>";
 
                     });
 
-                    optionTable += "<tr align='center'><td class='col-md-1'>HOWO</td><td class='col-md-2'><input type='hidden' name='hidden_trucking[]' value='HOWO'><textarea name='update_driver[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_pahinante1[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_pahinante2[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_comment[]' style='text-transform: uppercase;' class='form-control'></textarea></td></tr>";
+                    optionTable += "<tr align='center'><td class='col-md-1'>HOWO</td><td class='col-md-2'><input type='hidden' name='hidden_trucking[]' value='HOWO'><textarea name='update_driver[]' style='text-transform: uppercase;' class='form-control employees'></textarea></td><td class='col-md-2'><textarea name='update_pahinante1[]' style='text-transform: uppercase;' class='form-control employees'></textarea></td><td class='col-md-2'><textarea name='update_pahinante2[]' style='text-transform: uppercase;' class='form-control employees'></textarea></td><td class='col-md-2'><textarea name='update_comment[]' style='text-transform: uppercase;' class='form-control'></textarea></td></tr>";
 
                     optionTable += "</tbody>";
 
@@ -288,7 +302,7 @@
                     firebase.database().ref('trucking_list/'+plant).once('value', function(truckingSnapshot){
                         truckingSnapshot.forEach(function(truckingChildSnapshot){
 
-                            optionTable += "<tr align='center'><td class='col-md-1'>" + truckingChildSnapshot.val().item + "</td><td class='col-md-2'><input type='hidden' name='hidden_trucking[]' value='" + truckingChildSnapshot.val().item + "'><textarea name='update_driver[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_pahinante1[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_pahinante2[]' style='text-transform: uppercase;' class='form-control'></textarea></td><td class='col-md-2'><textarea name='update_comment[]' style='text-transform: uppercase;' class='form-control'></textarea></td></tr>";
+                            optionTable += "<tr align='center'><td class='col-md-1'>" + truckingChildSnapshot.val().item + "</td><td class='col-md-2'><input type='hidden' name='hidden_trucking[]' value='" + truckingChildSnapshot.val().item + "'><textarea name='update_driver[]' style='text-transform: uppercase;' class='form-control employees'></textarea></td><td class='col-md-2'><textarea name='update_pahinante1[]' style='text-transform: uppercase;' class='form-control employees'></textarea></td><td class='col-md-2'><textarea name='update_pahinante2[]' style='text-transform: uppercase;' class='form-control employees'></textarea></td><td class='col-md-2'><textarea name='update_comment[]' style='text-transform: uppercase;' class='form-control'></textarea></td></tr>";
                         });
 
                         document.getElementById('id_fields').innerHTML = optionTable;
@@ -313,7 +327,7 @@
 
                 optionSnapshot.forEach(function(optionChildSnapshot){
 
-                    optionTable += "<tr align='center'><input type='hidden' name='hidden_forklift_no[]' value='" + optionChildSnapshot.val().forklift_no + "'><td><strong>" + optionChildSnapshot.val().forklift_no + "</strong></td><td><input type='text' name='update_operator[]' value='" + optionChildSnapshot.val().operator + "' class='form-control input_type'></td><td><input type='text' name='update_operator_comment[]' value='" + optionChildSnapshot.val().comment + "' class='form-control input_type'></td></tr>";
+                    optionTable += "<tr align='center'><input type='hidden' name='hidden_forklift_no[]' value='" + optionChildSnapshot.val().forklift_no + "'><td><strong>" + optionChildSnapshot.val().forklift_no + "</strong></td><td><input type='text' name='update_operator[]' value='" + optionChildSnapshot.val().operator + "' class='form-control input_type employees'></td><td><input type='text' name='update_operator_comment[]' value='" + optionChildSnapshot.val().comment + "' class='form-control input_type'></td></tr>";
 
                 });
 
@@ -345,14 +359,14 @@
 
                     helperSnapshot.forEach(function(helperChildSnapshot){
 
-                        optionTable += "<tr><td colspan='2'><input type='text' id='update_helper_name' class='form-control input_type' value='" + helperChildSnapshot.val().helper_name + "'></td></tr>";
+                        optionTable += "<tr><td colspan='2'><input type='text' id='update_helper_name' class='form-control input_type employees' value='" + helperChildSnapshot.val().helper_name + "'></td></tr>";
                     });
 
                     optionTable += "</thead></tbody><br><br><thead><tr><th class='col-md-8 header_center'>Name</th><th class='col-md-1'></th></thead><tbody>";
 
                     employeeSnapshot.forEach(function(employeeChildSnapshot){
 
-                        optionTable += "<tr><td><input type='text' name='update_employee_name[]' class='form-control input_type' value='" + employeeChildSnapshot.val().employee_name + "'></td><td><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + employeeChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
+                        optionTable += "<tr><td><input type='text' name='update_employee_name[]' class='form-control input_type employees' value='" + employeeChildSnapshot.val().employee_name + "'></td><td><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + employeeChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
 
                     });
 
@@ -384,7 +398,7 @@
 
                 absentSnapshot.forEach(function(absentChildSnapshot){
 
-                    optionTable += "<tr><td><input type='text' name='update_employee_name[]' class='form-control input_type' value='" + absentChildSnapshot.val().employee_name + "'></td><td><textarea name='update_employee_reason[]' class='form-control input_type' rows='2'>" + absentChildSnapshot.val().employee_comment + "</textarea></td><td><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + absentChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
+                    optionTable += "<tr><td><input type='text' name='update_employee_name[]' class='form-control input_type employees' value='" + absentChildSnapshot.val().employee_name + "'></td><td><textarea name='update_employee_reason[]' class='form-control input_type' rows='2'>" + absentChildSnapshot.val().employee_comment + "</textarea></td><td><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + absentChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
                 });
 
                 optionTable += "</tbody>";
@@ -404,20 +418,30 @@
 
         if(option == "kamador" || option == "loader" || option == "mechanic" || option == "new_kamador" || option == "new_loader" || option == "new_mechanic"){
 
-            $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-5'><input type='text' name='update_employee_name[]' class='form-control input_type' required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
+            $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-5'><input type='text' name='update_employee_name[]' class='form-control input_type employees' required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
 
         }else if(option == "tagapukpok" || option == "checker" || option == "others" || option == "machine1" || option == "machine3" || option == "new_tagapukpok" || option == "new_checker" || option == "new_others" || option == "new_machine1" || option == "new_machine3"){
 
-            $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-5'><input type='text' name='update_employee_name[]' class='form-control input_type' required></td><td class='col-md-5'><input type='text' name='update_employee_position[]' style='text-transform: uppercase;' class='form-control'></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
+            $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-5'><input type='text' name='update_employee_name[]' class='form-control input_type employees' required></td><td class='col-md-5'><input type='text' name='update_employee_position[]' style='text-transform: uppercase;' class='form-control'></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
 
         }else if(option == "absent_plant" || option == "absent_motorpool" || option == "absent_trucking" || option == "new_absent_plant" || option == "new_absent_motorpool" || option == "new_absent_trucking"){
 
-            $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-3'><input type='text' name='update_employee_name[]' class='form-control input_type' required></td><td class='col-md-6'><textarea name='update_employee_reason[]' class='form-control input_type' rows='2' required></textarea></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
+            $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-3'><input type='text' name='update_employee_name[]' class='form-control input_type employees' required></td><td class='col-md-6'><textarea name='update_employee_reason[]' class='form-control input_type' rows='2' required></textarea></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
         
         }else if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4" || option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4"){
 
-            $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-8'><input type='text' name='update_employee_name[]' class='form-control input_type' required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
+            $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-8'><input type='text' name='update_employee_name[]' class='form-control input_type employees' required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
         }
+
+        var employee_array = [];
+
+        firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            listSnapshot.forEach(function(listChildSnapshot){
+                employee_array.push(listChildSnapshot.val().employee_name);
+            });
+
+            $('.employees').autocomplete({source: employee_array});
+        });
     }
 
 

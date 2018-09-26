@@ -93,6 +93,7 @@
     var date = getUrlParameter('date');
     var type = getUrlParameter('type');
     var option = {year: "numeric", month: "long", day: "numeric"}
+    var option1 = {weekday: 'long', year: "numeric", month: "long", day: "numeric"};
     var currentDate = new Date(date).toLocaleDateString('en', option);
     var currentDate1 = new Date(date);
     var myTableOfficeEmployee = "";
@@ -150,7 +151,7 @@
 
         document.getElementById('page_header').innerHTML = plant + " ATTENDANCE";
 
-        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <button class='btn btn-success' id='printPageButton' onclick='window.print();' style='float: right;'><span class='fa fa-print'></span> <strong>Print</strong></button> <br> <span id='id_schedule'></span></th>";
+        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + new Date(currentDate).toLocaleDateString('en', option1) + " <button class='btn btn-success' id='printPageButton' onclick='window.print();' style='float: right;'><span class='fa fa-print'></span> <strong>Print</strong></button> <br> <span id='id_schedule'></span></th>";
 
 
         firebase.database().ref('attendance/'+plant+'/'+currentDate).once('value', function(attendanceSnapshot){
