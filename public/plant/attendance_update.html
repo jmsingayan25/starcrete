@@ -138,7 +138,7 @@
 
         var employee_array = [];
 
-        firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+        firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
             listSnapshot.forEach(function(listChildSnapshot){
                 employee_array.push(listChildSnapshot.val().employee_name);
             });
@@ -270,7 +270,7 @@
 
                     helperSnapshot.forEach(function(helperChildSnapshot){
 
-                        optionTable += "<tr><td colspan='2'><input type='text' id='update_helper_name' class='form-control employees input_type' value='" + helperChildSnapshot.val().helper_name + "'></td></tr>";
+                        optionTable += "<tr><td colspan='2'><input type='text' id='update_helper_name' class='form-control nonskid input_type' value='" + helperChildSnapshot.val().helper_name + "'></td></tr>";
 
                     });
 
@@ -278,7 +278,7 @@
 
                     employeeSnapshot.forEach(function(employeeChildSnapshot){
 
-                        optionTable += "<tr><td><input type='text' name='update_employee_name[]' class='form-control employees input_type' value='" + employeeChildSnapshot.val().employee_name + "'></td><td><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + employeeChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
+                        optionTable += "<tr><td><input type='text' name='update_employee_name[]' class='form-control nonskid input_type' value='" + employeeChildSnapshot.val().employee_name + "'></td><td><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + employeeChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
 
                         count++;
                     });
@@ -287,6 +287,15 @@
 
                     document.getElementById('id_table_view').innerHTML = optionTable;
 
+                    var nonskid_array = [];
+
+                    firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
+                        listSnapshot.forEach(function(listChildSnapshot){
+                            nonskid_array.push(listChildSnapshot.val().employee_name);
+                        });
+
+                        $('.nonskid').autocomplete({source: nonskid_array});
+                    });
                 });
             });
 
@@ -362,34 +371,43 @@
 
                         guardDaySnapshot.forEach(function(guardDayChildSnapshot){
 
-                            optionTable += "<tr><td><input type='text' name='update_dayshift_guard[]' class='form-control input_type employees' value='" + guardDayChildSnapshot.val().guard_name + "'></td><td><input type='text' name='update_dayshift_position[]' class='form-control input_type' value='" + guardDayChildSnapshot.val().guard_position + "'></td></tr>";
+                            optionTable += "<tr><td><input type='text' name='update_dayshift_guard[]' class='form-control input_type guard_class' value='" + guardDayChildSnapshot.val().guard_name + "'></td><td><input type='text' name='update_dayshift_position[]' class='form-control input_type' value='" + guardDayChildSnapshot.val().guard_position + "'></td></tr>";
 
                             day_count++;
                         });
 
                         if(day_count < 2){
 
-                            optionTable += "<tr><td><input type='text' name='update_dayshift_guard[]' class='form-control input_type employees' value='N/A'></td><td><input type='text' name='update_dayshift_position[]' class='form-control input_type' value='N/A'></td></tr>";
+                            optionTable += "<tr><td><input type='text' name='update_dayshift_guard[]' class='form-control input_type guard_class' value='N/A'></td><td><input type='text' name='update_dayshift_position[]' class='form-control input_type' value='N/A'></td></tr>";
                         }
 
                         optionTable += "</tbody><thead><tr><th colspan='2' class='header_center'>NIGHT SHIFT</th></tr><tr><th colspan='1' class='header_center'>Name</th><th colspan='1' class='header_center'>Position</th></tr></thead><tbody>";
 
                         guardNightSnapshot.forEach(function(guardNightChildSnapshot){
 
-                            optionTable += "<tr><td><input type='text' name='update_nightshift_guard[]' class='form-control input_type employees' value='" + guardNightChildSnapshot.val().guard_name + "'></td><td><input type='text' name='update_nightshift_position[]' class='form-control input_type' value='" + guardNightChildSnapshot.val().guard_position + "'></td></tr>";
+                            optionTable += "<tr><td><input type='text' name='update_nightshift_guard[]' class='form-control input_type guard_class' value='" + guardNightChildSnapshot.val().guard_name + "'></td><td><input type='text' name='update_nightshift_position[]' class='form-control input_type' value='" + guardNightChildSnapshot.val().guard_position + "'></td></tr>";
 
                             night_count++;
                         });
 
                         if(night_count < 2){
 
-                            optionTable += "<tr><td><input type='text' name='update_nightshift_guard[]' class='form-control input_type employees' value='N/A'></td><td><input type='text' name='update_nightshift_position[]' class='form-control input_type' value='N/A'></td></tr>";
+                            optionTable += "<tr><td><input type='text' name='update_nightshift_guard[]' class='form-control input_type guard_class' value='N/A'></td><td><input type='text' name='update_nightshift_position[]' class='form-control input_type' value='N/A'></td></tr>";
                         }
 
                         optionTable += "</tbody></table></td></tr>";
 
                         document.getElementById('id_table_view').innerHTML = optionTable;
 
+                        var guard_array = [];
+
+                        firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
+                            listSnapshot.forEach(function(listChildSnapshot){
+                                guard_array.push(listChildSnapshot.val().employee_name);
+                            });
+
+                            $('.guard_class').autocomplete({source: guard_array});
+                        });
                     });
                 });
             });
@@ -481,7 +499,7 @@
 
         var employee_array = [];
 
-        firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+        firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
             listSnapshot.forEach(function(listChildSnapshot){
                 employee_array.push(listChildSnapshot.val().employee_name);
             });

@@ -142,7 +142,7 @@
 
         var employee_array = [];
 
-        firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+        firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
             listSnapshot.forEach(function(listChildSnapshot){
                 employee_array.push(listChildSnapshot.val().employee_name);
             });
@@ -359,14 +359,14 @@
 
                     helperSnapshot.forEach(function(helperChildSnapshot){
 
-                        optionTable += "<tr><td colspan='2'><input type='text' id='update_helper_name' class='form-control input_type employees' value='" + helperChildSnapshot.val().helper_name + "'></td></tr>";
+                        optionTable += "<tr><td colspan='2'><input type='text' id='update_helper_name' class='form-control input_type nonskid' value='" + helperChildSnapshot.val().helper_name + "'></td></tr>";
                     });
 
                     optionTable += "</thead></tbody><br><br><thead><tr><th class='col-md-8 header_center'>Name</th><th class='col-md-1'></th></thead><tbody>";
 
                     employeeSnapshot.forEach(function(employeeChildSnapshot){
 
-                        optionTable += "<tr><td><input type='text' name='update_employee_name[]' class='form-control input_type employees' value='" + employeeChildSnapshot.val().employee_name + "'></td><td><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + employeeChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
+                        optionTable += "<tr><td><input type='text' name='update_employee_name[]' class='form-control input_type nonskid' value='" + employeeChildSnapshot.val().employee_name + "'></td><td><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + employeeChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
 
                     });
 
@@ -374,6 +374,15 @@
 
                     document.getElementById('id_fields').innerHTML = optionTable;
 
+                    var nonskid_array = [];
+
+                    firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
+                        listSnapshot.forEach(function(listChildSnapshot){
+                            nonskid_array.push(listChildSnapshot.val().employee_name);
+                        });
+
+                        $('.nonskid').autocomplete({source: nonskid_array});
+                    });
                 });
             });
 
@@ -435,7 +444,7 @@
 
         var employee_array = [];
 
-        firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+        firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
             listSnapshot.forEach(function(listChildSnapshot){
                 employee_array.push(listChildSnapshot.val().employee_name);
             });

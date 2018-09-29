@@ -10,7 +10,7 @@
         
             var employee_array = [];
 
-            firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
                 listSnapshot.forEach(function(listChildSnapshot){
 
                     employee_array.push(listChildSnapshot.val().employee_name);
@@ -28,7 +28,7 @@
     
         var employee_array = [];
 
-            firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
                 listSnapshot.forEach(function(listChildSnapshot){
 
                     employee_array.push(listChildSnapshot.val().employee_name);
@@ -46,7 +46,7 @@
     
         var employee_array = [];
 
-            firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
                 listSnapshot.forEach(function(listChildSnapshot){
 
                     employee_array.push(listChildSnapshot.val().employee_name);
@@ -64,7 +64,7 @@
     
         var employee_array = [];
 
-            firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
                 listSnapshot.forEach(function(listChildSnapshot){
 
                     employee_array.push(listChildSnapshot.val().employee_name);
@@ -82,7 +82,7 @@
     
         var employee_array = [];
 
-            firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
                 listSnapshot.forEach(function(listChildSnapshot){
 
                     employee_array.push(listChildSnapshot.val().employee_name);
@@ -100,7 +100,7 @@
 
     var employee_array = [];
 
-            firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
                 listSnapshot.forEach(function(listChildSnapshot){
 
                     employee_array.push(listChildSnapshot.val().employee_name);
@@ -118,7 +118,7 @@
 
     var employee_array = [];
 
-            firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
                 listSnapshot.forEach(function(listChildSnapshot){
 
                     employee_array.push(listChildSnapshot.val().employee_name);
@@ -136,7 +136,7 @@
     
         var employee_array = [];
 
-            firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
                 listSnapshot.forEach(function(listChildSnapshot){
 
                     employee_array.push(listChildSnapshot.val().employee_name);
@@ -154,7 +154,7 @@
     
         var employee_array = [];
 
-            firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
                 listSnapshot.forEach(function(listChildSnapshot){
 
                     employee_array.push(listChildSnapshot.val().employee_name);
@@ -172,7 +172,7 @@
     
         var employee_array = [];
 
-            firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
                 listSnapshot.forEach(function(listChildSnapshot){
 
                     employee_array.push(listChildSnapshot.val().employee_name);
@@ -190,7 +190,7 @@
     
         var employee_array = [];
 
-            firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
                 listSnapshot.forEach(function(listChildSnapshot){
 
                     employee_array.push(listChildSnapshot.val().employee_name);
@@ -208,7 +208,7 @@
         
             var employee_array = [];
 
-            firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
                 listSnapshot.forEach(function(listChildSnapshot){
 
                     employee_array.push(listChildSnapshot.val().employee_name);
@@ -226,7 +226,7 @@
         
             var employee_array = [];
 
-            firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
                 listSnapshot.forEach(function(listChildSnapshot){
 
                     employee_array.push(listChildSnapshot.val().employee_name);
@@ -244,7 +244,7 @@
         
             var employee_array = [];
 
-            firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
                 listSnapshot.forEach(function(listChildSnapshot){
 
                     employee_array.push(listChildSnapshot.val().employee_name);
@@ -262,7 +262,7 @@
         
             var employee_array = [];
 
-            firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
                 listSnapshot.forEach(function(listChildSnapshot){
 
                     employee_array.push(listChildSnapshot.val().employee_name);
@@ -280,7 +280,7 @@
         
             var employee_array = [];
 
-            firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
                 listSnapshot.forEach(function(listChildSnapshot){
 
                     employee_array.push(listChildSnapshot.val().employee_name);
@@ -298,7 +298,7 @@
         
             var employee_array = [];
 
-            firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
                 listSnapshot.forEach(function(listChildSnapshot){
 
                     employee_array.push(listChildSnapshot.val().employee_name);
@@ -316,7 +316,7 @@
         
             var employee_array = [];
 
-            firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
                 listSnapshot.forEach(function(listChildSnapshot){
 
                     employee_array.push(listChildSnapshot.val().employee_name);
@@ -334,7 +334,7 @@
         
             var employee_array = [];
 
-            firebase.database().ref('employee_list/'+plant).once('value', function(listSnapshot){
+            firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
                 listSnapshot.forEach(function(listChildSnapshot){
 
                     employee_array.push(listChildSnapshot.val().employee_name);
