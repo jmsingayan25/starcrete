@@ -171,25 +171,24 @@
         firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(commentSnapshot){
             commentSnapshot.forEach(function(commentChildSnapshot){
 
-                 if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/'+commentChildSnapshot.key).update(commentData)){
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/'+commentChildSnapshot.key).update(commentData)
                      
-                     notifData = {
-                        time: currentTime,
-                        date: currentSystemDate,
-                        message: "Head Office sent a note on Line Up Page",
-                        isRead: 1,
-                        reverseDate: timeStamp,
-                        fromOffice: "Head Office",
-                        toOffice: plant,
-                        page: "lineup.html?date="+passDate
-                    }
+                notifData = {
+                    time: currentTime,
+                    date: currentSystemDate,
+                    message: "Head Office sent a comment on Line Up Page",
+                    isRead: 1,
+                    reverseDate: timeStamp,
+                    fromOffice: "Head Office",
+                    toOffice: plant,
+                    page: "lineup.html?date="+passDate
+                }
 
-                    if(firebase.database().ref('notification').push(notifData)){
+                if(firebase.database().ref('notification').push(notifData)){
 
-                        alert("Data update successfully");
-                        window.location.href = "lineup.html?plant="+plant;
-                    }
-                 }
+                    alert("Data update successfully");
+                    window.location.href = "lineup.html?plant="+plant;
+                }
             });
         });
     }
