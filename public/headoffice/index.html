@@ -227,7 +227,6 @@
                 
                 document.getElementById('id_bravo_ongoing_order').innerHTML = Number(bravo_ongoing_order_count).toLocaleString('en');
             }
-            
         });
 
         firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo('Delta').once('value', function(ongoingOrderSnapshot) {
@@ -242,7 +241,6 @@
                 
                 document.getElementById('id_delta_ongoing_order').innerHTML = Number(delta_ongoing_order_count).toLocaleString('en');
             }
-            
         });
 
         if(bravo_ongoing_order_count == 0){
@@ -280,7 +278,6 @@
 
                 document.getElementById('id_bravo_delivered_order').innerHTML = Number(bravo_delivered_order_count).toLocaleString('en');
             }
-            
         });
 
         firebase.database().ref('delivery_delivered_order').orderByChild('delivered_plant').equalTo('Delta').once('value', function(deliveredOrderSnapshot) {
@@ -298,17 +295,14 @@
 
                 document.getElementById('id_delta_delivered_order').innerHTML = Number(delta_delivered_order_count).toLocaleString('en');
             }
-            
         });
 
         if(bravo_delivered_order_count == 0){
             document.getElementById('id_bravo_delivered_order').innerHTML = bravo_delivered_order_count;
-            
         }
 
         if(delta_delivered_order_count == 0){
             document.getElementById('id_delta_delivered_order').innerHTML = delta_delivered_order_count;
-            
         }
 
         /*END OF DELIVERY ORDER*/
@@ -333,7 +327,6 @@
                 
                 document.getElementById('id_bravo_backloaded_order').innerHTML = Number(bravo_backloaded_order_count).toLocaleString('en');
             }
-            
         });
 
         firebase.database().ref('delivery_backloaded_order').orderByChild('backloaded_plant').equalTo('Delta').once('value', function(backloadedOrderSnapshot) {
@@ -351,7 +344,6 @@
 
                 document.getElementById('id_delta_backloaded_order').innerHTML = Number(delta_backloaded_order_count).toLocaleString('en');
             }
-            
         });
 
         if(bravo_backloaded_order_count == 0){
@@ -389,14 +381,10 @@
 
         if(bravo_diesel_count == 0){
             document.getElementById('id_bravo_diesel').innerHTML = Number(bravo_diesel_count).toLocaleString('en');
-
-            
         }
 
         if(delta_diesel_count == 0){
             document.getElementById('id_delta_diesel').innerHTML = Number(delta_diesel_count).toLocaleString('en');
-
-            
         }
 
         /*END OF DIESEL STOCK*/
@@ -441,6 +429,17 @@
 
         var myList = "";
         count = 0;
+        var option = {year: "numeric", month: "long", day: "numeric"}
+        var currentDate = new Date().toLocaleDateString('en', option);
+        var currentDate1 = new Date().toLocaleDateString('en', option);
+
+        var currentDate_date = new Date(currentDate);
+        var currentDate1_date = new Date(currentDate1);
+        currentDate1_date.setDate(currentDate1_date.getDate() - 1);
+        currentDate1_date = new Date(currentDate1_date);
+
+        var currentDateTimestamp = currentDate_date.getTime();
+        var yesterDateTimestamp = currentDate1_date.getTime();
 
         firebase.database().ref('notification').orderByChild('reverseDate').once('value', function(notifSnapshot){
 
@@ -451,22 +450,32 @@
                     if(notifChildSnapshot.val().toOffice == "Head Office"){
 
                         date = notifChildSnapshot.val().date;
+                        var dateDate = new Date(date);
+                        var dateTimestamp = dateDate.getTime();
+
+                        if(dateTimestamp == currentDateTimestamp){
+                            var date_status = "Today";
+                        }else if(dateTimestamp == yesterDateTimestamp){
+                            var date_status = "Yesterday";
+                        }else if(dateTimestamp < yesterDateTimestamp){
+                            var date_status = date;
+                        }
+
                         fromOffice = notifChildSnapshot.val().fromOffice;
                         message = notifChildSnapshot.val().message;
                         page = notifChildSnapshot.val().page;
-                        // page = "#";
                         time = notifChildSnapshot.val().time;
                         key = notifChildSnapshot.key;
 
                         if(notifChildSnapshot.val().isRead == 1){
 
-                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\"><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date + "</span></span></a></li>";
+                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\"><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
 
                             count++;
 
                         }else if(notifChildSnapshot.val().isRead == 0){
 
-                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\" style='color: #595959;'><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date + "</span></span></a></li>";
+                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\" style='color: #595959;'><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
 
                         }
                     }

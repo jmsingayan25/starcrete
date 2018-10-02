@@ -253,6 +253,17 @@
 
         var myList = "";
         count = 0;
+        var option = {year: "numeric", month: "long", day: "numeric"}
+        var currentDate = new Date().toLocaleDateString('en', option);
+        var currentDate1 = new Date().toLocaleDateString('en', option);
+
+        var currentDate_date = new Date(currentDate);
+        var currentDate1_date = new Date(currentDate1);
+        currentDate1_date.setDate(currentDate1_date.getDate() - 1);
+        currentDate1_date = new Date(currentDate1_date);
+
+        var currentDateTimestamp = currentDate_date.getTime();
+        var yesterDateTimestamp = currentDate1_date.getTime();
 
         firebase.database().ref('notification').orderByChild('reverseDate').once('value', function(notifSnapshot){
 
@@ -263,22 +274,32 @@
                     if(notifChildSnapshot.val().toOffice == plant){
 
                         date = notifChildSnapshot.val().date;
+                        var dateDate = new Date(date);
+                        var dateTimestamp = dateDate.getTime();
+
+                        if(dateTimestamp == currentDateTimestamp){
+                            var date_status = "Today";
+                        }else if(dateTimestamp == yesterDateTimestamp){
+                            var date_status = "Yesterday";
+                        }else if(dateTimestamp < yesterDateTimestamp){
+                            var date_status = date;
+                        }
+
                         fromOffice = notifChildSnapshot.val().fromOffice;
                         message = notifChildSnapshot.val().message;
                         page = notifChildSnapshot.val().page;
-                        // page = "#";
                         time = notifChildSnapshot.val().time;
                         key = notifChildSnapshot.key;
 
                         if(notifChildSnapshot.val().isRead == 1){
 
-                             myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\"><span class='subject'><span class='from'>From " + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date + "</span></span></a></li>";
+                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\"><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
 
-                             count++;
+                            count++;
 
                         }else if(notifChildSnapshot.val().isRead == 0){
 
-                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\" style='color: #595959;'><span class='subject'><span class='from'>From " + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date + "</span></span></a></li>";
+                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\" style='color: #595959;'><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
 
                         }
                     }
@@ -288,7 +309,7 @@
 
                 if(count != 0){
                     document.getElementById('id_badge').innerHTML = "<span class='badge bg-important'>" + count + "</span>";
-                }
+                } 
             }
 
             $('.class_notif').text(count);
