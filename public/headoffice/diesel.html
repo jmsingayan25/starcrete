@@ -198,7 +198,7 @@
         $(".se-pre-con").fadeIn("fast");
         var myTbody = "";
 
-        console.log(fromDate, endDate);
+        // console.log(fromDate, endDate);
         // var selectedDate = document.getElementById('date_view').value;
 
         // if(selectedDate == ""){
@@ -221,7 +221,6 @@
                 if(fromDate == "" && endDate == ""){
 
                     document.getElementById('search_date').innerHTML = "";
-
 
                     currentstockCopy = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
                     date = dieselChildSnapshot.val().date;
@@ -418,8 +417,6 @@
             }
         });
 
-        
-
         firebase.database().ref('incoming_diesel/'+plant).orderByChild('reverseDate').once('value', function(dieselSnapshot){
             dieselSnapshot.forEach(function(dieselChildSnapshot){
 
@@ -500,7 +497,7 @@
         });
 
         firebase.database().ref('available_stock/'+plant).on('value', function(stockSnapshot){
-            console.log(stockSnapshot.val());
+            // console.log(stockSnapshot.val());
             if(stockSnapshot.val().Liters == 0){
                 available_stock = 0;
             }else{

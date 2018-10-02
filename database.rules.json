@@ -75,7 +75,7 @@
       "$uid": {
          ".read": true,
          ".write": true,
-         ".indexOn": ["reverseDate"]
+         ".indexOn": ["reverseDate", "date"]
       }
     },
     "attendance": {
