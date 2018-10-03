@@ -173,10 +173,6 @@
                 
             }else{
 
-                // var beforeYesterdayDate = currentDate1.setDate(currentDate1.getDate() - 1);
-                // beforeYesterdayDate = new Date(beforeYesterdayDate).toLocaleDateString('en');
-                // $(".class_yesterday").text(beforeYesterdayDate);
-
                 value = 0;
                 todayTime = new Date(currentDate1).getTime();
 
@@ -193,7 +189,6 @@
                     if(value != 0){
                         timedate = new Date(value);
                         beforeYesterdayDate = timedate.toLocaleDateString('en');
-                        // document.getElementById('id_yesterday').innerHTML = "(" + beforeYesterdayDate + ")";
                         $(".class_yesterday").text("(" + beforeYesterdayDate + ")");
                     }
                 });
@@ -557,7 +552,6 @@
                             myNewTableTrucking += "</tbody></table></td></tr>";
 
                             document.getElementById('new_row_trucking_list').innerHTML = myNewTableTrucking;
-
                         });
 
                         firebase.database().ref('attendance/'+plant+'/'+currentDate+'/forklift_operator').once('value', function(forkliftSnapshot){
@@ -1129,7 +1123,6 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    
                                 </div>
                             </div>
                         </section>

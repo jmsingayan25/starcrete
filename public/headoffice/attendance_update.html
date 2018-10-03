@@ -150,7 +150,6 @@
             $('.button_add').hide();
 
             firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(commentSnapshot){
-                // console.log('attendance/'+plant+'/'+currentDate+'/comment', commentSnapshot.val());
 
                 commentSnapshot.forEach(function(commentChildSnapshot){
 
