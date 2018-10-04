@@ -163,7 +163,7 @@
 
         var yesterdayDate = currentDate1.setDate(currentDate1.getDate() - 1);
         yesterdayDate = new Date(yesterdayDate).toLocaleDateString('en');
-        yesterdayFullDate = new Date(yesterdayDate).toLocaleDateString('en', option);
+        var yesterdayFullDate = new Date(yesterdayDate).toLocaleDateString('en', option);
         
         firebase.database().ref('attendance/'+plant+'/'+yesterdayFullDate).once('value', function(yesterdayData){
 

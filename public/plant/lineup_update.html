@@ -89,9 +89,9 @@
 
     var date_option = {year: "numeric", month: "long", day: "numeric"}
     var currentDate = new Date(getCurrentDate).toLocaleDateString('en', date_option);
-    var optionTable = "";
     var passDate = new Date(getCurrentDate).toLocaleDateString('en');
-
+    var optionTable = "";
+    
     $(document).ready(function(){
 
         firebase.auth().onAuthStateChanged(function(user) {

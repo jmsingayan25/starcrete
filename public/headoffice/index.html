@@ -83,24 +83,24 @@
 
 <script>
     
-    var timer = null;
+    // var timer = null;
 
-    function goAway() {
-        clearTimeout(timer);
-        timer = setTimeout(function() {
-            // window.location.reload(true);
-            tableData();
-        }, 60000);
-    }
+    // function goAway() {
+    //     clearTimeout(timer);
+    //     timer = setTimeout(function() {
+    //         // window.location.reload(true);
+    //         tableData();
+    //     }, 60000);
+    // }
 
-    window.addEventListener('mousemove', goAway, true);
-    window.addEventListener('keypress', goAway, true);
+    // window.addEventListener('mousemove', goAway, true);
+    // window.addEventListener('keypress', goAway, true);
 
-    goAway();
+    // goAway();
 
     $(document).ready(function(){
 
-        startTime();
+        // startTime();
         tableData();
         displayNotif();
         refreshNotif();
@@ -172,8 +172,6 @@
                     });
                 });
             }
-
-            
         });
    
         firebase.database().ref('purchase_order').orderByChild('issued_po_plant').equalTo('Delta').once('value', function(orderSnapshot){
@@ -390,40 +388,40 @@
         /*END OF DIESEL STOCK*/
     }
 
-    function startTime() {
+    // function startTime() {
 
-        var today = new Date();
-        var hr = today.getHours();
-        var min = today.getMinutes();
-        var sec = today.getSeconds();
-        ap = (hr < 12) ? "<span>AM</span>" : "<span>PM</span>";
-        hr = (hr == 0) ? 12 : hr;
-        hr = (hr > 12) ? hr - 12 : hr;
-        //Add a zero in front of numbers<10
-        hr = checkTime(hr);
-        min = checkTime(min);
-        sec = checkTime(sec);
-        document.getElementById("clock").innerHTML = hr + ":" + min + ":" + sec + " " + ap;
+    //     var today = new Date();
+    //     var hr = today.getHours();
+    //     var min = today.getMinutes();
+    //     var sec = today.getSeconds();
+    //     ap = (hr < 12) ? "<span>AM</span>" : "<span>PM</span>";
+    //     hr = (hr == 0) ? 12 : hr;
+    //     hr = (hr > 12) ? hr - 12 : hr;
+    //     //Add a zero in front of numbers<10
+    //     hr = checkTime(hr);
+    //     min = checkTime(min);
+    //     sec = checkTime(sec);
+    //     document.getElementById("clock").innerHTML = hr + ":" + min + ":" + sec + " " + ap;
         
-        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        var curWeekDay = days[today.getDay()];
-        var curDay = today.getDate();
-        var curMonth = months[today.getMonth()];
-        var curYear = today.getFullYear();
-        var date = curWeekDay+", "+curDay+" "+curMonth+" "+curYear;
-        document.getElementById("date").innerHTML = date;
+    //     var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    //     var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    //     var curWeekDay = days[today.getDay()];
+    //     var curDay = today.getDate();
+    //     var curMonth = months[today.getMonth()];
+    //     var curYear = today.getFullYear();
+    //     var date = curWeekDay+", "+curDay+" "+curMonth+" "+curYear;
+    //     document.getElementById("date").innerHTML = date;
         
-        var time = setTimeout(function(){ startTime() }, 500);
-    }
+    //     var time = setTimeout(function(){ startTime() }, 500);
+    // }
 
-    function checkTime(i) {
+    // function checkTime(i) {
 
-        if (i < 10) {
-            i = "0" + i;
-        }
-        return i;
-    }
+    //     if (i < 10) {
+    //         i = "0" + i;
+    //     }
+    //     return i;
+    // }
 
     function displayNotif(){
 
@@ -620,18 +618,16 @@
             <section class="wrapper">
                  <!--overview start-->
                 <div class="row">
-                    <div class="col-md-8">
-                        <!-- <h3 class="page-header"><i class="fa fa-home"></i> History</h3> -->
+                    <div class="col-md-12">
                         <ol class="breadcrumb">
                             <li><i class="fa fa-home"></i>Dashboard</li>                          
                         </ol>
                     </div>
-                    <div class="col-md-4">
-                        <!-- <h3 class="page-header"><i class="fa fa-home"></i> History</h3> -->
+                    <!-- <div class="col-md-4">
                         <ol class="breadcrumb">
                             <li>As of <strong><span id="clock"></span>, <span id="date"></span></strong></li>                          
                         </ol>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="row">
                     <div class="col-md-12">
