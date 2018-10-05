@@ -644,15 +644,6 @@ function datePrint(){
         });
     }
 
-    function visitSite(key){
-
-        notifData = {
-            isRead: 0
-        }
-
-        firebase.database().ref('notification/'+key).update(notifData);
-    }
-
 </script>
 <style>
 .filterable .panel-heading .pull-right {

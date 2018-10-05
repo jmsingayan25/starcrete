@@ -353,8 +353,6 @@
                 }else{
                     document.getElementById("historyList").innerHTML = myTbody;
                 }
-
-
             });
         }
     }
@@ -503,15 +501,6 @@
 
             $('.class_notif').text(count);
         });
-    }
-
-    function visitSite(key){
-
-        notifData = {
-            isRead: 0
-        }
-
-        firebase.database().ref('notification/'+key).update(notifData);
     }
 
 </script>

@@ -308,16 +308,7 @@
             $('.class_notif').text(count_employee);
         });
     }
-
-    function visitSite(key){
-
-        notifData = {
-            isRead: 0
-        }
-
-        firebase.database().ref('notification/'+key).update(notifData);
-    }
-
+    
 </script>
 <style>
 .header_line{

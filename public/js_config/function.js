@@ -91,4 +91,13 @@
         return timeValue;
     }
 
+    function visitSite(key){
+
+        notifData = {
+            isRead: 0
+        }
+
+        firebase.database().ref('notification/'+key).update(notifData);
+    }
+
     
