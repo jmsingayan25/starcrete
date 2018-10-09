@@ -820,7 +820,7 @@
     function displayNotif(){
 
         var myList = "";
-        count = 0;
+        count_employee = 0;
         var option = {year: "numeric", month: "long", day: "numeric"}
         var currentDate = new Date().toLocaleDateString('en', option);
         var currentDate1 = new Date().toLocaleDateString('en', option);
@@ -863,7 +863,7 @@
 
                             myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\"><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
 
-                            count++;
+                            count_employee++;
 
                         }else if(notifChildSnapshot.val().isRead == 0){
 
@@ -875,12 +875,12 @@
 
                 document.getElementById('id_notif_list').innerHTML = myList;
 
-                if(count != 0){
-                    document.getElementById('id_badge').innerHTML = "<span class='badge bg-important'>" + count + "</span>";
+                if(count_employee != 0){
+                    document.getElementById('id_badge').innerHTML = "<span class='badge bg-important'>" + count_employee + "</span>";
                 } 
             }
 
-            $('.class_notif').text(count);
+            $('.class_notif').text(count_employee);
         });
     }
     
