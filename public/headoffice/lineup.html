@@ -180,23 +180,35 @@
                                 myTableRow1 += "<tr><td>";
 
                                 machine1Snapshot.forEach(function(machine1ChildSnapshot){
-                                    myTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + machine1ChildSnapshot.val().employee_name + "</strong> - " + machine1ChildSnapshot.val().employee_position + "</div></div>";
 
                                     if(machine1ChildSnapshot.val().employee_name != "N/A"){
+
+                                        myTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + machine1ChildSnapshot.val().employee_name + "</strong> - " + machine1ChildSnapshot.val().employee_position + "</div></div>";
+
                                         machine1Count++;
                                     }
                                 });
+
+                                if(machine1Count == 0){
+                                    myTableRow1 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                                }
 
                                 document.getElementById('badge_machine1').innerHTML = machine1Count;
 
                                 myTableRow1 += "</td><td>";
                                 machine3Snapshot.forEach(function(machine3ChildSnapshot){
-                                    myTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + machine3ChildSnapshot.val().employee_name + "</strong> - " + machine3ChildSnapshot.val().employee_position + "</div></div>";
 
                                     if(machine3ChildSnapshot.val().employee_name != "N/A"){
+
+                                        myTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + machine3ChildSnapshot.val().employee_name + "</strong> - " + machine3ChildSnapshot.val().employee_position + "</div></div>";
+
                                         machine3Count++;
                                     }
                                 });
+
+                                if(machine3Count == 0){
+                                    myTableRow1 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                                }
 
                                 document.getElementById('badge_machine3').innerHTML = machine3Count;
 
@@ -312,23 +324,35 @@
                         myTableRow3 += "<tr><td colspan='2'>";
 
                         tagapukpokSnapshot.forEach(function(tagapukpokChildSnapshot){
-                            myTableRow3 += "<div class='row'><div class='col-md-12'><strong>" + tagapukpokChildSnapshot.val().employee_name + "</strong> - " + tagapukpokChildSnapshot.val().employee_position + "</div></div>";
 
                             if(tagapukpokChildSnapshot.val().employee_name != "N/A"){
+
+                                myTableRow3 += "<div class='row'><div class='col-md-12'><strong>" + tagapukpokChildSnapshot.val().employee_name + "</strong> - " + tagapukpokChildSnapshot.val().employee_position + "</div></div>";
+
                                 tagapukpokCount++;
                             }
                         });
+
+                        if(tagapukpokCount == 0){
+                            myTableRow3 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                        }
 
                         document.getElementById('badge_tagapukpok').innerHTML = tagapukpokCount;
 
                         myTableRow3 += "</td><td colspan='2'>";
                         checkerSnapshot.forEach(function(checkerChildSnapshot){
-                            myTableRow3 += "<div class='row'><div class='col-md-12'><strong>" + checkerChildSnapshot.val().employee_name + "</strong> - " + checkerChildSnapshot.val().employee_position + "</div></div>";
 
                             if(checkerChildSnapshot.val().employee_name != "N/A"){
+
+                                myTableRow3 += "<div class='row'><div class='col-md-12'><strong>" + checkerChildSnapshot.val().employee_name + "</strong> - " + checkerChildSnapshot.val().employee_position + "</div></div>";
+
                                 checkerCount++;
                             }
                         });
+
+                        if(checkerCount == 0){
+                            myTableRow3 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                        }
 
                         document.getElementById('badge_checker').innerHTML = checkerCount;
 
@@ -386,12 +410,18 @@
                                 myTableRow5 += "<tr><td colspan='2'>";
 
                                 othersSnapshot.forEach(function(othersChildSnapshot){
-                                    myTableRow5 += "<div class='row'><div class='col-md-12'><strong>" + othersChildSnapshot.val().employee_name + "</strong> - " + othersChildSnapshot.val().employee_position + "</div></div>";
 
                                     if(othersChildSnapshot.val().employee_name != "N/A"){
+
+                                        myTableRow5 += "<div class='row'><div class='col-md-12'><strong>" + othersChildSnapshot.val().employee_name + "</strong> - " + othersChildSnapshot.val().employee_position + "</div></div>";
+
                                         othersCount++;
                                     }
                                 });
+
+                                if(othersCount == 0){
+                                    myTableRow5 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                                }
 
                                 document.getElementById('badge_others').innerHTML = othersCount;
 
@@ -499,23 +529,37 @@
                                         myNewTableRow1 += "<tr><td>";
 
                                         machine1Snapshot.forEach(function(machine1ChildSnapshot){
-                                            myNewTableRow1 += "<div class='row'><div class='col-md-12'>" + machine1ChildSnapshot.val().employee_name + " - " + machine1ChildSnapshot.val().employee_position + "</div></div>";
 
                                             if(machine1ChildSnapshot.val().employee_name != "N/A"){
+
+                                                myNewTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + machine1ChildSnapshot.val().employee_name + "</strong> - " + machine1ChildSnapshot.val().employee_position + "</div></div>";
+
                                                 machine1Count++;
                                             }
                                         });
+
+                                        if(machine1Count == 0){
+                                            myNewTableRow1 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+
+                                        }
 
                                         document.getElementById('badge_new_machine1').innerHTML = machine1Count;
 
                                         myNewTableRow1 += "</td><td>";
                                         machine3Snapshot.forEach(function(machine3ChildSnapshot){
-                                            myNewTableRow1 += "<div class='row'><div class='col-md-12'>" + machine3ChildSnapshot.val().employee_name + " - " + machine3ChildSnapshot.val().employee_position + "</div></div>";
 
                                             if(machine3ChildSnapshot.val().employee_name != "N/A"){
+
+                                                myNewTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + machine3ChildSnapshot.val().employee_name + "</strong> - " + machine3ChildSnapshot.val().employee_position + "</div></div>";
+
                                                 machine3Count++;
                                             }
                                         });
+
+                                        if(machine3Count == 0){
+                                            myNewTableRow1 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+
+                                        }
 
                                         document.getElementById('badge_new_machine3').innerHTML = machine3Count;
 
@@ -523,7 +567,7 @@
                                         forkliftSnapshot.forEach(function(forkliftChildSnapshot){
 
                                             if(forkliftChildSnapshot.val().operator != "N/A"){
-                                                myNewTableRow1 += "<div class='row'><div class='col-md-12'>" + forkliftChildSnapshot.val().operator + "</div></div>";
+                                                myNewTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + forkliftChildSnapshot.val().operator + "</strong></div></div>";
 
                                                 forkliftCount++;
                                             }
@@ -538,12 +582,18 @@
 
                                         myNewTableRow1 += "</td><td>";
                                         mechanicSnapshot.forEach(function(mechanicChildSnapshot){
-                                            myNewTableRow1 += "<div class='row'><div class='col-md-12'>" + mechanicChildSnapshot.val().employee_name + "</div></div>";
 
                                             if(mechanicChildSnapshot.val().employee_name != "N/A"){
+
+                                                myNewTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + mechanicChildSnapshot.val().employee_name + "</strong></div></div>";
+
                                                 mechanicCount++;
                                             }
                                         });
+
+                                        if(mechanicCount == 0){
+                                            myNewTableRow1 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                                        }
 
                                         document.getElementById('badge_new_mechanic').innerHTML = mechanicCount;
 
@@ -631,23 +681,35 @@
                                 myNewTableRow3 += "<tr><td colspan='2'>";
 
                                 tagapukpokSnapshot.forEach(function(tagapukpokChildSnapshot){
-                                    myNewTableRow3 += "<div class='row'><div class='col-md-12'>" + tagapukpokChildSnapshot.val().employee_name + " - " + tagapukpokChildSnapshot.val().employee_position +  "</div></div>";
                                     
                                     if(tagapukpokChildSnapshot.val().employee_name != "N/A"){
+
+                                        myNewTableRow3 += "<div class='row'><div class='col-md-12'><strong>" + tagapukpokChildSnapshot.val().employee_name + "</strong> - " + tagapukpokChildSnapshot.val().employee_position +  "</div></div>";
+
                                         tagapukpokCount++;
                                     }
                                 });
+
+                                if(tagapukpokCount == 0){
+                                    myNewTableRow3 += "<div class='row'><div class='col-md-12'></div></div>";
+                                }
 
                                 document.getElementById('badge_new_tagapukpok').innerHTML = tagapukpokCount;
 
                                 myNewTableRow3 += "</td><td colspan='2'>";
                                 checkerSnapshot.forEach(function(checkerChildSnapshot){
-                                    myNewTableRow3 += "<div class='row'><div class='col-md-12'>" + checkerChildSnapshot.val().employee_name + " - " + checkerChildSnapshot.val().employee_position +  "</div></div>";
 
                                     if(checkerChildSnapshot.val().employee_name != "N/A"){
+
+                                        myNewTableRow3 += "<div class='row'><div class='col-md-12'><strong>" + checkerChildSnapshot.val().employee_name + "</strong> - " + checkerChildSnapshot.val().employee_position +  "</div></div>";
+
                                         checkerCount++;
                                     }
                                 });
+
+                                if(checkerCount == 0){
+                                    myNewTableRow3 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                                }
 
                                 document.getElementById('badge_new_checker').innerHTML = checkerCount;
 
@@ -705,12 +767,18 @@
                                         myNewTableRow5 += "<tr><td colspan='2'>";
 
                                         othersSnapshot.forEach(function(othersChildSnapshot){
-                                            myNewTableRow5 += "<div class='row'><div class='col-md-12'>" + othersChildSnapshot.val().employee_name + " - " + othersChildSnapshot.val().employee_position + "</div></div>";
 
                                             if(othersChildSnapshot.val().employee_name != "N/A"){
+
+                                                myNewTableRow5 += "<div class='row'><div class='col-md-12'><strong>" + othersChildSnapshot.val().employee_name + "</strong> - " + othersChildSnapshot.val().employee_position + "</div></div>";
+
                                                 othersCount++;
                                             }
                                         });
+
+                                        if(othersCount == 0){
+                                            myNewTableRow5 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                                        }
 
                                         document.getElementById('badge_new_others').innerHTML = othersCount;
 

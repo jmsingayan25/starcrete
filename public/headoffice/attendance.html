@@ -375,12 +375,17 @@
 
                             plantSnapshot.forEach(function(plantChildSnapshot){
 
-                                myTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + plantChildSnapshot.val().employee_name + "</strong> - " + plantChildSnapshot.val().employee_comment + "</div></div>";
-
                                 if(plantChildSnapshot.val().employee_name != "N/A"){
+
+                                    myTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + plantChildSnapshot.val().employee_name + "</strong> - " + plantChildSnapshot.val().employee_comment + "</div></div>";
+
                                     plantCount++;
                                 }
                             });
+
+                            if(plantCount == 0){
+                                myTableAbsent += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                            }
 
                             document.getElementById('badge_plant').innerHTML = plantCount;
 
@@ -388,12 +393,18 @@
 
                             motorpoolSnapshot.forEach(function(motorpoolChildSnapshot){
 
-                                myTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + motorpoolChildSnapshot.val().employee_name + "</strong> - " + motorpoolChildSnapshot.val().employee_comment + "</div></div>";
-
                                 if(motorpoolChildSnapshot.val().employee_name != "N/A"){
+
+                                    myTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + motorpoolChildSnapshot.val().employee_name + "</strong> - " + motorpoolChildSnapshot.val().employee_comment + "</div></div>";
+
                                     motorpoolCount++;
                                 }
                             });
+
+                            if(motorpoolCount == 0){
+                                myTableAbsent += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+
+                            }
 
                             document.getElementById('badge_motorpool').innerHTML = motorpoolCount;
 
@@ -401,12 +412,18 @@
 
                             truckingSnapshot.forEach(function(truckingChildSnapshot){
 
-                                myTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + truckingChildSnapshot.val().employee_name + "</strong> - " + truckingChildSnapshot.val().employee_comment + "</div></div>";
-
                                 if(truckingChildSnapshot.val().employee_name != "N/A"){
+
+                                    myTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + truckingChildSnapshot.val().employee_name + "</strong> - " + truckingChildSnapshot.val().employee_comment + "</div></div>";
+
                                     truckingCount++;
                                 }
                             });
+
+                            if(truckingCount == 0){
+                                myTableAbsent += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+
+                            }
 
                             document.getElementById('badge_trucking').innerHTML = truckingCount;
 
