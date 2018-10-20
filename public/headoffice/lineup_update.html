@@ -135,7 +135,9 @@
 
                     commentSnapshot.forEach(function(commentChildSnapshot){
 
-                        optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;' required>" + commentChildSnapshot.val().comment_lineup_headoffice  + "</textarea></div>";
+                        var comment = commentChildSnapshot.val().comment_lineup_headoffice;
+
+                        optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;' required>" + comment  + "</textarea></div>";
                     });
 
              }else{

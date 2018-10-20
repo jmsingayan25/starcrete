@@ -153,7 +153,9 @@
 
                 commentSnapshot.forEach(function(commentChildSnapshot){
 
-                    optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;'>" + commentChildSnapshot.val().comment_attendance_headoffice  + "</textarea></div>";
+                    var comment = commentChildSnapshot.val().comment_attendance_headoffice;
+
+                    optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;'>" + comment  + "</textarea></div>";
 
                 });
 
@@ -172,7 +174,13 @@
 
                 attendanceSnapshot.forEach(function(attendanceChildSnapshot){
 
-                    optionTable += "<tr><td><input type='text' name='update_employee_name[]' class='form-control input_type employees' value='" + attendanceChildSnapshot.val().employee_name + "'></td><td><input type='time' name='update_employee_timein[]' class='form-control' value='" + attendanceChildSnapshot.val().employee_timein + "'></td><td><input type='time' name='update_employee_timeout[]' class='form-control' value='" + attendanceChildSnapshot.val().employee_timeout + "'></td><td><input type='text' name='update_employee_remarks[]' class='form-control input_type' value='" + attendanceChildSnapshot.val().employee_remarks + "'></td></td><td><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + attendanceChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
+                    var employee_name = attendanceChildSnapshot.val().employee_name;
+                    var employee_timein = attendanceChildSnapshot.val().employee_timein;
+                    var employee_timeout = attendanceChildSnapshot.val().employee_timeout;
+                    var remarks = attendanceChildSnapshot.val().employee_remarks;
+                    var key = attendanceChildSnapshot.key;
+
+                    optionTable += "<tr><td><input type='text' name='update_employee_name[]' class='form-control input_type employees' value='" + employee_name + "'></td><td><input type='time' name='update_employee_timein[]' class='form-control' value='" + employee_timein + "'></td><td><input type='time' name='update_employee_timeout[]' class='form-control' value='" + employee_timeout + "'></td><td><input type='text' name='update_employee_remarks[]' class='form-control input_type' value='" + remarks + "'></td></td><td><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
 
                 });
 
@@ -226,7 +234,9 @@
 
             firebase.database().ref('attendance/Head Office/'+currentDate+'/headoffice/').once('value', function(noteSnapshot){
 
-                optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;'>" + noteSnapshot.val().note  + "</textarea></div>";
+                var note = noteSnapshot.val().note;
+
+                optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;'>" + note  + "</textarea></div>";
 
                 document.getElementById('id_table_view').innerHTML = optionTable;
             });
