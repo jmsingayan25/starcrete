@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +8,10 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="../img/favicon.png">
 
-    <title>Line Up Update</title>
+    <title>Transmittal Outgoing Items</title>
 
     <!-- Firebase App is always required and must be first -->
-    <!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
-    <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
 
     <!-- Add additional services you want to use -->
     <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
@@ -81,21 +80,20 @@
     <script src="../js/jquery.slimscroll.min.js"></script>
     <script src="../js_config/function.js"></script>
 
+    <!-- =======================================================
+    Theme Name: NiceAdmin
+    Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+    Author: BootstrapMade
+    Author URL: https://bootstrapmade.com
+    ======================================================= -->
+
 <script>
-    
-    var option = getUrlParameter('option');
-    var plant = getUrlParameter('plant');
-    var getCurrentDate = getUrlParameter('date');
-    var date_option = {year: "numeric", month: "long", day: "numeric"}
-    var currentDate = new Date(getCurrentDate).toLocaleDateString('en', date_option);
-    var passDate = new Date(getCurrentDate).toLocaleDateString('en');
-    var optionTable = "";
 
     $(document).ready(function(){
 
         tableData();
+        refreshTransmittal();
         displayNotif();
-        refreshNotif();
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -106,9 +104,11 @@
                     if(snapshot.val().office != 'Head Office'){
                         window.location.href = '../plant/index.html';
                     }
+
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
+
                 },(error) => {
-                    console.error(error);
+                    console.log(error);
                 });
             } else {
                 window.location.href = '../login.html';
@@ -116,83 +116,147 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
-
-        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-home'></i><a href='lineup.html?plant=" + plant + "'>Line Up</a></li><li><i class='icon_document'></i>Line Up Update</li>  ";
+        // document.getElementById('id_breadcrumb').innerHTML = "<li><i class='icon_document'></i><a href='transmittal_input.html'>Transmittal Input</a></li><li><i class='icon_document'></i><a href='#'>Incoming Items</a></li><li><i class='icon_document'></i><a href='transmittal_outgoing.html'>Outgoing Items</a></li>";
 
     });
 
     function tableData(){
 
-        if(option == "comment"){
-            query_ext = option;
-        }else if(option == "new_comment"){
-            query_ext = "new/comment";
-        }
+        var tBody = "";
+        count = 0;
+        var array = [];
 
-        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(commentSnapshot){
+        firebase.database().ref('transmittal_input').once('value', function(dateSnapshot){
+            dateSnapshot.forEach(function(dateChildSnapshot){
+                firebase.database().ref('transmittal_input/'+dateChildSnapshot.key).once('value', function(transmittalSnapshot){
+                    transmittalSnapshot.forEach(function(transmittalChildSnapshot){
+                        firebase.database().ref('transmittal_input/'+dateChildSnapshot.key+'/'+transmittalChildSnapshot.key+'/Items').once('value', function(itemSnapshot){
 
-             if(commentSnapshot.val() != null){
+                            itemSnapshot.forEach(function(itemChildSnapshot){
 
-                    commentSnapshot.forEach(function(commentChildSnapshot){
+                                var date_holder = dateChildSnapshot.key;
+                                var key = transmittalChildSnapshot.key;
+                                var item_key = itemChildSnapshot.key;
+                                var delivered_by = transmittalChildSnapshot.val().delivered_by;
+                                var from_plant = transmittalChildSnapshot.val().from;
+                                var to_plant = transmittalChildSnapshot.val().to;
+                                var transmittal_no = transmittalChildSnapshot.val().transmittal_no;
+                                var comment = itemChildSnapshot.val().comment;
+                                var item_no = itemChildSnapshot.val().item_Batch;
+                                var purpose = itemChildSnapshot.val().purpose_batch;
+                                var quantity = itemChildSnapshot.val().quantity_Batch;
+                                var receive = itemChildSnapshot.val().receive_date;
+                                var status = itemChildSnapshot.val().status;
 
-                        var comment = commentChildSnapshot.val().comment_lineup_headoffice;
+                                var rowData = {
+                                    key: key,
+                                    item_key: item_key,
+                                    receive: receive,
+                                    date_holder: date_holder,
+                                    from_plant: from_plant,
+                                    to_plant: to_plant,
+                                    delivered_by: delivered_by,
+                                    transmittal_no: transmittal_no,
+                                    item_no: item_no,
+                                    quantity: quantity,
+                                    purpose: purpose,
+                                    comment: comment,
+                                    status: status
+                                }
 
-                        optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;' required>" + comment  + "</textarea></div>";
+                                array.push(rowData);
+                            });
+                        });
                     });
+                });
+            });
 
-             }else{
+            array.sort(function(a,b){
+                return Number(a.status) - Number(b.status);
+            });
 
-                 optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;' required></textarea></div>";
+            for(var a = 0; a < array.length; a++){
 
-             }
+                var date_holder = array[a].date_holder;
+                var key = array[a].key;
+                var item_key = array[a].item_key;
+                var delivered_by = array[a].delivered_by;
+                var from_plant = array[a].from_plant;
+                var to_plant = array[a].to_plant;
+                var transmittal_no = array[a].transmittal_no;
+                var comment = array[a].comment;
+                var item_no = array[a].item_no;
+                var purpose = array[a].purpose;
+                var quantity = array[a].quantity;
+                var receive = array[a].receive;
+                var status = array[a].status;
+            
+                if(array[a].to_plant == "Head Office"){
+
+                    if(status == 0){
+
+                        tBody += "<tr><td><strong>" + date_holder + "</strong></td>";
+                        tBody += "<td><strong>" + from_plant + "</strong></td>";
+                        tBody += "<td><strong>" + delivered_by + "</strong></td>";
+                        tBody += "<td><strong>" + transmittal_no + "</strong></td>";
+                        tBody += "<td><strong>" + item_no + "</strong></td>";
+                        tBody += "<td><strong>" + quantity + "</strong></td>";
+                        tBody += "<td><strong>" + purpose + "</strong></td>";
+                        tBody += "<td><strong><input type='text' id='input_comment" + a + "' name='input_comment[]' class='form-control'></strong></td>";
+                        tBody += "<td class='text_center'><strong><button type='button' class='btn btn-primary btn-md' onclick=\"if(confirm('Proceed?')){submitForm(\'" + a + "\', \'" + date_holder + "\', \'" + key + "\', \'" + item_key + "\')}else{event.preventDefault();}\"><strong>Receive</strong></button></strong></td></tr>";
+
+                    }else if(status == 1){
+
+                        tBody += "<tr><td><strong>" + date_holder + "</strong></td>";
+                        tBody += "<td><strong>" + from_plant + "</strong></td>";
+                        tBody += "<td><strong>" + delivered_by + "</strong></td>";
+                        tBody += "<td><strong>" + transmittal_no + "</strong></td>";
+                        tBody += "<td><strong>" + item_no + "</strong></td>";
+                        tBody += "<td><strong>" + quantity + "</strong></td>";
+                        tBody += "<td><strong>" + purpose + "</strong></td>";
+                        tBody += "<td><strong>" + comment + "</strong></td>";
+                        tBody += "<td class='text_center' style='background-color: #33cc33; color: white;'><strong>ACCEPTED</strong></td></tr>";
+
+                    }
+                }
+                document.getElementById('itemBody').innerHTML = tBody;
                 
-             document.getElementById('id_comment_field').innerHTML = optionTable;
+            }
+
+            $('.se-pre-con').fadeOut('slow');
         });
     }
 
-    function submitForm(){
+    function refreshTransmittal(){
+
+        firebase.database().ref('transmittal_input').on('child_changed', function(){
+            setTimeout(function() {
+                tableData();
+            }, 1000);
+        });
+    }
+
+    function submitForm(count,date,key,item_key){
 
         event.preventDefault();
 
-        var input_comment = document.getElementById('comment').value || "N/A";
-        var currentSystemDate = new Date().toLocaleDateString('en');
-        var currentTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        var timeStamp = new Date().getTime();
-        timeStamp = timeStamp * -1;
+        var displayDate = new Date();
+        var option = {year: "numeric", month: "long", day: "numeric"};
+        displayDate = new Date(displayDate).toLocaleDateString('en',option);
+        var displayTime = new Date().toLocaleTimeString('en');
 
-        var commentData = {
-            comment_lineup_headoffice: input_comment.toUpperCase()
+        var comment = document.getElementById('input_comment'+count).value;
+
+        var itemData = {
+            comment: comment,
+            receive_date: displayDate,
+            receive_time: displayTime,
+            status: "1"
         }
 
-        if(option == "comment"){
-            query_ext = option;
-        }else if(option == "new_comment"){
-            query_ext = "new/comment";
-        }
+        firebase.database().ref('transmittal_input/'+date+'/'+key+'/Items/'+item_key).update(itemData);
 
-        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(commentSnapshot){
-            commentSnapshot.forEach(function(commentChildSnapshot){
-
-                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/'+commentChildSnapshot.key).update(commentData)
-                     
-                notifData = {
-                    time: currentTime,
-                    date: currentSystemDate,
-                    message: "Head Office sent a comment on Line Up Page",
-                    isRead: 1,
-                    reverseDate: timeStamp,
-                    fromOffice: "Head Office",
-                    toOffice: plant,
-                    page: "lineup.html?date="+passDate
-                }
-
-                if(firebase.database().ref('notification').push(notifData)){
-
-                    alert("Data update successfully");
-                    window.location.href = "lineup.html?plant="+plant;
-                }
-            });
-        });
+        window.location.reload();
     }
 
     function displayNotif(){
@@ -263,9 +327,18 @@
     }
 
 </script>
+<style>
+.text_center{
+    text-align: center;
+}
+.text_white{
+    color: white;
+}   
+</style>
 </head>
 <body>
-	<!-- <div class="se-pre-con"></div> -->
+    <div class="se-pre-con"></div>
+    <!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
@@ -316,7 +389,9 @@
                 </ul>
                 <!-- notificatoin dropdown end-->
             </div>
-        </header>  
+        </header>      
+        <!--header end-->
+
         <!--sidebar start-->
         <aside>
             <div id="sidebar"  class="nav-collapse ">
@@ -359,7 +434,7 @@
                             <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
                             <li><a class="" href="transmittal_input.html?plant=Delta">Transmittal</a></li>
                         </ul>
-                    </li>  
+                    </li>   
                 </ul>
                 <!-- sidebar menu end-->
             </div>
@@ -371,34 +446,36 @@
                 <div class="row">
                     <div class="col-md-12">
                         <ol class="breadcrumb" id="id_breadcrumb">
-                                                  
+                            <li><i class='icon_document'></i><a href='transmittal_input.html'>Transmittal Input</a></li>
+                            <li><i class='icon_document'></i>Incoming Items</li>
+                            <li><i class='icon_document'></i><a href='transmittal_outgoing.html'>Outgoing Items</a></li>                      
                         </ol>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-offset-2 col-md-8">
+                    <div class="col-md-12">
                         <section class="panel">
-                            <header class="panel-heading">
-                            Update Form
+                            <header class="panel-heading text_center" style="font-size: 20px;">
+                                INCOMING ITEMS
                             </header>
-                            <header class="panel-heading" style="text-align: center;"><strong>NOTE</strong></header>
                             <div class="panel-body">
-                                <div class="row">                                          
-                                    <form class="form-horizontal" role="form" id="form" onsubmit='if(confirm("Proceed?")){submitForm();}else{ event.preventDefault();}'>
-                                        <div id="id_comment_field"></div>
-                                        <hr>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-md-offset-7 col-md-5">
-                                                        <input type="submit" name="submit" id="submit" value="Update" class="btn btn-primary" style="font-weight: bold;">
-                                                        <button type="button" class="btn btn-default" onclick="window.history.back();"><strong>Cancel</strong></button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+                                <form id="form" name="form" class="form-horizontal"></form>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr style="background-color: #00111a;">
+                                            <th colspan="1" class="text_center text_white">Date</th>
+                                            <th colspan="1" class="text_center text_white">From</th>
+                                            <th colspan="1" class="text_center text_white">Delivered By</th>
+                                            <th colspan="1" class="text_center text_white">Transmittal No.</th>
+                                            <th colspan="1" class="text_center text_white">Item</th>
+                                            <th colspan="1" class="text_center text_white">Quantity</th>
+                                            <th colspan="1" class="text_center text_white">Purpose</th>
+                                            <th colspan="1" class="text_center text_white">Comment</th>
+                                            <th colspan="1" class="text_center text_white"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="itemBody"></tbody>
+                                </table>
                             </div>
                         </section>
                     </div>

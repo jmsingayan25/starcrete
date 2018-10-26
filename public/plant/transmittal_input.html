@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,17 +8,18 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="../img/favicon.png">
 
-	<title>Diesel - Incoming Diesel Form</title>
+    <title>Transmittal Input</title>
 
-	<!-- Firebase App is always required and must be first -->
-	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+    <!-- Firebase App is always required and must be first -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
+    <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase-app.js"></script>
 
-	<!-- Add additional services you want to use -->
-	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
-	<script src="../js_config/firebase_config.js"></script>
+    <!-- Add additional services you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+    <script src="../js_config/firebase_config.js"></script>
 
-	<!-- Bootstrap CSS -->    
+    <!-- Bootstrap CSS -->    
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <!-- bootstrap theme -->
     <link href="../css/bootstrap-theme.css" rel="stylesheet">
@@ -35,7 +36,7 @@
     <link href="../css/widgets.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/style-responsive.css" rel="stylesheet" />
-    <link href="../css/xcharts.min.css" rel=" stylesheet">	
+    <link href="../css/xcharts.min.css" rel=" stylesheet">  
     <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
 
     <!-- javascripts -->
@@ -81,8 +82,8 @@
     <script src="../js_config/function.js"></script>
 
 <script>
-	
-	$(function() {
+
+    $(function() {
         
         // var $form = $( "#form" );
         // var $input = $form.find( "#quantity" );
@@ -90,10 +91,9 @@
         // $input.on( "keyup", function( event ) {
 
         var $form = $( "#form" );
-        var $input = $form.find( "#quantity_in" );
+        var $input = $form.find( "#transmittal_no" );
 
-        $form.on( "keyup", "#quantity_in", function( event ) {
-            
+        $form.on( "keyup", "#transmittal_no", function( event ) {
             
             // When user select text in the document, also abort.
             var selection = window.getSelection().toString();
@@ -106,19 +106,18 @@
                 return;
             }
             
-            
             var $this = $( this );
             
             // Get the value.
             var input = $this.val();
             
             var input = input.replace(/[\D\s\._\-]+/g, "");
-                    input = input ? parseInt( input, 10 ) : 0;
+            input = input ? parseInt( input, 10 ) : 0;
 
-                    $this.val( function() {
-                        return ( input === 0 ) ? "" : input.toLocaleString( "en-US" );
-                    } );
-        } );    
+            $this.val( function() {
+                return ( input === 0 ) ? "" : input.toLocaleString( "en-US" );
+            });
+        }); 
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -132,17 +131,16 @@
                     if(plant == 'Head Office'){
                         window.location.href = '../headoffice/index.html';
                     }
-                    // tableData(plant);
-
-                    displayNotif();
-                    refreshNotif();
-        
+                    
                     if(plant == 'Bravo'){
                         plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
                     }else{
                         plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
                     }
-
+                    // tableData(plant);
+                    Drop_Down_Plant();
+                    displayNotif();
+                    
                     document.getElementById('id_plant_name').innerHTML = plant_name;
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
@@ -153,133 +151,83 @@
             }
         });
 
-        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);  
+        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);     
     });
 
-    function submitForm()
-    {
+    function Drop_Down_Plant(){
+
+        var dd_category = "<option value=''>Select</option>";
+
+        if (plant == "Bravo") {
+            dd_category += "<option value ='Delta'>Delta</option>";
+            dd_category += "<option value ='Head Office'>Head Office</option>";
+        } else if (plant == "Delta") {
+            dd_category += "<option value ='Bravo'>Bravo</option>";
+            dd_category += "<option value ='Head Office'>Head Office</option>";
+        }else if (plant == "Head Office") {
+            dd_category += "<option value ='Bravo'>Bravo</option>";
+            dd_category += "<option value ='Delta'>Delta</option>";
+        }
+
+        document.getElementById("selectsys").innerHTML = dd_category;
+    }
+
+    function add_form(){
+
         event.preventDefault();
-        firebase.database().ref().child("available_stock/" + plant).once('value',function(CheckSnapshots)
-        {
-            if(CheckSnapshots.val() == null){
+        $rowno = $("#main_table tr").length;
+        $rowno = $rowno + 1;
+        $("#main_table tr:last").after("<tr id='clone"+$rowno+"'><th colspan='1'><input type='text' name='batch1[]' id='batch1'class='form-control' autocomplete='off' style='text-transform: uppercase;'></th><th colspan='1'><input type='text' name='batch2[]' id='batch2'class='form-control' autocomplete='off' style='text-transform: uppercase;'></th><th colspan='1'><input type='text' name='batch3[]' id='batch3'class='form-control' autocomplete='off' style='text-transform: uppercase;'></th><th colspan='1'><button type='button' class='btn btn-danger' style='font-weight: bold;' onclick= remove_others_row('clone" + $rowno + "')><span class='fa fa-minus'></span></button></th></tr>");
 
-                firebase.database().ref().child("incoming_diesel/" + plant).once('value',function(CheckSnapshot)
-                {
-                var po_no = document.getElementById('po_no').value;
-                var dr_no = document.getElementById('dr_no').value;
-                var quantity_in = document.getElementById('quantity_in').value;
-                quantity_in = quantity_in.replace(",","");
-                var supplier = document.getElementById('supplier').value;
-                var truck_no = document.getElementById('truck_no').value;
-                var date = new Date().toLocaleDateString('en');
-                var time = new Date().toLocaleTimeString('en');
-                var date_input = new Date(document.getElementById('date_input').value).toLocaleDateString('en');
-                
-                if(document.getElementById('time_input').value != ""){
-                    var time_input = startTime(document.getElementById('time_input').value);
-                }else{
-                    var time_input = "";
-                }
-                //
-                var liters_bravo = quantity_in;
-                var stock_available = {Liters: liters_bravo};
-                firebase.database().ref().child("available_stock/" + plant).set(stock_available );
-                //
-                var currentStockCopy = liters_bravo;
-                transactionType = "In";
-                var currentStockHolder = {
-                    po_no: po_no, 
-                    dr_no: dr_no, 
-                    quantity_in: quantity_in,
-                    supplier: supplier.toUpperCase(), truck_no: truck_no.toUpperCase(),
-                    reverseDate:firebase.database.ServerValue.TIMESTAMP,
-                    date: date,
-                    time: time,
-                    currentstockCopy: currentStockCopy,
-                    TransactionType: transactionType,
-                    Date_Input: date_input,
-                    time_input: time_input};
+    }
 
-                var postData = firebase.database().ref('incoming_diesel/' + plant);
-                var newPostRef = postData.push();
-                newPostRef.set(currentStockHolder);
+    function remove_others_row(rowno){
+        $('#'+rowno).remove();
+    }
 
-                var postId = newPostRef.key;
-                
-                firebase.database().ref().child("incoming_diesel/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot)
-                {
-                    var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
-                    var UpdateReverseDate = {reverseDate: StartReverseDate};
-                    /*firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
-                    console.log(StartReverseDate);*/
-                     if(firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate)){
-                        //alert("Incoming diesel complete.");
-                         window.location.reload();
-                    }
-                });
-            });
+    function submitForm(){
+
+        event.preventDefault();
+
+        var displayDate = new Date();
+        var option = {year: "numeric", month: "long", day: "numeric"};
+        displayDate = new Date(displayDate).toLocaleDateString('en',option);
+
+        var plant_holder = document.getElementById("selectsys").value;
+        var transmittal_no_holder = document.getElementById("transmittal_no").value;
+        var delivered_by_holder = document.getElementById("delivered_by").value;
+
+        var item_Batch =  $("input[name='batch1[]']").map(function(){return $(this).val() || "";}).get();
+        var quantity_Batch =  $("input[name='batch2[]']").map(function(){return $(this).val() || "";}).get();
+        var purpose_batch=  $("input[name='batch3[]']").map(function(){return $(this).val() || "";}).get();
+
+        var main_holder ={
+
+            to: plant_holder,
+            transmittal_no: transmittal_no_holder,
+            delivered_by: delivered_by_holder,
+            from: plant,
+        }
+
+        var postData = firebase.database().ref('transmittal_input/' + '/'+ displayDate);
+        var newPostRef = postData.push();
+        newPostRef.set(main_holder);
+
+        var postId = newPostRef.key;
+        //items
+        for (var i = 0; i < item_Batch.length; i++){
+            var items_holder = {
+               item_Batch: item_Batch[i],
+               quantity_Batch: quantity_Batch[i],
+               purpose_batch: purpose_batch[i],
+               status: "0",
+               comment: "",
+               receive_date:"",
+               receive_time:""
             }
-            else{
-                 firebase.database().ref().child("incoming_diesel/" + plant).once('value',function(CheckSnapshot)
-                {
-                    //
-                    var po_no = document.getElementById('po_no').value;
-                    var dr_no = document.getElementById('dr_no').value;
-                    var quantity_in = document.getElementById('quantity_in').value;
-                    quantity_in = quantity_in.replace(",","");
-                    var supplier = document.getElementById('supplier').value;
-                    var truck_no = document.getElementById('truck_no').value;
-                    var date = new Date().toLocaleDateString('en');
-                    var time = new Date().toLocaleTimeString('en');
-                    var date_input = new Date(document.getElementById('date_input').value).toLocaleDateString('en');
-                    
-                    if(document.getElementById('time_input').value != ""){
-                        var time_input = startTime(document.getElementById('time_input').value);
-                    }else{
-                        var time_input = "";
-                    }
-                    //
-                    var get_liters = CheckSnapshots.val().Liters;
-                    var total_int_liters = Number(quantity_in) + Number(get_liters);
-                    var total_string_liters = total_int_liters.toString();
-                    var new_liters = total_string_liters;
-                    var stock_available  ={Liters: new_liters};
-                    firebase.database().ref().child("available_stock/" + plant).set(stock_available );
-                    //
-                    var currentStockCopy = new_liters;
-                    transactionType = "In";
-                    var currentStockHolder = {
-                        po_no: po_no, dr_no: dr_no, 
-                        quantity_in: quantity_in,
-                        supplier: supplier.toUpperCase(), 
-                        truck_no: truck_no.toUpperCase(),
-                        reverseDate: firebase.database.ServerValue.TIMESTAMP,
-                        date: date,time: time,
-                        currentstockCopy: currentStockCopy,
-                        TransactionType: transactionType,
-                        Date_Input: date_input,
-                        time_input: time_input};
-
-                    var postData = firebase.database().ref('incoming_diesel/' + plant);
-                    var newPostRef = postData.push();
-                    newPostRef.set(currentStockHolder);
-                    var postId = newPostRef.key;
-                
-                    firebase.database().ref().child("incoming_diesel/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot)
-                    {
-                    var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
-                    var UpdateReverseDate = {reverseDate: StartReverseDate};
-                    // firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
-                    console.log(StartReverseDate);
-                    if(firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate)){
-                        //alert("Incoming diesel complete.");
-                        window.location.reload();
-                    }
-
-                    });
-                });
-            }
-        });
+            firebase.database().ref('transmittal_input/'+'/'+ displayDate +'/'+postId+"/Items").push(items_holder); 
+        }
+       window.location.reload();
     }
 
     function displayNotif(){
@@ -350,9 +298,11 @@
     }
 
 </script>
+<style>
+    
+</style>
 </head>
 <body>
-	<!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
@@ -362,7 +312,6 @@
             <!--logo start-->
 
             <!--logo end-->
-            <!-- <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a> -->
             <span id="id_plant_name"></span>
             <div class="top-nav notification-row">                
                 <!-- notificatoin dropdown start-->
@@ -405,24 +354,23 @@
                 <!-- notificatoin dropdown end-->
             </div>
         </header>  
-
         <!--sidebar start-->
-	    <aside>
-	        <div id="sidebar"  class="nav-collapse ">
-	            <!-- sidebar menu start-->
-	            <ul class="sidebar-menu">                
+        <aside>
+            <div id="sidebar"  class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu"> 
                     <li class="">
                         <a class="" href="index.html">
                             <i class="icon_house"></i>
                             <span>Dashboard</span>
                         </a>
-                    </li>
+                    </li> 
                     <li class="">
                         <a class="" href="attendance.html">
                             <i class="icon_document"></i>
                             <span>Attendance</span>
                         </a>
-                    </li>
+                    </li>    
                     <li class="sub-menu">
                         <a href="javascript:;" class="">
                             <i class="fa fa-building"></i>
@@ -433,8 +381,8 @@
                             <li><a class="" href="batch_report_input.html">Daily Production Input</a></li>
                             <li><a class="" href="view_daily_production_report.html">Daily Production Report</a></li>
                         </ul>
-                    </li> 
-                    <li class="active">
+                    </li>          
+                    <li class="">
                         <a class="" href="diesel.html">
                             <i class="fa fa-building"></i>
                             <span>Diesel</span>
@@ -451,7 +399,7 @@
                             <i class="fa fa-building"></i>
                             <span>Oil</span>
                         </a>
-                    </li>
+                    </li> 
                     <li class="sub-menu">
                         <a href="javascript:;" class="">
                             <i class="fa fa-building"></i>
@@ -463,80 +411,63 @@
                             <li><a class="" href="transmittal_receive.html">Incoming Items</a></li>
                             <li><a class="" href="transmittal_outgoing.html">Outgoing Items</a></li>
                         </ul>
-                    </li> 
+                    </li>
                 </ul>
-	            <!-- sidebar menu end-->
-	        </div>
-	    </aside>
-	    <!--sidebar end-->
+                <!-- sidebar menu end-->
+            </div>
+        </aside>
+        <!--sidebar end-->
 
-	    <section id="main-content">
+        <section id="main-content">
             <section class="wrapper">            
                 <!--overview start-->
                 <div class="row">
-                    <div class="col-md-12 page_links">
+                    <div class="col-md-12">
                         <!-- <h3 class="page-header"><i class="fa fa-home"></i> History</h3> -->
                         <ol class="breadcrumb">
-                            <!-- <li><i class="fa fa-building"></i><?php echo $plant; ?></li> -->
-                            <li><i class="icon_document"></i><a href="diesel.html">Diesel</a></li>             
-                            <li><i class="icon_document"></i>Incoming Diesel Form</li>             
+                            <li><i class="icon_document"></i>Transmittal Input</li> 
+                            <li><i class="icon_document"></i><a href="transmittal_receive.html">Incoming Items</a></li>
+                            <li><i class="icon_document"></i><a href="transmittal_outgoing.html">Outgoing Items</a></li>          
+                                        
                         </ol>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6 col-md-offset-3">
+                    <div class="col-md-5">
                         <form id="form" name="form" class="form-horizontal" onsubmit="if(confirm('Proceed?')){submitForm();}else{ event.preventDefault();}">
                             <section class="panel">
-                                <header class="panel-heading">
-                                    Details
+                                <header class="panel-heading" style="font-size: 20px; text-align: center;">
+                                    TRANSFER FORM
                                 </header>
                                 <div class="panel-body">
                                     <div class="form-group">
-                                        <label for="po_no" class="col-md-4 control-label">P.O. No.<span class="required" style="color: red;"></span></label>
-                                        <div class="col-md-5">
-                                            <input type="text" name="po_no" id="po_no" class="form-control" autocomplete="off">
+                                        <label for="plant_input" class="col-md-4 control-label">Plant<span class="required" style="color: red;">*</span></label>
+                                         <div class="col-md-7">
+                                            <select id="selectsys" name="selectsys" class ="form-control">
+                                               <!--  <option>Select</option>
+                                                <option value="Bravo">Bravo</option>
+                                                <option value="Delta">Delta</option>
+                                                <option value="Head Office">Head Office</option> -->
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="dr_no" class="col-md-4 control-label">DR No. <span class="required" style="color: red;"></span></label>
-                                        <div class="col-md-5">
-                                            <input type="text" name="dr_no" id="dr_no" class="form-control" autocomplete="off">
+                                        <label for="transmittal_no" class="col-md-4 control-label">Transmittal No.<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-7">
+                                            <input type="text" name="transmittal_no" id="transmittal_no"class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="quantity_in" class="col-md-4 control-label">Quantity (IN)<span class="required" style="color: red;">*</span></label>
-                                        <div class="col-md-5">
-                                            <input type="text" name="quantity_in" id="quantity_in" class="form-control" autocomplete="off" required>
+                                       <label for="delivered_by" class="col-md-4 control-label">Delivered By<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-7">
+                                            <input type="text" name="delivered_by" id="delivered_by"class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
                                         </div>
                                     </div>
+                                
                                     <div class="form-group">
-                                        <label for="supplier" class="col-md-4 control-label">Supplier<span class="required" style="color: red;">*</span></label>
-                                        <div class="col-md-5">
-                                            <input type="text" name="supplier" id="supplier" class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="truck_no" class="col-md-4 control-label">Truck No.<span class="required" style="color: red;"></span></label>
-                                        <div class="col-md-5">
-                                            <input type="text" name="truck_no" id="truck_no" class="form-control" autocomplete="off" style="text-transform: uppercase;">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="date_input" class="col-md-4 control-label">Date<span class="required" style="color: red;">*</span></label>
-                                        <div class="col-md-5">
-                                            <input type="date" name="date_input" id="date_input" class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
-                                        </div>
-                                    </div>
-                                       <div class="form-group">
-                                        <label for="time_input" class="col-md-4 control-label">Time<span class="required" style="color: red;"></span></label>
-                                        <div class="col-md-5">
-                                            <input type="time" name="time_input" id="time_input" class="form-control" autocomplete="off" style="text-transform: uppercase;">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-offset-8 col-md-4">
+                                        <div class="col-md-offset-4 col-md-5">
                                             <input type="submit" name="submit" id="submit" value="Done" class="btn btn-primary" style="font-weight: bold;">
-                                            <a href="diesel.html" class="btn btn-default"><strong>Cancel</strong></a>
+                                            <!-- <button type="submit" name="submit" id="submit" value="Reset" class="btn btn-primary" style="font-weight: bold;"><strong>Reset</strong></button> -->
                                         </div>
                                     </div>
                                 </div>
@@ -547,9 +478,40 @@
                             </section>
                         </form>
                     </div>
+                    <div class="col-md-7">
+                        <section class="panel">
+                            <header class="panel-heading" style="font-size: 20px; text-align: center;">
+                                ITEM
+                            </header>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                         <table class="table table-bordered" id="main_table">
+                                            <tbody>
+                                                 <tr>
+                                                    <th colspan="1" style="vertical-align: middle; text-align: center;">Item<span class="required" style="color: red;">*</span>
+                                                    </th>
+                                                    <th  colspan="1" style="vertical-align: middle; text-align: center;">Quantity<span class="required" style="color: red;">*</span></th>
+                                                    <th colspan="1" style="vertical-align: middle; text-align: center;">Purpose<span class="required" style="color: red;">*</span></th>
+                                                    <th colspan="1" style="vertical-align: middle; text-align: center;">Add</th>
+                                                </tr>
+
+                                                 <tr id="clone1">
+                                                    <th><input type="text" name="batch1[]" id="batch1"class="form-control" autocomplete="off" style="text-transform: uppercase;"></th>
+                                                    <th><input type="text" name="batch2[]" id="batch2"class="form-control" autocomplete="off" style="text-transform: uppercase;"></th>
+                                                    <th><input type="text" name="batch3[]" id="batch3"class="form-control" autocomplete="off" style="text-transform: uppercase;"></th>
+                                                    <th> <button type="button" name="submit" id="submit"  class="btn btn-primary fa fa-plus" style="font-weight: bold;" onclick="add_form()"></button></th>
+                                                </tr>
+                                            </tbody>
+                                         </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
                 </div>
             </section>
         </section>
-    </section>
+    </section>   
 </body>
 </html>

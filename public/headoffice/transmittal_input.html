@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +8,10 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="../img/favicon.png">
 
-    <title>Line Up Update</title>
+    <title>Transmittal Form</title>
 
     <!-- Firebase App is always required and must be first -->
-    <!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
-    <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
 
     <!-- Add additional services you want to use -->
     <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
@@ -81,21 +80,49 @@
     <script src="../js/jquery.slimscroll.min.js"></script>
     <script src="../js_config/function.js"></script>
 
+    <!-- =======================================================
+    Theme Name: NiceAdmin
+    Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+    Author: BootstrapMade
+    Author URL: https://bootstrapmade.com
+    ======================================================= -->
+
 <script>
-    
-    var option = getUrlParameter('option');
-    var plant = getUrlParameter('plant');
-    var getCurrentDate = getUrlParameter('date');
-    var date_option = {year: "numeric", month: "long", day: "numeric"}
-    var currentDate = new Date(getCurrentDate).toLocaleDateString('en', date_option);
-    var passDate = new Date(getCurrentDate).toLocaleDateString('en');
-    var optionTable = "";
 
     $(document).ready(function(){
 
-        tableData();
         displayNotif();
-        refreshNotif();
+
+        var $form = $( "#form" );
+        var $input = $form.find( "#input_trans_no" );
+
+        $form.on( "keyup", "#input_trans_no", function( event ) {
+            
+            
+            // When user select text in the document, also abort.
+            var selection = window.getSelection().toString();
+            if ( selection !== '' ) {
+                return;
+            }
+            
+            // When the arrow keys are pressed, abort.
+            if ( $.inArray( event.keyCode, [38,40,37,39] ) !== -1 ) {
+                return;
+            }
+            
+            
+            var $this = $( this );
+            
+            // Get the value.
+            var input = $this.val();
+            
+            var input = input.replace(/[\D\s\._\-]+/g, "");
+            input = input ? parseInt( input, 10 ) : 0;
+
+            $this.val( function() {
+                return ( input === 0 ) ? "" : input.toLocaleString( "en-US" );
+            });
+        }); 
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -106,9 +133,11 @@
                     if(snapshot.val().office != 'Head Office'){
                         window.location.href = '../plant/index.html';
                     }
+
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
+
                 },(error) => {
-                    console.error(error);
+                    console.log(error);
                 });
             } else {
                 window.location.href = '../login.html';
@@ -116,83 +145,69 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
-
-        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-home'></i><a href='lineup.html?plant=" + plant + "'>Line Up</a></li><li><i class='icon_document'></i>Line Up Update</li>  ";
+        // document.getElementById('id_breadcrumb').innerHTML = "<li><i class='icon_document'></i><a href='#'>Transmittal Input</a></li><li><i class='icon_document'></i><a href='transmittal_receive.html'>Incoming Items</a></li><li><i class='icon_document'></i><a href='transmittal_outgoing.html'>Outgoing Items</a></li>";
 
     });
 
-    function tableData(){
+    function add_row(){
 
-        if(option == "comment"){
-            query_ext = option;
-        }else if(option == "new_comment"){
-            query_ext = "new/comment";
-        }
+        event.preventDefault();
 
-        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(commentSnapshot){
+        $rowno = $("#itemTable tr").length;
+        $rowno = $rowno + 1;
 
-             if(commentSnapshot.val() != null){
+        $("#itemTable tr:last").after("<tr id='item_row" + $rowno + "'><td><input type='text' name='input_item[]' class='form-control'></td><td><input type='text' name='input_quantity[]' class='form-control'></td><td><input type='text' name='input_purpose[]' class='form-control'></td><td><button type='button' class='btn btn-danger btn-md' onclick=remove_row('item_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
 
-                    commentSnapshot.forEach(function(commentChildSnapshot){
-
-                        var comment = commentChildSnapshot.val().comment_lineup_headoffice;
-
-                        optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;' required>" + comment  + "</textarea></div>";
-                    });
-
-             }else{
-
-                 optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;' required></textarea></div>";
-
-             }
-                
-             document.getElementById('id_comment_field').innerHTML = optionTable;
-        });
+    function remove_row(rowno){
+        $("#"+rowno).remove();
     }
 
     function submitForm(){
 
         event.preventDefault();
 
-        var input_comment = document.getElementById('comment').value || "N/A";
-        var currentSystemDate = new Date().toLocaleDateString('en');
-        var currentTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        var timeStamp = new Date().getTime();
-        timeStamp = timeStamp * -1;
+        var displayDate = new Date();
+        var option = {year: "numeric", month: "long", day: "numeric"};
+        displayDate = new Date(displayDate).toLocaleDateString('en',option);
 
-        var commentData = {
-            comment_lineup_headoffice: input_comment.toUpperCase()
+        var to_plant = document.getElementById('input_plant').value;
+        var transmittal_no = document.getElementById('input_trans_no').value;
+        var deliver_by = document.getElementById('input_deliver_by').value;
+
+        var item_no =  $("input[name='input_item[]']").map(function(){return $(this).val() || "";}).get();
+        var item_quantity =  $("input[name='input_quantity[]']").map(function(){return $(this).val() || "";}).get();
+        var item_purpose =  $("input[name='input_purpose[]']").map(function(){return $(this).val() || "";}).get();
+
+        var transmittalData = {
+            delivered_by: deliver_by,
+            from: "Head Office",
+            to: to_plant,
+            transmittal_no: transmittal_no
         }
 
-        if(option == "comment"){
-            query_ext = option;
-        }else if(option == "new_comment"){
-            query_ext = "new/comment";
+        var postData = firebase.database().ref('transmittal_input/'+displayDate);
+        var newPostRef = postData.push();
+        newPostRef.set(transmittalData);
+
+        var postId = newPostRef.key;
+
+        for(a = 0; a < item_no.length; a++){
+
+            var itemData = {
+                comment: "",
+                item_Batch: item_no[a],
+                purpose_batch: item_purpose[a],
+                quantity_Batch: item_quantity[a],
+                receive_date: "",
+                receive_time: "",
+                status: "0"
+            }
+
+            firebase.database().ref('transmittal_input/'+displayDate+'/'+postId+'/Items').push(itemData);
         }
 
-        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(commentSnapshot){
-            commentSnapshot.forEach(function(commentChildSnapshot){
-
-                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/'+commentChildSnapshot.key).update(commentData)
-                     
-                notifData = {
-                    time: currentTime,
-                    date: currentSystemDate,
-                    message: "Head Office sent a comment on Line Up Page",
-                    isRead: 1,
-                    reverseDate: timeStamp,
-                    fromOffice: "Head Office",
-                    toOffice: plant,
-                    page: "lineup.html?date="+passDate
-                }
-
-                if(firebase.database().ref('notification').push(notifData)){
-
-                    alert("Data update successfully");
-                    window.location.href = "lineup.html?plant="+plant;
-                }
-            });
-        });
+        window.location.reload();
     }
 
     function displayNotif(){
@@ -263,9 +278,15 @@
     }
 
 </script>
+<style>
+.text_center{
+    text-align: center;
+}
+</style>
 </head>
 <body>
-	<!-- <div class="se-pre-con"></div> -->
+    <!-- <div class="se-pre-con"></div> -->
+    <!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
@@ -316,7 +337,9 @@
                 </ul>
                 <!-- notificatoin dropdown end-->
             </div>
-        </header>  
+        </header>      
+        <!--header end-->
+
         <!--sidebar start-->
         <aside>
             <div id="sidebar"  class="nav-collapse ">
@@ -359,50 +382,103 @@
                             <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
                             <li><a class="" href="transmittal_input.html?plant=Delta">Transmittal</a></li>
                         </ul>
-                    </li>  
+                    </li>   
                 </ul>
                 <!-- sidebar menu end-->
             </div>
         </aside>
         <!--sidebar end-->
 
-        <section id="main-content">
+         <section id="main-content">
             <section class="wrapper">  
                 <div class="row">
                     <div class="col-md-12">
                         <ol class="breadcrumb" id="id_breadcrumb">
-                                                  
+                            <li><i class='icon_document'></i>Transmittal Input</li>
+                            <li><i class='icon_document'></i><a href='transmittal_receive.html'>Incoming Items</a></li>
+                            <li><i class='icon_document'></i><a href='transmittal_outgoing.html'>Outgoing Items</a></li>        
                         </ol>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-offset-2 col-md-8">
-                        <section class="panel">
-                            <header class="panel-heading">
-                            Update Form
-                            </header>
-                            <header class="panel-heading" style="text-align: center;"><strong>NOTE</strong></header>
-                            <div class="panel-body">
-                                <div class="row">                                          
-                                    <form class="form-horizontal" role="form" id="form" onsubmit='if(confirm("Proceed?")){submitForm();}else{ event.preventDefault();}'>
-                                        <div id="id_comment_field"></div>
-                                        <hr>
+                <form id="form" name="form" class="form-horizontal" onsubmit="if(confirm('Proceed?')){submitForm();}else{ event.preventDefault();}">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <section class="panel">
+                                <header class="panel-heading text_center">
+                                    <div class="row">
                                         <div class="col-md-12">
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-md-offset-7 col-md-5">
-                                                        <input type="submit" name="submit" id="submit" value="Update" class="btn btn-primary" style="font-weight: bold;">
-                                                        <button type="button" class="btn btn-default" onclick="window.history.back();"><strong>Cancel</strong></button>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <h4><strong>TRANSFER FORM</strong></h4>
                                         </div>
-                                    </form>
+                                    </div>
+                                </header>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label for="input_plant" class="col-md-4 control-label">Plant<span class="required" style="color: red">*</span></label>
+                                        <div class="col-md-7">
+                                            <select id="input_plant" class="form-control">
+                                                <option>Select</option>
+                                                <option value="Bravo">Bravo</option>
+                                                <option value="Delta">Delta</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="input_trans_no" class="col-md-4 control-label">Transmittal No.<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-7">
+                                            <input type="text" id="input_trans_no" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="input_deliver_by" class="col-md-4 control-label">Delivered By<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-7">
+                                            <input type="text" id="input_deliver_by" class="form-control" style="text-transform: uppercase;">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-offset-4 col-md-5">
+                                            <input type="submit" name="submit" id="submit" value="Submit" class="btn btn-primary" style="font-weight: bold;">
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </section>
+                                <footer class="panel-footer">
+                                    <p class="help-block"><span class="required" style="color: red;">*</span> - required</p>
+                                    <p class="help-block">Note: <strong>N/A</strong> for not available.</p>
+                                </footer>
+                            </section>
+                        </div>
+                        <div class="col-md-7">
+                            <section class="panel">
+                                <header class="panel-heading text_center">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h4><strong>ITEM</strong></h4>
+                                        </div>
+                                    </div>
+                                </header>
+                                <div class="panel-body">
+                                    <table class="table table-bordered" id="itemTable">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-md-4 text_center">Item<span class="required" style="color: red;">*</span></th>
+                                                <th class="col-md-2 text_center">Quantity<span class="required" style="color: red;">*</span></th>
+                                                <th class="col-md-5 text_center">Purpose<span class="required" style="color: red;">*</span></th>
+                                                <th class="col-md-1"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr id="item_row1">
+                                                <td><input type="text" name="input_item[]" class="form-control"></td>
+                                                <td><input type="text" name="input_quantity[]" class="form-control"></td>
+                                                <td><input type="text" name="input_purpose[]" class="form-control"></td>
+                                                <td><button type="button" class="btn btn-primary btn-md" onclick="add_row()"><span class="fa fa-plus"></span></button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
+                        </div>
                     </div>
-                </div>
+                </form>
             </section>
         </section>
     </section>
