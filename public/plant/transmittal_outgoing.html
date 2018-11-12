@@ -120,6 +120,47 @@
             });
         }); 
 
+        $('.filterable .btn-filter').click(function(){
+            var $panel = $(this).parents('.filterable'),
+            $filters = $panel.find('.filters input'),
+            $tbody = $panel.find('.table tbody');
+            if ($filters.prop('disabled') == true) {
+                $filters.prop('disabled', false);
+                $filters.first().focus();
+            } else {
+                $filters.val('').prop('disabled', true);
+                $tbody.find('.no-result').remove();
+                $tbody.find('tr').show();
+            }
+        });
+
+        $('.filterable .filters input').keyup(function(e){
+            /* Ignore tab key */
+            var code = e.keyCode || e.which;
+            if (code == '9') return;
+            /* Useful DOM data and selectors */
+            var $input = $(this),
+            inputContent = $input.val().toLowerCase(),
+            $panel = $input.parents('.filterable'),
+            column = $panel.find('.filters th').index($input.parents('th')),
+            $table = $panel.find('.table'),
+            $rows = $table.find('tbody tr');
+            /* Dirtiest filter function ever ;) */
+            var $filteredRows = $rows.filter(function(){
+                var value = $(this).find('td').eq(column).text().toLowerCase();
+                return value.indexOf(inputContent) === -1;
+            });
+            /* Clean previous no-result if exist */
+            $table.find('tbody .no-result').remove();
+            /* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
+            $rows.show();
+            $filteredRows.hide();
+            /* Prepend no-result row if all rows are filtered */
+            if ($filteredRows.length === $rows.length) {
+                 $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="9" style="min-height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
+            }
+        });
+
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
 
@@ -227,26 +268,26 @@
 
                     if(status == 0){
 
-                        tbody += "<tr><td><strong>" + date_holder + "</strong></td>";
-                        tbody += "<td><strong>" + to_plant + "</strong></td>";
-                        tbody += "<td><strong>" + delivered_by + "</strong></td>";
-                        tbody += "<td><strong>" + transmittal_no + "</strong></td>";
-                        tbody += "<td><strong>" + item_no + "</strong></td>";
-                        tbody += "<td><strong>" + quantity + "</strong></td>";
-                        tbody += "<td><strong>" + purpose + "</strong></td>";
-                        tbody += "<td><strong>" + comment + "</strong></td>";
+                        tbody += "<tr><td style='text-align: center;'><strong>" + date_holder + "</strong></td>";
+                        tbody += "<td style='text-align: center;'><strong>" + to_plant + "</strong></td>";
+                        tbody += "<td style='text-align: center;'><strong>" + delivered_by + "</strong></td>";
+                        tbody += "<td style='text-align: center;'><strong>" + transmittal_no + "</strong></td>";
+                        tbody += "<td style='text-align: center;'><strong>" + item_no + "</strong></td>";
+                        tbody += "<td style='text-align: center;'><strong>" + quantity + "</strong></td>";
+                        tbody += "<td style='text-align: center;'><strong>" + purpose + "</strong></td>";
+                        tbody += "<td style='text-align: center;'><strong>" + comment + "</strong></td>";
                         tbody += "<td class='text_center' style='background-color: #ff1a1a; color: white; text-align: center'><strong>ONGOING</strong></td></tr>";
 
                     }else if(status == 1){
 
-                        tbody += "<tr><td><strong>" + date_holder + "</strong></td>";
-                        tbody += "<td><strong>" + to_plant + "</strong></td>";
-                        tbody += "<td><strong>" + delivered_by + "</strong></td>";
-                        tbody += "<td><strong>" + transmittal_no + "</strong></td>";
-                        tbody += "<td><strong>" + item_no + "</strong></td>";
-                        tbody += "<td><strong>" + quantity + "</strong></td>";
-                        tbody += "<td><strong>" + purpose + "</strong></td>";
-                        tbody += "<td><strong>" + comment + "</strong></td>";
+                        tbody += "<tr><td style='text-align: center;'><strong>" + date_holder + "</strong></td>";
+                        tbody += "<td style='text-align: center;'><strong>" + to_plant + "</strong></td>";
+                        tbody += "<td style='text-align: center;'><strong>" + delivered_by + "</strong></td>";
+                        tbody += "<td style='text-align: center;'><strong>" + transmittal_no + "</strong></td>";
+                        tbody += "<td style='text-align: center;'><strong>" + item_no + "</strong></td>";
+                        tbody += "<td style='text-align: center;'><strong>" + quantity + "</strong></td>";
+                        tbody += "<td style='text-align: center;'><strong>" + purpose + "</strong></td>";
+                        tbody += "<td style='text-align: center;'><strong>" + comment + "</strong></td>";
                         tbody += "<td class='text_center' style='background-color: #33cc33; color: white; text-align:center'><strong>ACCEPTED</strong></td></tr>";
 
                     }
@@ -360,7 +401,33 @@
 
 </script>
 <style>
-    
+.filterable .panel-heading .pull-right {
+    margin-top: -20px;
+}
+.filterable .filters input[disabled] {
+    background-color: transparent;
+    text-align: center;
+    border: none;
+    cursor: auto;
+    box-shadow: none;
+    padding: 0;
+    height: auto;
+}
+.filterable .filters input[disabled]::-webkit-input-placeholder {
+    color: white;
+    text-align: center;
+    font-weight: bold;
+}
+.filterable .filters input[disabled]::-moz-placeholder {
+     color: white;
+     text-align: center;
+     font-weight: bold;
+}
+.filterable .filters input[disabled]:-ms-input-placeholder {
+     color: white;
+     text-align: center;
+     font-weight: bold;
+}   
 </style>
 </head>
 <body>
@@ -504,9 +571,15 @@
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="col-md-12">
+                                        <div class="table-responsive filterable">
                                          <table class="table table-bordered" id="main_table">
                                             <thead>
-                                                 <tr style="background-color: #00111a; color:white; text-align: center;">
+                                                <tr class="filterable">
+                                                    <th colspan="9">
+                                                        <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button></span><br>
+                                                    </th>
+                                                </tr>
+                                                 <tr class="fliters" style="background-color: #00111a; color:white; text-align: center;">
                                                     <th colspan="1" style="vertical-align: middle; text-align: center; color:white;">Date
                                                     </th>
                                                     <th colspan="1" style="vertical-align: middle; text-align: center; color:white;">To
@@ -515,8 +588,9 @@
                                                     </th>
                                                       <th colspan="1" style="vertical-align: middle; text-align: center; color:white;">Transmittal No.
                                                     </th>
-                                                    <th colspan="1" style="vertical-align: middle; text-align: center; color:white;">Item
-                                                    </th>
+                                                    <!-- <th colspan="1" style="vertical-align: middle; text-align: center; color:white;">Item
+                                                    </th> -->
+                                                    <th colspan="1"><input type="text" class="form-control" placeholder="Item" disabled></th>
                                                     <th  colspan="1" style="vertical-align: middle; text-align: center; color:white;">Quantity</th>
                                                     <th colspan="1" style="vertical-align: middle; text-align: center; color:white;">Purpose</th>
                                                     <th colspan="1" style="vertical-align: middle; text-align: center; color:white;">Comment</th>
@@ -525,6 +599,7 @@
                                             </thead>
                                             <tbody id="tbody"></tbody>
                                          </table>
+                                         </div>
                                     </div>
                                 </div>
                             </div>

@@ -235,7 +235,10 @@
                     if (quantityout == "NaN"){quantityoutholder = "";}
                     else{quantityoutholder = quantityout + " liter(s)";}
                     if (pondo == "NaN"){pondo= "";}
-                    else{pondo = pondo + " liter(s)";}
+                    else{
+                        if (truckno == "HOWO"){pondo = pondo + " km";}
+                        else{pondo = pondo + " liter(s)";}
+                    }
                     if (dieselChildSnapshot.val().TransactionType == "In"){
                         myTbody += "<tr style ='background-color:#006080'>";
                         myTbody += "<td style ='color: white'><strong>" + truckno + "</strong></td>";
@@ -318,7 +321,10 @@
                         if (quantityout == "NaN"){quantityoutholder = "";}
                         else{quantityoutholder = quantityout + " liter(s)";}
                         if (pondo == "NaN"){pondo= "";}
-                        else{pondo = pondo + " liter(s)";}
+                        else{
+                            if (truckno == "HOWO"){pondo = pondo + " km";}
+                            else{pondo = pondo + " liter(s)";}
+                        }
                         if (dieselChildSnapshot.val().TransactionType == "In"){
                             myTbody += "<tr style ='background-color:#006080'>";
                             myTbody += "<td style ='color: white'><strong>" + truckno + "</strong></td>";
@@ -413,7 +419,10 @@
                 if (quantityout == "NaN"){quantityoutholder = "";}
                 else{quantityoutholder = quantityout + " liter(s)";}
                 if (pondo == "NaN"){pondo= "";}
-                else{pondo = pondo + " liter(s)";}
+                else{
+                    if (truckno == "HOWO"){pondo = pondo + " km";}
+                    else{pondo = pondo + " liter(s)";}
+                }
                 if (dieselChildSnapshot.val().TransactionType == "In"){
                     myTbody += "<tr style ='background-color:#006080'>";
                     myTbody += "<td style ='color: white'><strong>" + truckno + "</strong></td>";

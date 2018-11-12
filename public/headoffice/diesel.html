@@ -239,9 +239,21 @@
                     pondo = dieselChildSnapshot.val().pondo_Input || "";
 
                     if(pondo != ""){
-                        pondo_string = Number(pondo).toLocaleString('en') + " liter(s)";
+
+                        if(truck_no == "HOWO"){
+                            pondo_ext = " km";
+                        }else{
+                            pondo_ext = " liter(s)";
+                        }
+                        
+                        pondo_string = Number(pondo).toLocaleString('en') + pondo_ext;
                     }else{
-                        pondo_string = "";
+
+                        if(dieselChildSnapshot.val().TransactionType == "Out"){
+                            pondo_string = "0 liter";
+                        }else{
+                            pondo_string = "";
+                        }
                     }
 
                     if(quantity_in != ""){
@@ -324,9 +336,21 @@
                         pondo = dieselChildSnapshot.val().pondo_Input || "";
 
                         if(pondo != ""){
-                            pondo_string = Number(pondo).toLocaleString('en') + " liter(s)";
+
+                            if(truck_no == "HOWO"){
+                                pondo_ext = " km";
+                            }else{
+                                pondo_ext = " liter(s)";
+                            }
+
+                            pondo_string = Number(pondo).toLocaleString('en') + pondo_ext;
                         }else{
-                            pondo_string = "";
+                            
+                            if(dieselChildSnapshot.val().TransactionType == "Out"){
+                                pondo_string = "0 liter";
+                            }else{
+                                pondo_string = "";
+                            }
                         }
 
                         if(quantity_in != ""){
@@ -440,9 +464,21 @@
                     pondo = dieselChildSnapshot.val().pondo_Input || "";
 
                     if(pondo != ""){
-                        pondo_string = Number(pondo).toLocaleString('en') + " liter(s)";
+
+                        if(truck_no == "HOWO"){
+                            pondo_ext = " km";
+                        }else{
+                            pondo_ext = " liter(s)";
+                        }
+                        
+                        pondo_string = Number(pondo).toLocaleString('en') + pondo_ext;
                     }else{
-                        pondo_string = "";
+                        
+                        if(dieselChildSnapshot.val().TransactionType == "Out"){
+                            pondo_string = "0 liter";
+                        }else{
+                            pondo_string = "";
+                        }
                     }
 
                     if(quantity_in != ""){
