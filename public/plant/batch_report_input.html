@@ -200,6 +200,8 @@
         var date_of_batch = document.getElementById("date_selected").value;
         var option = {year: "numeric", month: "long", day: "numeric"};
         date_of_batch = new Date(date_of_batch).toLocaleDateString('en',option);
+        var date_for_timestamp = new Date(date_of_batch).getTime();
+        date_for_timestamp = date_for_timestamp * -1;
 
         // machine_1
         var machine1_cementkg = document.getElementById("cementKG1").value;
@@ -213,13 +215,17 @@
 
             machine1_cementkg: machine1_cementkg,
             machine1_comment: machine1_comment,
-            machine1_cementType: machine1_cementType
+            machine1_cementType: machine1_cementType,
+            machine1_status: "0"
+
         }
 
         firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_of_batch+'/Machine1').set(machine1_holder);
 
         //machine_1_content
         count = 6;
+        var machine1_total_batch = 0;
+
         for (var i = 0; i < machine1_time_batch.length; i++){
              machine1_time_batch_replace = machine1_time_batch[i].replace(",","");
             var machine1_time_holder = {
@@ -229,7 +235,15 @@
             }
             firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_of_batch+'/Machine1'+'/Time').push(machine1_time_holder); 
             count++;
+
+            machine1_total_batch = Number(machine1_total_batch) + Number(machine1_time_batch_replace);
          }
+
+        var machine1Data = {
+            machine1_total_batch: machine1_total_batch
+        }
+
+        firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_of_batch+'/Machine1').update(machine1Data); 
      //machine_1_end
 
 
@@ -245,13 +259,17 @@
 
             machine2_cementkg: machine2_cementkg,
             machine2_comment: machine2_comment,
-            machine2_cementType: machine2_cementType
+            machine2_cementType: machine2_cementType,
+            machine2_status: "0"
+
         }
 
         firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_of_batch+'/Machine2').set(machine2_holder);
 
         //machine_2_content
         count = 6;
+        var machine2_total_batch = 0;
+
         for (var i = 0; i < machine2_time_batch.length; i++){
              machine2_time_batch_replace = machine2_time_batch[i].replace(",","");
             var machine2_time_holder = {
@@ -261,7 +279,15 @@
             }
             firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_of_batch+'/Machine2'+'/Time').push(machine2_time_holder); 
             count++;
+
+            machine2_total_batch = Number(machine2_total_batch) + Number(machine2_time_batch_replace);
          }
+
+        var machine2Data = {
+            machine2_total_batch: machine2_total_batch
+        }
+
+        firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_of_batch+'/Machine2').update(machine2Data); 
      //machine_2_end
 
       // machine_3
@@ -276,13 +302,17 @@
 
             machine3_cementkg: machine3_cementkg,
             machine3_comment: machine3_comment,
-            machine3_cementType: machine3_cementType
+            machine3_cementType: machine3_cementType,
+            machine3_status: "0"
+
         }
 
         firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_of_batch+'/Machine3').set(machine3_holder);
 
         //machine_3_content
         count = 6;
+        var machine3_total_batch = 0;
+
         for (var i = 0; i < machine3_time_batch.length; i++){
             machine3_time_batch_replace = machine3_time_batch[i].replace(",","");
             var machine3_time_holder = {
@@ -292,7 +322,15 @@
             }
             firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_of_batch+'/Machine3'+'/Time').push(machine3_time_holder); 
             count++;
-         }
+
+            machine3_total_batch = Number(machine3_total_batch) + Number(machine3_time_batch_replace);
+        }
+
+        var machine3Data = {
+            machine3_total_batch: machine3_total_batch
+        }
+
+        firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_of_batch+'/Machine3').update(machine3Data); 
      //machine_3_end
 
       // machine_4
@@ -307,13 +345,17 @@
 
             machine4_cementkg: machine4_cementkg,
             machine4_comment: machine4_comment,
-            machine4_cementType: machine4_cementType
+            machine4_cementType: machine4_cementType,
+            machine4_status: "0"
+
         }
 
         firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_of_batch+'/Machine4').set(machine4_holder);
 
         //machine_4_content
         count = 6;
+        var machine4_total_batch = 0;
+
         for (var i = 0; i < machine4_time_batch.length; i++){
             machine4_time_batch_replace = machine4_time_batch[i].replace(",","");
             var machine4_time_holder = {
@@ -323,7 +365,15 @@
             }
             firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_of_batch+'/Machine4'+'/Time').push(machine4_time_holder); 
             count++;
-         }
+
+            machine4_total_batch = Number(machine4_total_batch) + Number(machine4_time_batch_replace);
+        }
+
+        var machine4Data = {
+            machine4_total_batch: machine4_total_batch
+        }
+
+        firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_of_batch+'/Machine4').update(machine4Data); 
      //machine_4_end
 
      // machine_5
@@ -338,13 +388,17 @@
 
             machine5_cementkg: machine5_cementkg,
             machine5_comment: machine5_comment,
-            machine5_cementType: machine5_cementType
+            machine5_cementType: machine5_cementType,
+            machine5_status: "0"
+
         }
 
         firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_of_batch+'/Machine5').set(machine5_holder);
 
         //machine_5_content
         count = 6;
+        var machine5_total_batch = 0;
+
         for (var i = 0; i < machine5_time_batch.length; i++){
             machine5_time_batch_replace = machine5_time_batch[i].replace(",","");
             var machine5_time_holder = {
@@ -355,7 +409,20 @@
             firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_of_batch+'/Machine5'+'/Time').push(machine5_time_holder); 
             count++;
 
-         }
+            machine5_total_batch = Number(machine5_total_batch) + Number(machine5_time_batch_replace);
+        }
+
+        var machine5Data = {
+            machine5_total_batch: machine5_total_batch
+        }
+
+        firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_of_batch+'/Machine5').update(machine5Data);
+
+        var timeStampData = {
+            timestamp: date_for_timestamp
+        }
+
+        firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_of_batch).update(timeStampData); 
 
          window.setTimeout(function(){
              window.location.reload();
@@ -438,7 +505,7 @@
     color: #333; 
     float: right; 
     margin-right: -15px; 
-    margin-top: -25px;
+    margin-top: -35px;
 }
 .input_type{
     text-transform: uppercase;
@@ -638,15 +705,15 @@
                                         <th colspan="2" style="text-align: center;">Machine-5</th>
                                     </tr>
                                     <tr>
-                                        <th colspan="2">Cement (kg): <input type="text" name="cementKG1" id="cementKG1" autocomplete="off" style="text-transform: uppercase; width: 100px" required></th>
+                                        <th colspan="2">Cement (kg): <input type="text" name="cementKG1" id="cementKG1" autocomplete="off" style="text-transform: uppercase; width: 100px"></th>
                                      
-                                        <th colspan="2">Cement (kg): <input type="text" name="cementKG2" id="cementKG2" autocomplete="off" style="text-transform: uppercase; width: 100px" required></th>
+                                        <th colspan="2">Cement (kg): <input type="text" name="cementKG2" id="cementKG2" autocomplete="off" style="text-transform: uppercase; width: 100px"></th>
                     
-                                        <th colspan="2">Cement (kg): <input type="text" name="cementKG3" id="cementKG3" autocomplete="off" style="text-transform: uppercase; width: 100px" required></th>
+                                        <th colspan="2">Cement (kg): <input type="text" name="cementKG3" id="cementKG3" autocomplete="off" style="text-transform: uppercase; width: 100px"></th>
                                
-                                        <th colspan="2">Cement (kg): <input type="text" name="cementKG4" id="cementKG4" autocomplete="off" style="text-transform: uppercase; width: 100px" required></th>
+                                        <th colspan="2">Cement (kg): <input type="text" name="cementKG4" id="cementKG4" autocomplete="off" style="text-transform: uppercase; width: 100px"></th>
                           
-                                        <th colspan="2">Cement (kg): <input type="text" name="cementKG5" id="cementKG5" autocomplete="off" style="text-transform: uppercase; width: 100px" required></th>
+                                        <th colspan="2">Cement (kg): <input type="text" name="cementKG5" id="cementKG5" autocomplete="off" style="text-transform: uppercase; width: 100px"></th>
                                     </tr>
                                     <tr>
                                         <th colspan="2">Comment: <input type="text" name="commentKG1" id="commentKG1" autocomplete="off" style="text-transform: uppercase; width: 100px"></th>
@@ -661,11 +728,11 @@
                                     </tr>
 
                                     <tr>
-                                        <th colspan="2" style="text-align: center;">Production Type<select id="selectsys1" class ="form-control" required></select></th>
-                                        <th colspan="2" style="text-align: center;">Production Type<select id="selectsys2" class ="form-control" required></select></th>
-                                        <th colspan="2" style="text-align: center;">Production Type<select id="selectsys3" class ="form-control" required></select></th>
-                                        <th colspan="2" style="text-align: center;">Production Type<select id="selectsys4" class ="form-control" required></select></th>
-                                        <th colspan="2" style="text-align: center;">Production Type<select id="selectsys5" class ="form-control" required></select></th>
+                                        <th colspan="2" style="text-align: center;">Production Type<select id="selectsys1" class ="form-control"></select></th>
+                                        <th colspan="2" style="text-align: center;">Production Type<select id="selectsys2" class ="form-control"></select></th>
+                                        <th colspan="2" style="text-align: center;">Production Type<select id="selectsys3" class ="form-control"></select></th>
+                                        <th colspan="2" style="text-align: center;">Production Type<select id="selectsys4" class ="form-control"></select></th>
+                                        <th colspan="2" style="text-align: center;">Production Type<select id="selectsys5" class ="form-control"></select></th>
                                     </tr>
                                     <tr style="background-color: #00111a; color:white;">
                                         <th class="align_center" style="color:white;">AM</th>

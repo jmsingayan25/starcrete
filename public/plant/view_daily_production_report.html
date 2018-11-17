@@ -118,6 +118,10 @@
                     } );
         } ); 
 
+        $('#prod_modal').on('hidden.bs.modal', function () {
+            $(this).find('form').trigger('reset');
+        });
+
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
 
@@ -130,6 +134,8 @@
                     if(plant == 'Head Office'){
                         window.location.href = '../headoffice/index.html';
                     }
+
+                    dateData();
 
                     if(plant == 'Bravo'){
                         plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
@@ -152,6 +158,7 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
         document.getElementById('header_form').innerHTML = "<h4><strong>DAILY PRODUCTION REPORT</strong></h4>";
+        document.getElementById('view_btn').innerHTML = "<a href='view_production_report.html' class='btn btn-md btn-info'><strong>View Reports</strong></a>";
         
         $(".se-pre-con").fadeOut("slow");
 
@@ -418,6 +425,204 @@
         });
     }
 
+    function dateData(){
+
+        var selectDp = "";
+        var dateArray = [];
+
+        firebase.database().ref('Daily_Production_Report/'+plant).orderByChild('timestamp').once('value', function(dateSnapshot){
+
+            selectDp += "<option value=''>Select</option>";
+
+            if(dateSnapshot.val() != null){
+
+                dateSnapshot.forEach(function(dateChildSnapshot){
+
+                    var data = {
+                        date: dateChildSnapshot.key
+                    }
+
+                    dateArray.push(data);
+
+                });
+                
+                count = 0;
+                for(a = 0; a < dateArray.length; a++){
+
+                    firebase.database().ref('Daily_Production_Report/'+plant+'/'+dateArray[a].date).once('value', function(snapshot){
+
+                        machineCount = 1;
+                        var array = [];
+                        snapshot.forEach(function(snapChildshot){
+
+                            if(machineCount < 6){
+
+                                var machinename = "Machine"+machineCount;
+                                var machinevarname = "machine"+machineCount;
+
+                                firebase.database().ref('Daily_Production_Report/'+plant+'/'+snapshot.key+'/'+machinename).once('value', function(machineSnapshot){
+
+                                    type = "machineSnapshot.val()."+machinevarname+"_cementType";
+                                    con_type = eval(type);
+                                    status = "machineSnapshot.val()."+machinevarname+"_status";
+                                    con_status = eval(status);
+
+                                    if(con_status == '0' && con_type != ''){
+
+                                        if(array.indexOf(snapshot.key) == -1){
+
+                                            array.push(snapshot.key);
+                                            console.log(snapshot.key, type);
+
+                                            date = new Date(snapshot.key).toLocaleDateString('en');
+                                            selectDp += "<option value='" + snapshot.key + "'>" + date + "</option>";
+
+                                            document.getElementById('dropdown_date').innerHTML = selectDp;
+                                        }
+                                    }
+                                });
+                                machineCount++;
+                            }
+                        });
+                    });
+                }
+            }
+        });
+    }
+
+    function prodType(date_val){
+
+        var selectDp = "";
+        
+        if(date_val != ""){
+
+            firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_val).once('value', function(dateSnapshot){
+
+                if(dateSnapshot.val() != null){
+
+                    count = 1;
+
+                    selectDp += "<option value=''>Select</option>";
+
+                    dateSnapshot.forEach(function(dateChildSnapshot){
+
+                        if(count < 6){
+
+                            type = "dateChildSnapshot.val().machine"+count+"_cementType";
+                            con_type = eval(type);
+                            status = "dateChildSnapshot.val().machine"+count+"_status";
+                            con_status = eval(status);
+                            total = "dateChildSnapshot.val().machine"+count+"_total_batch";
+                            con_total = eval(total);
+
+                            if(con_type != '' && con_status == '1' && con_total != '0'){
+                                selectDp += "<option value='#'>" + con_type + " (With Actual Production Output)</option>";
+                            }else if(con_type != '' && con_status == '0' && con_total != '0'){
+                                selectDp += "<option value='" + con_type + "'>" + con_type + "</option>";
+                            }
+
+                            count++;
+                        }
+                    });
+
+                    document.getElementById('dropdown_type').innerHTML = selectDp;
+
+                }else{
+                    document.getElementById('dropdown_type').innerHTML = "<option value=''>Select</option>";
+                }
+            });   
+
+        }else{
+            document.getElementById('dropdown_type').innerHTML = "<option value=''>Select</option>";
+        } 
+    }
+
+    function btnDisable(val){
+
+        console.log(val);
+
+        if(val == "#"){
+            document.getElementById("btn_prod").disabled = true;
+        }else{
+            document.getElementById("btn_prod").disabled = false;
+        }
+    }
+
+    function submitProduction(){
+
+        event.preventDefault();
+
+        var date_selected = document.getElementById('dropdown_date').value;
+        var production_type = document.getElementById('dropdown_type').value;
+        var actual = document.getElementById('actual_prod').value;
+        var rejected = document.getElementById('rejected').value;
+        var con_type = "";
+        var con_batches = "";
+        var con_status = "";
+        var output_per_batch = 0;
+
+        var timestamp_date = new Date(date_selected).toLocaleDateString('en');
+        var timestamp = new Date(timestamp_date).getTime();
+        timestamp = timestamp * -1;
+
+        console.log(timestamp, timestamp_date);
+
+        firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_selected).once('value', function(dateSnapshot){
+
+            if(dateSnapshot.val() != null){
+
+                var count = 1;
+
+                dateSnapshot.forEach(function(dateChildSnapshot){
+
+                    if(count < 6){
+
+                        type = "dateChildSnapshot.val().machine"+count+"_cementType";
+                        con_type = eval(type);
+                        batches = "dateChildSnapshot.val().machine"+count+"_total_batch";
+                        con_batches = eval(batches);
+
+                        status = "machine"+count+"_status";
+
+                        machinename = "Machine"+count;
+
+                        if(con_type == production_type){
+
+                            output_per_batch = Number(actual) / Number(con_batches);
+                            output_per_batch = Number(output_per_batch).toFixed(2);
+
+                            var prodData = {
+
+                                actual: actual,
+                                date: date_selected,
+                                item_no: production_type,
+                                output: output_per_batch,
+                                reject: rejected,
+                                timestamp: timestamp,
+                                total: con_batches
+
+                            }
+
+                            if(firebase.database().ref('daily_actual_production/'+plant).push(prodData)){
+
+                                var updateStatus = {};
+                                updateStatus[status] = "1";
+
+                                firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_selected+'/'+machinename).update(updateStatus);
+
+                                alert("Success");
+                                window.location.reload();
+                            }
+                        }
+
+                        count++;
+                    }
+                });
+            }
+        });
+
+    }
+
 </script>
 <style>
 .view_details_btn{
@@ -578,17 +783,83 @@
                                 Date:
                             </div>
                             <button type="submit" id = "submitGo" class="btn btn-md btn-info" style="" onclick="Go()"><strong>Go</strong></button>
+                            <button type="button" id="add_prod" class="btn btn-md btn-success" data-toggle="modal" data-target="#prod_modal"><strong>Add Production</strong></button>
+
+                            <div class="modal fade" id="prod_modal" tabindex="-1" role="dialog" aria-labelledby="prod_modalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="prod_modalLabel"><strong>Production Form</strong></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form class="form-horizontal">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="dropdown_date" class="col-md-3 control-label">Date</label>
+                                                            <div class="col-md-8">
+                                                                <select id="dropdown_date" class="form-control" onchange="prodType(this.value);">
+                                                                    <option value=''>Select</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="dropdown_type" class="col-md-3 control-label">Production Type</label>
+                                                            <div class="col-md-8">
+                                                                <select id="dropdown_type" class="form-control" onchange="btnDisable(this.value);">
+                                                                    <option value=''>Select</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="actual_prod" class="col-md-3 control-label">Actual Production</label>
+                                                            <div class="col-md-8">
+                                                                <input type="text" id="actual_prod" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="rejected" class="col-md-3 control-label">Rejected</label>
+                                                            <div class="col-md-8">
+                                                                <input type="text" id="rejected" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><strong>Close</strong></button>
+                                            <button type="button" id="btn_prod" class="btn btn-primary" onclick="if(confirm('Proceed?')){ submitProduction();}else{ event.preventDefault(); }"><strong>Done</strong></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-md-2">
                                 <input type="date" name="date_selected" id="date_selected" class="form-control" required>
                             </div>
 
-                             <div class="col-md-3 pull-right" style="margin-right: -50px">
+                             <!-- <div class="col-md-3 pull-right" style="margin-right: -50px">
                                 Search Date:  <span id="searched_Date"></span>
+                            </div> -->
+
+                            <div class="col-md-2 pull-right" style="margin-right: -50px">
+                                <span id="view_btn"></span> 
                             </div>
                         </div>     
                     </header>
                     <div class="panel-body">
                         <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th colspan="11">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                Date:  <span id="searched_Date"></span>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 <tr>
                                     <th rowspan="4" style="vertical-align: middle; text-align: center;">Time</th>
@@ -614,19 +885,19 @@
                                 </tr>
                                 <tr>
                                     <th colspan="2">Production Type:   
-                                       <br><span id="machine1_cementype1"></span>
+                                       <span id="machine1_cementype1"></span>
                                     </th>
                                     <th colspan="2">Production Type:   
-                                        <br><span id="machine2_cementype2"></span>
+                                        <span id="machine2_cementype2"></span>
                                     </th>
                                     <th colspan="2">Production Type:   
-                                        <br><span id="machine3_cementype3"></span>
+                                        <span id="machine3_cementype3"></span>
                                     </th>
                                     <th colspan="2">Production Type:   
-                                        <br><span id="machine4_cementype4"></span>
+                                        <span id="machine4_cementype4"></span>
                                     </th>
                                     <th colspan="2">Production Type:   
-                                        <br><span id="machine5_cementype5"></span>
+                                        <span id="machine5_cementype5"></span>
                                     </th>
                                 </tr>
                                 <tr style="background-color: #00111a; color:white;">

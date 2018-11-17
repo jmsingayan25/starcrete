@@ -93,7 +93,7 @@
 
     $(document).ready(function(){
 
-        submitForm();
+        // submitForm();
         displayNotif();
 
         firebase.auth().onAuthStateChanged(function(user) {
@@ -118,6 +118,9 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
         document.getElementById('id_breadcrumb').innerHTML = "<li><i class='icon_document'></i><a href='#'>Daily Production Report</a></li>";
+        document.getElementById('view_btn').innerHTML = "<a href='view_production_report.html?plant=" + plant + "' class='btn btn-md btn-info'><strong>View Reports</strong></a>";
+
+        $(".se-pre-con").fadeOut("slow");
 
     });
 
@@ -136,7 +139,7 @@
             date_of_batch = new Date().toLocaleDateString('en',option);
         }
 
-        document.getElementById('searched_Date').innerHTML = date_of_batch;
+        document.getElementById('searched_Date').innerHTML = date_of_batch + " <br> Plant: " + plant;
 
         firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_of_batch).once('value', function(dailySnapshot){
 
@@ -293,9 +296,55 @@
                         document.getElementById('machine5_total').innerHTML = Number(total).toLocaleString('en');
                     });
                 });
+
+            }else{
+
+                // alert("No Record Found!");
+                // window.location.reload();
+                // $(".se-pre-con").fadeOut("slow");
+
+
+                document.getElementById('cement1').innerHTML = "";
+                document.getElementById('cement2').innerHTML = "";
+                document.getElementById('cement3').innerHTML = "";
+                document.getElementById('cement4').innerHTML = "";
+                document.getElementById('cement5').innerHTML = "";
+
+                document.getElementById('comment1').innerHTML = "";
+                document.getElementById('comment2').innerHTML = "";
+                document.getElementById('comment3').innerHTML = "";
+                document.getElementById('comment4').innerHTML = "";
+                document.getElementById('comment5').innerHTML = "";
+
+                document.getElementById('type1').innerHTML = "";
+                document.getElementById('type2').innerHTML = "";
+                document.getElementById('type3').innerHTML = "";
+                document.getElementById('type4').innerHTML = "";
+                document.getElementById('type5').innerHTML = "";
+
+                document.getElementById('machine1_total').innerHTML = "";
+                document.getElementById('machine2_total').innerHTML = "";
+                document.getElementById('machine3_total').innerHTML = "";
+                document.getElementById('machine4_total').innerHTML = "";
+                document.getElementById('machine5_total').innerHTML = "";
+
+                for(var a = 1; a < 19; a++){
+
+                    document.getElementById("machine1_batch"+a).innerHTML = "";
+                    document.getElementById("machine1_comment"+a).innerHTML = ""; 
+                    document.getElementById("machine2_batch"+a).innerHTML = "";
+                    document.getElementById("machine2_comment"+a).innerHTML = ""; 
+                    document.getElementById("machine3_batch"+a).innerHTML = "";
+                    document.getElementById("machine3_comment"+a).innerHTML = ""; 
+                    document.getElementById("machine4_batch"+a).innerHTML = "";
+                    document.getElementById("machine4_comment"+a).innerHTML = ""; 
+                    document.getElementById("machine5_batch"+a).innerHTML = "";
+                    document.getElementById("machine5_comment"+a).innerHTML = ""; 
+                }
             }
+
+            $(".se-pre-con").fadeOut("slow");            
             
-            $(".se-pre-con").fadeOut("slow");
         });
     }
 
@@ -526,14 +575,19 @@
                                         <input type="date" name="date_selected" id="date_selected" class="form-control" required>
                                     </div>
 
-                                    <div class="col-md-3 pull-right" style="margin-right: -50px">
-                                        Search Date:  <strong><span id="searched_Date"></span></strong>
+                                    <div class="col-md-2 pull-right" style="margin-right: -50px">
+                                        <span id="view_btn"></span> 
                                     </div>
                                 </div>  
                             </header>
                             <div class="panel-body">
-                                <table class="table table-bordered">
+                                <table class="table table-bordered" id="myTable">
                                     <thead>
+                                        <tr>
+                                            <th colspan="11">
+                                                Date:  <strong><span id="searched_Date"></span></strong>
+                                            </th>
+                                        </tr>
                                         <tr>
                                             <th rowspan="4" class="text_center" style="vertical-align: middle;">Time</th>
                                             <th colspan="2" class="text_center">Machine 1</th>
