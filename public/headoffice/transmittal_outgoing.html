@@ -260,9 +260,17 @@
                         tBody += "<td class='text_center' style='background-color: #33cc33; color: white; vertical-align: middle;'><strong>ACCEPTED</strong></td></tr>";
                     }
 
-                    document.getElementById('itemBody').innerHTML = tBody;
+                    
                 }
             }
+
+            if(tBody == ''){
+
+                tBody += "<tr class='no-result text-center'><td colspan='9' style='min-height: 100%;background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+            }
+
+            document.getElementById('itemBody').innerHTML = tBody;
 
             $('.se-pre-con').fadeOut('slow');
         });

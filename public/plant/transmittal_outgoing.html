@@ -291,10 +291,17 @@
                         tbody += "<td class='text_center' style='background-color: #33cc33; color: white; text-align:center'><strong>ACCEPTED</strong></td></tr>";
 
                     }
-                }
-                document.getElementById('tbody').innerHTML = tbody;
-           
+                }           
             }
+
+            if(tbody == ''){
+
+                tbody += "<tr class='no-result text-center'><td colspan='9' style='min-height: 100%;background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+            }
+            
+            document.getElementById('tbody').innerHTML = tbody;
+
             $(".se-pre-con").fadeOut("slow");
         });
     }
@@ -576,17 +583,17 @@
                                             <thead>
                                                 <tr class="filterable">
                                                     <th colspan="9">
-                                                        <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button></span><br>
+                                                        <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                                     </th>
                                                 </tr>
-                                                 <tr class="fliters" style="background-color: #00111a; color:white; text-align: center;">
+                                                <tr class="filters" style="background-color: #00111a; color:white; text-align: center;">
                                                     <th colspan="1" style="vertical-align: middle; text-align: center; color:white;">Date
                                                     </th>
                                                     <th colspan="1" style="vertical-align: middle; text-align: center; color:white;">To
                                                     </th>
                                                     <th colspan="1" style="vertical-align: middle; text-align: center; color:white;">Delivered By
                                                     </th>
-                                                      <th colspan="1" style="vertical-align: middle; text-align: center; color:white;">Transmittal No.
+                                                    <th colspan="1" style="vertical-align: middle; text-align: center; color:white;">Transmittal No.
                                                     </th>
                                                     <!-- <th colspan="1" style="vertical-align: middle; text-align: center; color:white;">Item
                                                     </th> -->
@@ -605,7 +612,7 @@
                             </div>
                         </section>
                     </div>
-                </section>
+                </div>
             </section>
         </section>
     </section>

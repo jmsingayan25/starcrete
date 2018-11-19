@@ -135,7 +135,7 @@
 
             firebase.database().ref('daily_actual_production/'+plant).orderByChild('timestamp').once('value', function(reportSnapshot){
 
-                myTbody += "<table class='table table-bordered table-stripped'><thead><tr><th colspan='6' class='text_center'><h4><strong>OUTPUT PER BATCH</strong></h4></th></tr></thead><thead><tr><th class='col-md-1 text_center'>Date</th><th class='col-md-1 text_center'>Item</th><th class='col-md-1 text_center'>Production</th><th class='col-md-1 text_center'>Batches</th><th class='col-md-1 text_center'>Output</th><th class='col-md-1 text_center'>Rejected</th></tr></thead><tbody>";
+                myTbody += "<table class='table table-bordered table-stripped'><thead><tr><th colspan='6' class='text_center'><h4><strong>OUTPUT PER BATCH</strong></h4></th></tr></thead><thead><tr style='background-color: #00111a;'><th class='col-md-1 text_center text_white'>Date</th><th class='col-md-1 text_center text_white'>Item</th><th class='col-md-1 text_center text_white'>Production</th><th class='col-md-1 text_center text_white'>Batches</th><th class='col-md-1 text_center text_white'>Output</th><th class='col-md-1 text_center text_white'>Rejected</th></tr></thead><tbody>";
 
                 if(reportSnapshot.val() != null){
 
@@ -188,7 +188,7 @@
 
             firebase.database().ref('Daily_Production_Report/'+plant).orderByChild('timestamp').once('value', function(reportSnapshot){
 
-                myTbody += "<table class='table table-bordered table-stripped'><thead><tr><th colspan='6' class='text_center'><h4><strong>CEMENT USED</strong></h4></th></tr></thead><thead><tr><th class='col-md-1 text_center'>Date</th><th class='col-md-1 text_center'>Machine 1</th><th class='col-md-1 text_center'>Machine 2</th><th class='col-md-1 text_center'>Machine 3</th><th class='col-md-1 text_center'>Machine 4</th><th class='col-md-1 text_center'>Machine 5</th></tr></thead><tbody>";
+                myTbody += "<table class='table table-bordered table-stripped'><thead><tr><th colspan='6' class='text_center'><h4><strong>BAGS OF CEMENT USED</strong></h4></th></tr></thead><thead><tr style='background-color: #00111a;'><th class='col-md-1 text_center text_white'>Date</th><th class='col-md-1 text_center text_white'>Machine 1</th><th class='col-md-1 text_center text_white'>Machine 2</th><th class='col-md-1 text_center text_white'>Machine 3</th><th class='col-md-1 text_center text_white'>Machine 4</th><th class='col-md-1 text_center text_white'>Machine 5</th></tr></thead><tbody>";
 
                 if(reportSnapshot.val() != null){
 
@@ -388,7 +388,10 @@
 <style>
 .text_center{
     text-align: center;
-}    
+}  
+.text_white{
+    color: white;
+}
 </style>
 <body>
     <div class="se-pre-con"></div>
