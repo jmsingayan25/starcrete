@@ -155,8 +155,6 @@
 
         firebase.database().ref('attendance/'+plant+'/'+currentDate).once('value', function(tableContentSnapshot){
 
-            console.log(tableContentSnapshot.val());
-
             if(tableContentSnapshot.val() != null){
 
                 $(".button-link").show();
@@ -497,6 +495,10 @@
                             }
                         });
 
+                        if(kamadorCount == 0){
+                            myTableRow4 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                        }
+
                         document.getElementById('badge_kamador').innerHTML = kamadorCount;
 
                         myTableRow4 += "</td><td colspan='2'>";
@@ -511,6 +513,10 @@
                                 loaderCount++;
                             }
                         });
+
+                        if(loaderCount == 0){
+                            myTableRow4 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                        }
 
                         document.getElementById('badge_loader').innerHTML = loaderCount;
 

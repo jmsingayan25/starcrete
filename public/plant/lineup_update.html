@@ -27,7 +27,7 @@
     <!-- font icon -->
     <link href="../css/elegant-icons-style.css" rel="stylesheet" />
     <link href="../css/font-awesome.min.css" rel="stylesheet" />    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
     <!-- owl carousel -->
     <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">
     <link href="../css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
@@ -259,6 +259,8 @@
 
                 optionSnapshot.forEach(function(optionChildSnapshot){
 
+                    // optionTable += "<tr><td class='col-md-5'><input type='text' name='update_employee_name[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_name + "' class='form-control employees'></td><td class='col-md-5'><input type='text' name='update_employee_position[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_position + "' class='form-control'></td><td class='col-md-1'><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
+
                     optionTable += "<tr><td class='col-md-5'><input type='text' name='update_employee_name[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_name + "' class='form-control employees'></td><td class='col-md-5'><input type='text' name='update_employee_position[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_position + "' class='form-control'></td><td class='col-md-1'><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
                 });
 
@@ -350,38 +352,109 @@
 
             $('.button_add').show();
 
-            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/employee').orderByChild('employee_name').once('value', function(employeeSnapshot){
+            // firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/employee').orderByChild('employee_name').once('value', function(employeeSnapshot){
 
-                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/helper').orderByChild('employee_name').once('value', function(helperSnapshot){
+            //     firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/helper').orderByChild('employee_name').once('value', function(helperSnapshot){
 
-                    optionTable += "<thead><tr><th colspan='2' class='header_center'>Helper Name</th></thead><tbody>";
+            //         optionTable += "<thead><tr><th colspan='2' class='header_center'>Helper Name</th></thead><tbody>";
+
+            //         helperSnapshot.forEach(function(helperChildSnapshot){
+
+            //             optionTable += "<tr><td colspan='2'><input type='text' id='update_helper_name' class='form-control input_type nonskid' value='" + helperChildSnapshot.val().helper_name + "'></td></tr>";
+            //         });
+
+            //         optionTable += "</thead></tbody><br><br><thead><tr><th class='col-md-8 header_center'>Name</th><th class='col-md-1'></th></thead><tbody>";
+
+            //         employeeSnapshot.forEach(function(employeeChildSnapshot){
+
+            //             optionTable += "<tr><td><input type='text' name='update_employee_name[]' class='form-control input_type nonskid' value='" + employeeChildSnapshot.val().employee_name + "'></td><td><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + employeeChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
+
+            //         });
+
+            //         optionTable += "</tbody>";
+
+            //         document.getElementById('id_fields').innerHTML = optionTable;
+
+            //         var nonskid_array = [];
+
+            //         firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
+            //             listSnapshot.forEach(function(listChildSnapshot){
+            //                 nonskid_array.push(listChildSnapshot.val().employee_name);
+            //             });
+
+            //             $('.nonskid').autocomplete({source: nonskid_array});
+            //         });
+            //     });
+            // });
+
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/employee').once('value', function(employeeSnapshot){
+
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/helper').once('value', function(helperSnapshot){
+
+                    var array = [];
 
                     helperSnapshot.forEach(function(helperChildSnapshot){
 
-                        optionTable += "<tr><td colspan='2'><input type='text' id='update_helper_name' class='form-control input_type nonskid' value='" + helperChildSnapshot.val().helper_name + "'></td></tr>";
-                    });
+                        var employee_name = helperChildSnapshot.val().helper_name;
+                        var key = helperChildSnapshot.key;
+                        
+                        if(employee_name != "N/A"){
 
-                    optionTable += "</thead></tbody><br><br><thead><tr><th class='col-md-8 header_center'>Name</th><th class='col-md-1'></th></thead><tbody>";
+                            var data = {
+                                employee_name: employee_name,
+                                employee_key: key,
+                                position: "HELPER"
+                            }
+
+                            array.push(data);
+                        }
+                    });
 
                     employeeSnapshot.forEach(function(employeeChildSnapshot){
 
-                        optionTable += "<tr><td><input type='text' name='update_employee_name[]' class='form-control input_type nonskid' value='" + employeeChildSnapshot.val().employee_name + "'></td><td><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + employeeChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
+                        var employee_name = employeeChildSnapshot.val().employee_name;
+                        var key = employeeChildSnapshot.key;
 
+                        if(employee_name != "N/A"){
+
+                            var data = {
+                                employee_name: employee_name,
+                                employee_key: key,
+                                position: "OPERATOR"
+                            }
+
+                            array.push(data);
+                        }
                     });
+
+                    console.log(array);
+
+                    optionTable += "<thead><tr><th class='col-md-6'>Name</th><th class='col-md-5'>Position</th><th class='col-md-1'></th></tr></thead><tbody>";
+
+                    count = 0;
+                    for(var a = 0; a < array.length; a++){
+
+                        var employee_name = array[a].employee_name;
+                        var position = array[a].position;
+                        var key = array[a].employee_key;
+
+                        optionTable += "<tr><td><input type='text' name='update_employee_name[]' class='form-control input_type' value='" + employee_name + "'></td>";
+                        optionTable += "<td><select name='update_pos[]' id='update_id" + a + "' class='form-control'><option value='HELPER'>HELPER</option><option value='OPERATOR'>OPERATOR</option></select></td>";
+                        optionTable += "<td><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + position + "\",\"" + key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
+
+                    }
 
                     optionTable += "</tbody>";
 
                     document.getElementById('id_fields').innerHTML = optionTable;
 
-                    var nonskid_array = [];
+                    for(var a = 0; a < array.length; a++){
 
-                    firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(listSnapshot){
-                        listSnapshot.forEach(function(listChildSnapshot){
-                            nonskid_array.push(listChildSnapshot.val().employee_name);
-                        });
+                        var position = array[a].position;
 
-                        $('.nonskid').autocomplete({source: nonskid_array});
-                    });
+                        document.getElementById("update_id"+a).value = position;
+
+                    }
                 });
             });
 
@@ -452,45 +525,56 @@
         });
     }
 
-
-    function remove_employee_row(rowno){
-        $('#'+rowno).remove();
-    }
-
     function removeEmployee(position, key){
 
         event.preventDefault();
 
-        if(position == "checker" || position == "machine1" || position == "machine3" || position == "others" || position == "tagapukpok" || position == "new_checker" || position == "new_machine1" || position == "new_machine3" || position == "new_others" || position == "new_tagapukpok"){
+        if(option == "checker" || option == "machine1" || option == "machine3" || option == "others" || option == "tagapukpok" || option == "new_checker" || option == "new_machine1" || option == "new_machine3" || option == "new_others" || option == "new_tagapukpok"){
 
-            if(position == "checker" || position == "machine1" || position == "machine3" || position == "others" || position == "tagapukpok"){
+            if(option == "checker" || option == "machine1" || option == "machine3" || option == "others" || option == "tagapukpok"){
                 query_ext = option;
-            }else if(position == "new_checker" || position == "new_machine1" || position == "new_machine3" || position == "new_others" || position == "new_tagapukpok"){
+            }else if(option == "new_checker" || option == "new_machine1" || option == "new_machine3" || option == "new_others" || option == "new_tagapukpok"){
                 new_option = option.replace("new_","");
                 query_ext = "new/"+new_option;
             }
-                // console.log('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/'+key);
-            if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/'+key).remove()){
 
-                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(snapshot){
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/'+key).once('value', function(snapshot){
 
-                    if(snapshot.val() == null){
+                var employee_name = snapshot.val().employee_name;
+                var employee_position = snapshot.val().employee_position;
 
-                        var data = {
-                            employee_name: "N/A",
-                            employee_position: "N/A"
+                var data = {
+                    employee_name: employee_name,
+                    employee_position: employee_position,
+                    status: 1
+                }
+
+                // console.log(data);
+
+                firebase.database().ref('attendance_update_list/'+plant+'/'+currentDate+'/'+query_ext).push(data);
+
+                if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/'+key).remove()){
+
+                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(snapshot){
+
+                        if(snapshot.val() == null){
+
+                            var data = {
+                                employee_name: "N/A",
+                                employee_position: "N/A"
+                            }
+
+                            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).push(data);
+                            alert("Data has been removed");
+                            window.location.href='lineup.html';
+                        
+                        }else{
+                            alert("Data has been removed");
+                            location.reload();
                         }
-
-                        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).push(data);
-                        alert("Data has been removed");
-                        window.location.href='lineup.html';
-                    
-                    }else{
-                        alert("Data has been removed");
-                        location.reload();
-                    }
-                });
-            }
+                    });
+                }
+            });        
 
         }else if(position == "kamador" || position == "loader" || position == "mechanic" || position == "new_kamador" || position == "new_loader" || position == "new_mechanic"){
 
@@ -585,6 +669,10 @@
         }
     }
 
+    function remove_employee_row(rowno){
+        $('#'+rowno).remove();
+    }
+
     function submitForm(){
 
         event.preventDefault();
@@ -644,7 +732,7 @@
             page: "lineup.html?plant="+plant+"&date="+passDate
         }
 
-        firebase.database().ref('notification').push(notifData);
+        // firebase.database().ref('notification').push(notifData);
 
         if(option == "absent_plant" || option == "absent_motorpool" || option == "absent_trucking" || option == "new_absent_plant" || option == "new_absent_motorpool" || option == "new_absent_trucking"){
 
@@ -718,24 +806,63 @@
                 query_ext = "new/"+new_option;
             }
 
-            if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).remove()){
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(snapshot){
 
-                for(a = 0; a < input_employee_name.length; a++){
+                var currentArray = [];
+                snapshot.forEach(function(childSnapshot){
 
-                    var employeeData = {
-                        employee_name: input_employee_name[a].toUpperCase(),
-                        employee_position: input_employee_position[a].toUpperCase() || "N/A"
+                    var employee_name = childSnapshot.val().employee_name.toUpperCase();
+                    var employee_position = childSnapshot.val().employee_position.toUpperCase();
+
+                    currentArray.push(employee_name);
+                });
+
+                for(var a = 0; a < input_employee_name.length; a++){
+
+                    var employee_name = input_employee_name[a].toUpperCase();
+                    var employee_position = input_employee_position[a].toUpperCase();
+
+                    if(currentArray.indexOf(employee_name) == -1){
+
+                        var data = {
+                            employee_name: employee_name,
+                            employee_position: employee_position,
+                            status: 0
+                        }
+
+                        console.log(data);
+
+                        firebase.database().ref('attendance_update_list/'+plant+'/'+currentDate+'/'+query_ext).push(data);
+                    }
+                }
+
+                if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).remove()){
+
+                    for(a = 0; a < input_employee_name.length; a++){
+
+                        var employeeData = {
+                            employee_name: input_employee_name[a].toUpperCase(),
+                            employee_position: input_employee_position[a].toUpperCase() || "N/A"
+                        }
+
+                        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).push(employeeData);
+
+                        var data = {
+                            employee_name: input_employee_name[a].toUpperCase(),
+                            employee_position: input_employee_position[a].toUpperCase() || "N/A",
+                            status: 0
+                        }
+
+                        firebase.database().ref('attendance_update_list/'+plant+'/'+currentDate+'/'+query_ext);
+                        count++;
                     }
 
-                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).push(employeeData);
-                    count++;
+                    if(count == input_employee_name.length){
+                        alert("Data updated successfully");
+                        window.location.href='lineup.html';
+                    }
                 }
-
-                if(count == input_employee_name.length){
-                    alert("Data updated successfully");
-                    window.location.href='lineup.html';
-                }
-            }
+            });
 
         }else if(option == "trucking" || option == "new_trucking"){
 
