@@ -99,19 +99,6 @@
     var timer = null;
     var fromDate = "";
     var endDate = "";
-
-    // function goAway() {
-    //     clearTimeout(timer);
-    //     timer = setTimeout(function() {
-    //         // window.location.reload(true);
-    //         // tableData(plant);
-    //     }, 60000);
-    // }
-
-    // window.addEventListener('mousemove', goAway, true);
-    // window.addEventListener('keypress', goAway, true);
-
-    // goAway();
     
     $(document).ready(function(){
         
@@ -156,7 +143,6 @@
             }
         });
 
-        // availableStock(plant);
         tableData(plant);
         displayNotif();
         refreshNotif();
@@ -301,8 +287,6 @@
                         myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
                     }
 
-                    // document.getElementById('dieselList').innerHTML = myTbody;
-
                 }else{
 
                     var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
@@ -321,7 +305,7 @@
                     if(dieselDate.getTime() >= fromDate.getTime() && dieselDate.getTime() <= endDate.getTime()){
 
                         currentstockCopy = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
-                        // date = dieselChildSnapshot.val().date;
+
                         dr_no = dieselChildSnapshot.val().dr_no || "";
                         po_no = dieselChildSnapshot.val().po_no;
                         quantity_in = dieselChildSnapshot.val().quantity_in || "";
@@ -397,8 +381,6 @@
                             myTbody += "<td><strong>" + date + "</strong></td>";
                             myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
                         }
-
-                        // document.getElementById('dieselList').innerHTML = myTbody;
                     }
                 }
             });
@@ -431,10 +413,9 @@
         
         firebase.database().ref('incoming_diesel/'+plant).once('value', function(dieselSnapshot){
 
-            // console.log(dieselSnapshot.val(), dateFormat(currentDate));
             if(dieselSnapshot.val() == null){
 
-                myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+                myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                 document.getElementById('dieselList').innerHTML = myTbody;
 
@@ -458,7 +439,7 @@
                     if(dieselMonth == currentMonth && dieselYear == currentYear){
 
                         currentstockCopy = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
-                        // date = dieselChildSnapshot.val().date;
+
                         dr_no = dieselChildSnapshot.val().dr_no || "";
                         po_no = dieselChildSnapshot.val().po_no;
                         quantity_in = dieselChildSnapshot.val().quantity_in || "";
@@ -545,7 +526,7 @@
         });
 
         firebase.database().ref('available_stock/'+plant).on('value', function(stockSnapshot){
-            // console.log(stockSnapshot.val());
+
             if(stockSnapshot.val().Liters == 0){
                 available_stock = 0;
             }else{
@@ -584,44 +565,15 @@ function datePrint(){
 
     event.preventDefault();
 
-    // if (document.getElementById('date_view').value != "") {
+    if(fromDate == "" && endDate == ""){
+        date1 = "";
+        date2 = "";
+    }else{
+        date1 = new Date(fromDate).toLocaleDateString('en');
+        date2 = new Date(endDate).toLocaleDateString('en');
+    }
 
-        // filter_input = document.getElementById('input_truck_no').value || document.getElementById('input_address').value || document.getElementById('input_driver').value;
-
-        if(fromDate == "" && endDate == ""){
-            date1 = "";
-            date2 = "";
-        }else{
-            date1 = new Date(fromDate).toLocaleDateString('en');
-            date2 = new Date(endDate).toLocaleDateString('en');
-        }
-        // var GetStringDate = date;
-        // console.log(filter_input);
-        // firebase.database().ref().child("diesel_current_date_print/" + plant).once('value',function(Snapshot){
-        //     var text_date = {printCurrentDate:GetStringDate};
-        //     firebase.database().ref().child("diesel_current_date_print/" + plant).set(text_date);
-
-        //     // window.location.href = "diesel_print.html?plant=" + plant;
-        //     window.open('diesel_print.html?plant=' + plant + "&date=" + GetStringDate, '_blank');
-        // });
-
-        window.open('diesel_print.html?plant=' + plant + "&fromdate=" + date1 + "&enddate=" + date2, '_blank');
-
-    // }else{
-
-        // var date = "";
-        // var GetStringDate = date;
-        
-        // firebase.database().ref().child("diesel_current_date_print/" + plant).once('value',function(Snapshot){
-            
-        //     var text_date = {printCurrentDate:GetStringDate};
-        //     firebase.database().ref().child("diesel_current_date_print/" + plant).set(text_date);
-
-        //     // window.location.href = "diesel_print.html?plant=" + plant;
-        //     window.open('diesel_print.html?plant=' + plant + "&date=" + GetStringDate, '_blank');
-        //     //window.open("diesel_transaction_print.html","_blank","","","width=200,height=100");
-        // });
-    // }  
+    window.open('diesel_print.html?plant=' + plant + "&fromdate=" + date1 + "&enddate=" + date2, '_blank');
 }
 
     function displayNotif(){
