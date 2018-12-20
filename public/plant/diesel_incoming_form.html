@@ -298,7 +298,7 @@
         var currentDateTimestamp = currentDate_date.getTime();
         var yesterDateTimestamp = currentDate1_date.getTime();
 
-        firebase.database().ref('notification').orderByChild('reverseDate').once('value', function(notifSnapshot){
+        firebase.database().ref('notification').orderByChild('reverseDate').limitToFirst(20).once('value', function(notifSnapshot){
 
             if(notifSnapshot.val() != null){
 
