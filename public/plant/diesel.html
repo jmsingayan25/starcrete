@@ -208,6 +208,8 @@
         var minustwo = 2;
         var MinusTwoDate = newDateGetTwo.setDate(newDateGetTwo.getDate() - minustwo);
         var SeperatecurrentdateTwo = new Date(MinusTwoDate).toLocaleDateString('en');
+
+        var numRows = 0;
     
         if(fromDate == '' && endDate == ''){//startif  
 
@@ -274,6 +276,8 @@
                             myTbody += "<td></td></tr>";
                         }
                     }
+
+                    numRows++;
                 });//endloop
 
                 if (myTbody == ""){
@@ -360,11 +364,15 @@
                                 myTbody += "<td></td></tr>";
                             }
                         }
+
+                        numRows++;
                     }//enddate
                 });//endloop
+
+                document.getElementById('num_rows').innerHTML = numRows;
                 if (myTbody == ""){
 
-                    myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+                    myTbody ="<tr><td colspan='11' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
                     document.getElementById("DieselList").innerHTML = myTbody;
 
                 }else{
@@ -376,6 +384,8 @@
                 $(".se-pre-con").fadeOut("slow"); 
             });//endfirebase
         }//endelse
+
+        document.getElementById('num_rows').innerHTML = numRows;
     }//end
  
     function DisplayCurrentData(){
@@ -392,6 +402,8 @@
         var minustwo = 2;
         var MinusTwoDate = newDateGetTwo.setDate(newDateGetTwo.getDate() - minustwo);
         var SeperatecurrentdateTwo = new Date(MinusTwoDate).toLocaleDateString('en');
+
+        var numRows = 0;
 
         firebase.database().ref('incoming_diesel/'+plant).orderByChild("reverseDate").once('value').then(function(DieselSnapshotTransaction){
             DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
@@ -467,11 +479,14 @@
                         //      myTbody += "<td></td></tr>";
                         // }
                     }
-
+                    numRows++;
                 }
             });
+
+            document.getElementById('num_rows').innerHTML = numRows;
+
             if (myTbody == ""){
-                myTbody ="<tr><td colspan='9' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+                myTbody ="<tr><td colspan='11' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
                 document.getElementById("DieselList").innerHTML = myTbody;
             }else{
                 document.getElementById("DieselList").innerHTML = myTbody;
@@ -890,6 +905,7 @@ function DeleteRowData(key,plant)
                                     <thead>
                                         <tr class="filterable">
                                             <th colspan="11">
+                                                Number of rows: <span id="num_rows"></span>
                                                 <!-- <span>Available stock as of today:</span> -->
                                                 <!-- <br><span>Last Delivery: <span id ="last_day"></span></span><br> -->
                                                 <!-- <span>Search Date: </span><br> -->

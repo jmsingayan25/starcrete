@@ -452,265 +452,265 @@
                     document.getElementById('row_comment').innerHTML = myTableComment;
                 });
 
-                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new').once('value', function(newSnapshot){
+                // firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new').once('value', function(newSnapshot){
 
-                    if(newSnapshot.val() != null){
+                //     if(newSnapshot.val() != null){
 
-                        $('.new_set_table').show();
-                        $('.badge_new').show();
+                //         $('.new_set_table').show();
+                //         $('.badge_new').show();
 
-                        var myNewTableOfficeEmployee = "";
-                        var myNewTableNewEmployee = "";
-                        var myNewTableAbsent = "";
-                        var myNewTableNonskid = "";
-                        var myNewTableTrucking = "";
-                        var myNewTableForklift = "";
-                        var myNewTableDayshiftGuard = "";
-                        var myNewTableNightshiftGuard = "";
-                        var myNewTableComment = "";
+                //         var myNewTableOfficeEmployee = "";
+                //         var myNewTableNewEmployee = "";
+                //         var myNewTableAbsent = "";
+                //         var myNewTableNonskid = "";
+                //         var myNewTableTrucking = "";
+                //         var myNewTableForklift = "";
+                //         var myNewTableDayshiftGuard = "";
+                //         var myNewTableNightshiftGuard = "";
+                //         var myNewTableComment = "";
 
-                        document.getElementById('id_new_date').innerHTML = "<th colspan='4'>Result: NEW SET OF LINE UP <br> Schedule: " + newSnapshot.val().schedule + "</th>";
+                //         document.getElementById('id_new_date').innerHTML = "<th colspan='4'>Result: NEW SET OF LINE UP <br> Schedule: " + newSnapshot.val().schedule + "</th>";
 
-                        document.getElementById('new_link_office_update').innerHTML = "<a href='attendance_update.html?option=new_office&date=" + passcurrentDate + "'>Update</a>";
-                        document.getElementById('new_link_new_employee_update').innerHTML = "<a href='attendance_update.html?option=new_employee_hired&date=" + passcurrentDate + "'>Update</a>";
-                        document.getElementById('new_link_absent_plant_update').innerHTML = "<a href='attendance_update.html?option=new_plant&date=" + passcurrentDate + "'>Update Plant</a>";
-                        document.getElementById('new_link_absent_motorpool_update').innerHTML = "<a href='attendance_update.html?option=new_motorpool&date=" + passcurrentDate + "'>Update Motorpool</a>";
-                        document.getElementById('new_link_absent_trucking_update').innerHTML = "<a href='attendance_update.html?option=new_trucking&date=" + passcurrentDate + "'>Update Trucking</a>";
-                        document.getElementById('new_link_nonskid1_update').innerHTML = "<a href='attendance_update.html?option=new_nonskid1&date=" + passcurrentDate + "'>Update</a>";
-                        document.getElementById('new_link_nonskid2_update').innerHTML = "<a href='attendance_update.html?option=new_nonskid2&date=" + passcurrentDate + "'>Update</a>";
-                        document.getElementById('new_link_nonskid3_update').innerHTML = "<a href='attendance_update.html?option=new_nonskid3&date=" + passcurrentDate + "'>Update</a>";
-                        document.getElementById('new_link_nonskid4_update').innerHTML = "<a href='attendance_update.html?option=new_nonskid4&date=" + passcurrentDate + "'>Update</a>";
-                        document.getElementById('new_link_trucking_update').innerHTML = "<a href='attendance_update.html?option=new_truck&date=" + passcurrentDate + "'>Update</a>";
-                        document.getElementById('new_link_forklift_update').innerHTML = "<a href='attendance_update.html?option=new_forklift_operator&date=" + passcurrentDate + "'>Update</a>";
-                        document.getElementById('new_link_guard_update').innerHTML = "<a href='attendance_update.html?option=new_guard&date=" + passcurrentDate + "'>Update</a>";
-                        document.getElementById('new_link_note_update').innerHTML = "<a href='attendance_update.html?option=new_note&date=" + passcurrentDate + "'>Update</a>";
+                //         document.getElementById('new_link_office_update').innerHTML = "<a href='attendance_update.html?option=new_office&date=" + passcurrentDate + "'>Update</a>";
+                //         document.getElementById('new_link_new_employee_update').innerHTML = "<a href='attendance_update.html?option=new_employee_hired&date=" + passcurrentDate + "'>Update</a>";
+                //         document.getElementById('new_link_absent_plant_update').innerHTML = "<a href='attendance_update.html?option=new_plant&date=" + passcurrentDate + "'>Update Plant</a>";
+                //         document.getElementById('new_link_absent_motorpool_update').innerHTML = "<a href='attendance_update.html?option=new_motorpool&date=" + passcurrentDate + "'>Update Motorpool</a>";
+                //         document.getElementById('new_link_absent_trucking_update').innerHTML = "<a href='attendance_update.html?option=new_trucking&date=" + passcurrentDate + "'>Update Trucking</a>";
+                //         document.getElementById('new_link_nonskid1_update').innerHTML = "<a href='attendance_update.html?option=new_nonskid1&date=" + passcurrentDate + "'>Update</a>";
+                //         document.getElementById('new_link_nonskid2_update').innerHTML = "<a href='attendance_update.html?option=new_nonskid2&date=" + passcurrentDate + "'>Update</a>";
+                //         document.getElementById('new_link_nonskid3_update').innerHTML = "<a href='attendance_update.html?option=new_nonskid3&date=" + passcurrentDate + "'>Update</a>";
+                //         document.getElementById('new_link_nonskid4_update').innerHTML = "<a href='attendance_update.html?option=new_nonskid4&date=" + passcurrentDate + "'>Update</a>";
+                //         document.getElementById('new_link_trucking_update').innerHTML = "<a href='attendance_update.html?option=new_truck&date=" + passcurrentDate + "'>Update</a>";
+                //         document.getElementById('new_link_forklift_update').innerHTML = "<a href='attendance_update.html?option=new_forklift_operator&date=" + passcurrentDate + "'>Update</a>";
+                //         document.getElementById('new_link_guard_update').innerHTML = "<a href='attendance_update.html?option=new_guard&date=" + passcurrentDate + "'>Update</a>";
+                //         document.getElementById('new_link_note_update').innerHTML = "<a href='attendance_update.html?option=new_note&date=" + passcurrentDate + "'>Update</a>";
 
 
-                        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/office').orderByChild('employee_name').once('value', function(officeSnapshot){
-                            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/new_employee').orderByChild('employee_name').once('value', function(newEmployeeSnapshot){
+                //         firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/office').orderByChild('employee_name').once('value', function(officeSnapshot){
+                //             firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/new_employee').orderByChild('employee_name').once('value', function(newEmployeeSnapshot){
 
-                                officeSnapshot.forEach(function(officeChildSnapshot){
+                //                 officeSnapshot.forEach(function(officeChildSnapshot){
 
-                                    myNewTableOfficeEmployee += "<tr align='center'><td>" + officeChildSnapshot.val().employee_name + "</td><td>" + officeChildSnapshot.val().employee_timein + "</td><td>" + officeChildSnapshot.val().employee_timeout + "</td></tr>";
+                //                     myNewTableOfficeEmployee += "<tr align='center'><td>" + officeChildSnapshot.val().employee_name + "</td><td>" + officeChildSnapshot.val().employee_timein + "</td><td>" + officeChildSnapshot.val().employee_timeout + "</td></tr>";
 
-                                });
+                //                 });
 
-                                document.getElementById('new_row_office_list').innerHTML = myNewTableOfficeEmployee;
+                //                 document.getElementById('new_row_office_list').innerHTML = myNewTableOfficeEmployee;
 
-                                newEmployeeSnapshot.forEach(function(newEmployeeChildSnapshot){
+                //                 newEmployeeSnapshot.forEach(function(newEmployeeChildSnapshot){
 
-                                    myNewTableNewEmployee += "<div class='row'><div class='col-md-12'>" + newEmployeeChildSnapshot.val().employee_name + "</div></div>";
-                                });
+                //                     myNewTableNewEmployee += "<div class='row'><div class='col-md-12'>" + newEmployeeChildSnapshot.val().employee_name + "</div></div>";
+                //                 });
 
-                                document.getElementById('new_row_new_employee_list').innerHTML = myNewTableNewEmployee;
-                            });
-                        });
+                //                 document.getElementById('new_row_new_employee_list').innerHTML = myNewTableNewEmployee;
+                //             });
+                //         });
 
-                        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/nonskid1/employee').orderByChild('employee_name').once('value', function(nonskid1Snapshot){
-                            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/nonskid2/employee').orderByChild('employee_name').once('value', function(nonskid2Snapshot){
-                                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/nonskid3/employee').orderByChild('employee_name').once('value', function(nonskid3Snapshot){
-                                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/nonskid4/employee').orderByChild('employee_name').once('value', function(nonskid4Snapshot){
-                                        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/nonskid1/helper').orderByChild('employee_name').once('value', function(nonskid1HelperSnapshot){
-                                            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/nonskid2/helper').orderByChild('employee_name').once('value', function(nonskid2HelperSnapshot){
-                                                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/nonskid3/helper').orderByChild('employee_name').once('value', function(nonskid3HelperSnapshot){
-                                                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/nonskid4/helper').orderByChild('employee_name').once('value', function(nonskid4HelperSnapshot){
+                //         firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/nonskid1/employee').orderByChild('employee_name').once('value', function(nonskid1Snapshot){
+                //             firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/nonskid2/employee').orderByChild('employee_name').once('value', function(nonskid2Snapshot){
+                //                 firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/nonskid3/employee').orderByChild('employee_name').once('value', function(nonskid3Snapshot){
+                //                     firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/nonskid4/employee').orderByChild('employee_name').once('value', function(nonskid4Snapshot){
+                //                         firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/nonskid1/helper').orderByChild('employee_name').once('value', function(nonskid1HelperSnapshot){
+                //                             firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/nonskid2/helper').orderByChild('employee_name').once('value', function(nonskid2HelperSnapshot){
+                //                                 firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/nonskid3/helper').orderByChild('employee_name').once('value', function(nonskid3HelperSnapshot){
+                //                                     firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/nonskid4/helper').orderByChild('employee_name').once('value', function(nonskid4HelperSnapshot){
 
-                                        myNewTableNonskid += "<tr><td colspan='1'>";
+                //                         myNewTableNonskid += "<tr><td colspan='1'>";
 
-                                        nonskid1Snapshot.forEach(function(nonskid1ChildSnapshot){
+                //                         nonskid1Snapshot.forEach(function(nonskid1ChildSnapshot){
 
-                                            myNewTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid1ChildSnapshot.val().employee_name + "</div></div>";
-                                        });
+                //                             myNewTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid1ChildSnapshot.val().employee_name + "</div></div>";
+                //                         });
 
-                                        myNewTableNonskid += "</td><td colspan='1'>";
+                //                         myNewTableNonskid += "</td><td colspan='1'>";
 
-                                        nonskid2Snapshot.forEach(function(nonskid2ChildSnapshot){
+                //                         nonskid2Snapshot.forEach(function(nonskid2ChildSnapshot){
 
-                                            myNewTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid2ChildSnapshot.val().employee_name + "</div></div>";
-                                        });
+                //                             myNewTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid2ChildSnapshot.val().employee_name + "</div></div>";
+                //                         });
 
-                                        myNewTableNonskid += "</td><td colspan='1'>";
+                //                         myNewTableNonskid += "</td><td colspan='1'>";
 
-                                        nonskid3Snapshot.forEach(function(nonskid3ChildSnapshot){
+                //                         nonskid3Snapshot.forEach(function(nonskid3ChildSnapshot){
 
-                                            myNewTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid3ChildSnapshot.val().employee_name + "</div></div>";
-                                        });
+                //                             myNewTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid3ChildSnapshot.val().employee_name + "</div></div>";
+                //                         });
 
-                                        myNewTableNonskid += "</td><td colspan='1'>";
+                //                         myNewTableNonskid += "</td><td colspan='1'>";
 
-                                        nonskid4Snapshot.forEach(function(nonskid4ChildSnapshot){
+                //                         nonskid4Snapshot.forEach(function(nonskid4ChildSnapshot){
 
-                                            myNewTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid4ChildSnapshot.val().employee_name + "</div></div>";
-                                        });
+                //                             myNewTableNonskid += "<div class='row'><div class='col-md-12'>" + nonskid4ChildSnapshot.val().employee_name + "</div></div>";
+                //                         });
 
-                                        myNewTableNonskid += "</td></tr><tr><td colspan='1'>";
+                //                         myNewTableNonskid += "</td></tr><tr><td colspan='1'>";
 
-                                        nonskid1HelperSnapshot.forEach(function(nonskid1HelperChildSnapshot){
-                                            myNewTableNonskid += "Helper: " + nonskid1HelperChildSnapshot.val().helper_name;
-                                        });
+                //                         nonskid1HelperSnapshot.forEach(function(nonskid1HelperChildSnapshot){
+                //                             myNewTableNonskid += "Helper: " + nonskid1HelperChildSnapshot.val().helper_name;
+                //                         });
 
-                                        myNewTableNonskid += "</td><td colspan='1'>";
+                //                         myNewTableNonskid += "</td><td colspan='1'>";
 
-                                        nonskid2HelperSnapshot.forEach(function(nonskid2HelperChildSnapshot){
-                                            myNewTableNonskid += "Helper: " + nonskid2HelperChildSnapshot.val().helper_name;
-                                        });
+                //                         nonskid2HelperSnapshot.forEach(function(nonskid2HelperChildSnapshot){
+                //                             myNewTableNonskid += "Helper: " + nonskid2HelperChildSnapshot.val().helper_name;
+                //                         });
 
-                                        myNewTableNonskid += "</td><td colspan='1'>";
+                //                         myNewTableNonskid += "</td><td colspan='1'>";
 
-                                        nonskid3HelperSnapshot.forEach(function(nonskid3HelperChildSnapshot){
-                                            myNewTableNonskid += "Helper: " + nonskid3HelperChildSnapshot.val().helper_name;
-                                        });
+                //                         nonskid3HelperSnapshot.forEach(function(nonskid3HelperChildSnapshot){
+                //                             myNewTableNonskid += "Helper: " + nonskid3HelperChildSnapshot.val().helper_name;
+                //                         });
 
-                                        myNewTableNonskid += "</td><td colspan='1'>";
+                //                         myNewTableNonskid += "</td><td colspan='1'>";
 
-                                        nonskid4HelperSnapshot.forEach(function(nonskid4HelperChildSnapshot){
-                                            myNewTableNonskid += "Helper: " + nonskid4HelperChildSnapshot.val().helper_name;
+                //                         nonskid4HelperSnapshot.forEach(function(nonskid4HelperChildSnapshot){
+                //                             myNewTableNonskid += "Helper: " + nonskid4HelperChildSnapshot.val().helper_name;
 
-                                            $(".se-pre-con").fadeOut("slow");
-                                        });
+                //                             $(".se-pre-con").fadeOut("slow");
+                //                         });
 
-                                        myNewTableNonskid += "</td></tr>";
+                //                         myNewTableNonskid += "</td></tr>";
 
-                                        document.getElementById('new_row_nonskid_list').innerHTML = myNewTableNonskid;
-                                                    });
-                                                });
-                                            });
-                                        });
-                                    });
-                                });
-                            });
-                        });
+                //                         document.getElementById('new_row_nonskid_list').innerHTML = myNewTableNonskid;
+                //                                     });
+                //                                 });
+                //                             });
+                //                         });
+                //                     });
+                //                 });
+                //             });
+                //         });
 
-                        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/trucking').once('value', function(truckingSnapshot){
+                //         firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/trucking').once('value', function(truckingSnapshot){
 
-                            myNewTableTrucking += "<tr><td colspan='4'><table class='table table-bordered'><thead><tr class='header_line'><th class='col-md-2' style='text-align: center;'>TRUCK NO.</th><th class='col-md-2' style='text-align: center;'>DRIVER</th><th class='col-md-2' style='text-align: center;'>PAHINANTE 1</th><th class='col-md-2' style='text-align: center;'>PAHINANTE 2</th><th class='col-md-3' style='text-align: center;'>COMMENT</th></tr></thead><tbody>";
+                //             myNewTableTrucking += "<tr><td colspan='4'><table class='table table-bordered'><thead><tr class='header_line'><th class='col-md-2' style='text-align: center;'>TRUCK NO.</th><th class='col-md-2' style='text-align: center;'>DRIVER</th><th class='col-md-2' style='text-align: center;'>PAHINANTE 1</th><th class='col-md-2' style='text-align: center;'>PAHINANTE 2</th><th class='col-md-3' style='text-align: center;'>COMMENT</th></tr></thead><tbody>";
 
-                            truckingSnapshot.forEach(function(truckingChildSnapshot){
-                                myNewTableTrucking += "<tr align='center'><td>" + truckingChildSnapshot.val().truck_no + "</td><td>" + truckingChildSnapshot.val().driver + "</td><td>" + truckingChildSnapshot.val().pahinante1 + "</td><td>" + truckingChildSnapshot.val().pahinante2 + "</td><td>" +  truckingChildSnapshot.val().comment + "</td></tr>";
-                            });
+                //             truckingSnapshot.forEach(function(truckingChildSnapshot){
+                //                 myNewTableTrucking += "<tr align='center'><td>" + truckingChildSnapshot.val().truck_no + "</td><td>" + truckingChildSnapshot.val().driver + "</td><td>" + truckingChildSnapshot.val().pahinante1 + "</td><td>" + truckingChildSnapshot.val().pahinante2 + "</td><td>" +  truckingChildSnapshot.val().comment + "</td></tr>";
+                //             });
 
-                            myNewTableTrucking += "</tbody></table></td></tr>";
+                //             myNewTableTrucking += "</tbody></table></td></tr>";
 
-                            document.getElementById('new_row_trucking_list').innerHTML = myNewTableTrucking;
+                //             document.getElementById('new_row_trucking_list').innerHTML = myNewTableTrucking;
 
-                        });
+                //         });
 
-                        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/forklift_operator').once('value', function(forkliftSnapshot){
-                            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/guard').once('value', function(guardSnapshot){
-                                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/guard/dayshift').once('value', function(guardDayshiftSnapshot){
-                                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/guard/nightshift').once('value', function(guardNightshiftSnapshot){
+                //         firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/forklift_operator').once('value', function(forkliftSnapshot){
+                //             firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/guard').once('value', function(guardSnapshot){
+                //                 firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/guard/dayshift').once('value', function(guardDayshiftSnapshot){
+                //                     firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/guard/nightshift').once('value', function(guardNightshiftSnapshot){
 
-                                        myNewTableForklift += "<tr><td colspan='2'><table class='table table-bordered'><thead><tr class='header_line'><th class='col-md-3' style='text-align: center;'>FORKLIFT NO.</th><th class='col-md-5' style='text-align: center;'>OPERATOR</th><th class='col-md-4' style='text-align: center;'>COMMENT</th></tr></thead><tbody>";
+                //                         myNewTableForklift += "<tr><td colspan='2'><table class='table table-bordered'><thead><tr class='header_line'><th class='col-md-3' style='text-align: center;'>FORKLIFT NO.</th><th class='col-md-5' style='text-align: center;'>OPERATOR</th><th class='col-md-4' style='text-align: center;'>COMMENT</th></tr></thead><tbody>";
 
-                                        forkliftSnapshot.forEach(function(forkliftChildSnapshot){
-                                            myNewTableForklift += "<tr align='center'><td>" + forkliftChildSnapshot.val().forklift_no + "</td><td>" + forkliftChildSnapshot.val().operator + "</td><td>" + forkliftChildSnapshot.val().comment + "</td></tr>";
-                                        });
+                //                         forkliftSnapshot.forEach(function(forkliftChildSnapshot){
+                //                             myNewTableForklift += "<tr align='center'><td>" + forkliftChildSnapshot.val().forklift_no + "</td><td>" + forkliftChildSnapshot.val().operator + "</td><td>" + forkliftChildSnapshot.val().comment + "</td></tr>";
+                //                         });
 
-                                        myNewTableForklift += "</tbody></table></td><td colspan='2'><table class='table table-bordered'><thead><tr><th>Guard Agency: <strong>" + guardSnapshot.val().agency_name + "<strong></th></tr><tr class='header_line'><th>DAY SHIFT</th></tr></thead><tbody><tr><td>";
+                //                         myNewTableForklift += "</tbody></table></td><td colspan='2'><table class='table table-bordered'><thead><tr><th>Guard Agency: <strong>" + guardSnapshot.val().agency_name + "<strong></th></tr><tr class='header_line'><th>DAY SHIFT</th></tr></thead><tbody><tr><td>";
 
-                                        guardDayshiftSnapshot.forEach(function(guardDayshiftChildSnapshot){
+                //                         guardDayshiftSnapshot.forEach(function(guardDayshiftChildSnapshot){
 
-                                            myNewTableForklift += "<div class='row'><div class='col-md-12'>" + guardDayshiftChildSnapshot.val().guard_name + " - " + guardDayshiftChildSnapshot.val().guard_position + "</div></div>";
-                                        });
+                //                             myNewTableForklift += "<div class='row'><div class='col-md-12'>" + guardDayshiftChildSnapshot.val().guard_name + " - " + guardDayshiftChildSnapshot.val().guard_position + "</div></div>";
+                //                         });
 
-                                        myNewTableForklift += "</td></tr></tbody><thead><tr class='header_line'><th>NIGHT SHIFT</th></tr></thead><tbody><tr><td>";
+                //                         myNewTableForklift += "</td></tr></tbody><thead><tr class='header_line'><th>NIGHT SHIFT</th></tr></thead><tbody><tr><td>";
 
-                                        guardNightshiftSnapshot.forEach(function(guardNightshiftChildSnapshot){
+                //                         guardNightshiftSnapshot.forEach(function(guardNightshiftChildSnapshot){
 
-                                            myNewTableForklift += "<div class='row'><div class='col-md-12'>" + guardNightshiftChildSnapshot.val().guard_name + " - " + guardNightshiftChildSnapshot.val().guard_position + "</div></div>";
-                                        });
+                //                             myNewTableForklift += "<div class='row'><div class='col-md-12'>" + guardNightshiftChildSnapshot.val().guard_name + " - " + guardNightshiftChildSnapshot.val().guard_position + "</div></div>";
+                //                         });
 
-                                        myNewTableForklift += "</td></tr></tbody></table></td></tr>";
+                //                         myNewTableForklift += "</td></tr></tbody></table></td></tr>";
 
-                                        document.getElementById('new_row_forklift_list').innerHTML = myNewTableForklift;
-                                    });
-                                });
-                            });
-                        });
+                //                         document.getElementById('new_row_forklift_list').innerHTML = myNewTableForklift;
+                //                     });
+                //                 });
+                //             });
+                //         });
 
-                        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/absent/plant').orderByChild('employee_name').once('value', function(plantSnapshot){
-                            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/absent/motorpool').orderByChild('employee_name').once('value', function(motorpoolSnapshot){
-                                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/absent/trucking').orderByChild('employee_name').once('value', function(truckingSnapshot){
+                //         firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/absent/plant').orderByChild('employee_name').once('value', function(plantSnapshot){
+                //             firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/absent/motorpool').orderByChild('employee_name').once('value', function(motorpoolSnapshot){
+                //                 firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/absent/trucking').orderByChild('employee_name').once('value', function(truckingSnapshot){
 
-                                    plantCount = 0;
-                                    motorpoolCount = 0;
-                                    truckingCount = 0;
+                //                     plantCount = 0;
+                //                     motorpoolCount = 0;
+                //                     truckingCount = 0;
 
-                                    myNewTableAbsent += "<tr><td>";
+                //                     myNewTableAbsent += "<tr><td>";
 
-                                    plantSnapshot.forEach(function(plantChildSnapshot){
+                //                     plantSnapshot.forEach(function(plantChildSnapshot){
 
-                                        if(plantChildSnapshot.val().employee_name != "N/A"){
+                //                         if(plantChildSnapshot.val().employee_name != "N/A"){
 
-                                            myNewTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + plantChildSnapshot.val().employee_name + "</strong> - " + plantChildSnapshot.val().employee_comment + "</div></div>";
+                //                             myNewTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + plantChildSnapshot.val().employee_name + "</strong> - " + plantChildSnapshot.val().employee_comment + "</div></div>";
 
-                                            plantCount++;
-                                        }
-                                    });
+                //                             plantCount++;
+                //                         }
+                //                     });
 
-                                    if(plantCount == 0){
-                                        myNewTableAbsent += "<div class='row'><div class='col-md-12'>N/A</div></div>";
-                                    }
+                //                     if(plantCount == 0){
+                //                         myNewTableAbsent += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                //                     }
 
-                                    document.getElementById('badge_new_plant').innerHTML = plantCount;
+                //                     document.getElementById('badge_new_plant').innerHTML = plantCount;
 
-                                    myNewTableAbsent += "</td><td>";
+                //                     myNewTableAbsent += "</td><td>";
 
-                                    motorpoolSnapshot.forEach(function(motorpoolChildSnapshot){
+                //                     motorpoolSnapshot.forEach(function(motorpoolChildSnapshot){
 
-                                        if(motorpoolChildSnapshot.val().employee_name != "N/A"){
+                //                         if(motorpoolChildSnapshot.val().employee_name != "N/A"){
 
-                                            myNewTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + motorpoolChildSnapshot.val().employee_name + "</strong> - " + motorpoolChildSnapshot.val().employee_comment + "</div></div>";
+                //                             myNewTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + motorpoolChildSnapshot.val().employee_name + "</strong> - " + motorpoolChildSnapshot.val().employee_comment + "</div></div>";
 
-                                            motorpoolCount++;
-                                        }
-                                    });
+                //                             motorpoolCount++;
+                //                         }
+                //                     });
 
-                                    if(motorpoolCount == 0){
-                                        myNewTableAbsent += "<div class='row'><div class='col-md-12'>N/A</div></div>";
-                                    }
+                //                     if(motorpoolCount == 0){
+                //                         myNewTableAbsent += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                //                     }
 
-                                    document.getElementById('badge_new_motorpool').innerHTML = motorpoolCount;
+                //                     document.getElementById('badge_new_motorpool').innerHTML = motorpoolCount;
 
-                                    myNewTableAbsent += "</td><td>";
+                //                     myNewTableAbsent += "</td><td>";
 
-                                    truckingSnapshot.forEach(function(truckingChildSnapshot){
+                //                     truckingSnapshot.forEach(function(truckingChildSnapshot){
 
-                                        if(truckingChildSnapshot.val().employee_name != "N/A"){
+                //                         if(truckingChildSnapshot.val().employee_name != "N/A"){
 
-                                            myNewTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + truckingChildSnapshot.val().employee_name + "</strong> - " + truckingChildSnapshot.val().employee_comment + "</div></div>";
+                //                             myNewTableAbsent += "<div class='row'><div class='col-md-12'><strong>" + truckingChildSnapshot.val().employee_name + "</strong> - " + truckingChildSnapshot.val().employee_comment + "</div></div>";
 
-                                            truckingCount++;
-                                        }
-                                    });
+                //                             truckingCount++;
+                //                         }
+                //                     });
 
-                                    if(truckingCount == 0){
-                                        myNewTableAbsent += "<div class='row'><div class='col-md-12'>N/A</div></div>";
-                                    }
+                //                     if(truckingCount == 0){
+                //                         myNewTableAbsent += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                //                     }
 
-                                    document.getElementById('badge_new_trucking').innerHTML = truckingCount;
+                //                     document.getElementById('badge_new_trucking').innerHTML = truckingCount;
 
-                                    myNewTableAbsent += "</td></tr>";
+                //                     myNewTableAbsent += "</td></tr>";
 
-                                    document.getElementById('new_row_absent_list').innerHTML = myNewTableAbsent;
-                                });
-                            });
-                        });
+                //                     document.getElementById('new_row_absent_list').innerHTML = myNewTableAbsent;
+                //                 });
+                //             });
+                //         });
 
-                        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/comment').once('value', function(commentSnapshot){
-                            commentSnapshot.forEach(function(commentChildSnapshot){
+                //         firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new/comment').once('value', function(commentSnapshot){
+                //             commentSnapshot.forEach(function(commentChildSnapshot){
 
-                                myNewTableComment += "<tr><td colspan='2'><div class='row'><div class='col-md-3'><strong>FROM " + plant.toUpperCase() + "</strong></div><div class='col-md-9'>" + commentChildSnapshot.val().comment_attendance_plant + "</div></div></td><td colspan='2'><div class='row'><div class='col-md-3'><strong>FROM HEAD OFFICE</strong></div><div class='col-md-9'>" + commentChildSnapshot.val().comment_attendance_headoffice + "</div></div></td></tr>";
-                            });
-                            document.getElementById('new_row_comment').innerHTML = myNewTableComment;
-                        });
-                    }else{
+                //                 myNewTableComment += "<tr><td colspan='2'><div class='row'><div class='col-md-3'><strong>FROM " + plant.toUpperCase() + "</strong></div><div class='col-md-9'>" + commentChildSnapshot.val().comment_attendance_plant + "</div></div></td><td colspan='2'><div class='row'><div class='col-md-3'><strong>FROM HEAD OFFICE</strong></div><div class='col-md-9'>" + commentChildSnapshot.val().comment_attendance_headoffice + "</div></div></td></tr>";
+                //             });
+                //             document.getElementById('new_row_comment').innerHTML = myNewTableComment;
+                //         });
+                //     }else{
 
-                        $('.new_set_table').hide();
-                        $('.badge_new').hide();
-                        $('.row_new_list_class').html("");
-                    }
-                });
+                //         $('.new_set_table').hide();
+                //         $('.badge_new').hide();
+                //         $('.row_new_list_class').html("");
+                //     }
+                // });
             }else{
 
                 $('.button-link').hide();
@@ -719,7 +719,7 @@
                 $('.no_data_text').show();
 
                 $('.row_list_class').html("");
-                $('.row_new_list_class').html("");
+                // $('.row_new_list_class').html("");
 
                 $(".se-pre-con").fadeOut("slow");
             }
@@ -1171,7 +1171,7 @@
                         </section>
                     </div>
                 </div>
-                <div class="row new_set_table">
+                <!-- <div class="row new_set_table">
                     <div class="col-md-12">
                         <section class="panel">
                             <header class="panel-heading header_line"></header>
@@ -1369,7 +1369,7 @@
                             </div>
                         </section>
                     </div>
-                </div>
+                </div> -->
             </section>
         </section>
     </section>

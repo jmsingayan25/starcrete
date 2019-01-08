@@ -202,6 +202,9 @@
         
         firebase.database().ref('incoming_diesel/'+plant).once('value', function(dieselSnapshot){
             // console.log(dieselSnapshot.val(), dateFormat(selectedDate));
+
+            var numRows = 0;
+
             dieselSnapshot.forEach(function(dieselChildSnapshot){
 
                 // if(dieselChildSnapshot.val().Date_Input == dateFormat(selectedDate)){
@@ -286,6 +289,8 @@
                         myTbody += "<td><strong>" + date + "</strong></td>";
                         myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
                     }
+
+                    numRows++;
 
                 }else{
 
@@ -381,9 +386,15 @@
                             myTbody += "<td><strong>" + date + "</strong></td>";
                             myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
                         }
+
+                        numRows++;
                     }
                 }
+
+                
             });
+
+            document.getElementById('num_rows').innerHTML = numRows;
 
             if(myTbody != ""){
 
@@ -424,6 +435,9 @@
         });
 
         firebase.database().ref('incoming_diesel/'+plant).orderByChild('reverseDate').once('value', function(dieselSnapshot){
+
+            var numRows = 0;
+
             dieselSnapshot.forEach(function(dieselChildSnapshot){
 
                 // console.log(dieselChildSnapshot.val().date, dateFormat(currentDate));
@@ -518,9 +532,14 @@
 
                         document.getElementById('dieselList').innerHTML = myTbody;
                         
+                        numRows++;
                     }
                 // }
+
+                
             });
+
+            document.getElementById('num_rows').innerHTML = numRows;
 
             $(".se-pre-con").fadeOut("slow");
         });
@@ -818,6 +837,11 @@ function datePrint(){
                                                         </div> 
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6" style="margin: 5px 0px 0px 0px;">
+                                            <div class="pull-right">
+                                                Number of rows: <span id="num_rows" style="font-weight: bold;"></span>
                                             </div>
                                         </div>
 	                                </div>
