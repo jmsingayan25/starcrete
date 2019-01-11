@@ -229,15 +229,28 @@
                                         firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid3/helper').orderByChild('employee_name').once('value', function(nonskid3HelperSnapshot){
                                             firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/nonskid4/helper').orderByChild('employee_name').once('value', function(nonskid4HelperSnapshot){
 
+                                                nonskid1Count = 0;
+                                                nonskid2Count = 0;
+                                                nonskid3Count = 0;
+                                                nonskid4Count = 0;
+
                                                 myTableRow2 += "<tr><td>";
 
                                                 nonskid1Snapshot.forEach(function(nonskid1ChildSnapshot){
 
                                                     var employee_name = nonskid1ChildSnapshot.val().employee_name;
 
-                                                    myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
+                                                    if(employee_name != "N/A"){
 
+                                                        myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
+
+                                                        nonskid1Count++;
+                                                    }
                                                 });
+
+                                                if(nonskid1Count == 0){
+                                                    myTableRow2 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                                                }
 
                                                 myTableRow2 += "</td><td>";
 
@@ -245,8 +258,17 @@
 
                                                     var employee_name = nonskid2ChildSnapshot.val().employee_name;
 
-                                                    myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
+                                                    if(employee_name != "N/A"){
+
+                                                        myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
+
+                                                        nonskid2Count++;
+                                                    }
                                                 });
+
+                                                if(nonskid2Count == 0){
+                                                    myTableRow2 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                                                }
 
                                                 myTableRow2 += "</td><td>";
 
@@ -254,8 +276,17 @@
 
                                                     var employee_name = nonskid3ChildSnapshot.val().employee_name;
 
-                                                    myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
+                                                    if(employee_name != "N/A"){
+
+                                                         myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
+
+                                                        nonskid3Count++;
+                                                    }
                                                 });
+
+                                                if(nonskid3Count == 0){
+                                                    myTableRow2 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                                                }
 
                                                 myTableRow2 += "</td><td>";
 
@@ -263,14 +294,27 @@
 
                                                     var employee_name = nonskid4ChildSnapshot.val().employee_name;
 
-                                                    myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
+                                                    if(employee_name != "N/A"){
+
+                                                        myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
+
+                                                        nonskid4Count++;
+                                                    }
                                                 });
+
+                                                if(nonskid4Count == 0){
+                                                    myTableRow2 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                                                }
 
                                                 myTableRow2 += "</td></tr><tr><td>";
 
                                                 nonskid1HelperSnapshot.forEach(function(nonskid1HelperChildSnapshot){
 
                                                     var helper_name = nonskid1HelperChildSnapshot.val().helper_name;
+
+                                                    if(helper_name != "N/A"){
+                                                        nonskid1Count++;
+                                                    }
 
                                                     myTableRow2 += "Helper: <strong>" + helper_name + "</strong>";
                                                 });
@@ -281,6 +325,10 @@
 
                                                     var helper_name = nonskid2HelperChildSnapshot.val().helper_name;
 
+                                                    if(helper_name != "N/A"){
+                                                        nonskid2Count++;
+                                                    }
+
                                                     myTableRow2 += "Helper: <strong>" + helper_name + "</strong>";
                                                 });
 
@@ -289,6 +337,10 @@
                                                 nonskid3HelperSnapshot.forEach(function(nonskid3HelperChildSnapshot){
 
                                                     var helper_name = nonskid3HelperChildSnapshot.val().helper_name;
+
+                                                    if(helper_name != "N/A"){
+                                                        nonskid3Count++;
+                                                    }
 
                                                     myTableRow2 += "Helper: <strong>" + helper_name + "</strong>";
                                                 });
@@ -299,12 +351,20 @@
 
                                                     var helper_name = nonskid4HelperChildSnapshot.val().helper_name;
 
+                                                    if(helper_name != "N/A"){
+                                                        nonskid4Count++;
+                                                    }
+
                                                     myTableRow2 += "Helper: <strong>" + helper_name + "</strong>";
                                                 });
                                                 
                                                 myTableRow2 += "</td></tr>";
 
                                                 document.getElementById('row2_list').innerHTML = myTableRow2;
+                                                document.getElementById('badge_nonskid1').innerHTML = nonskid1Count;
+                                                document.getElementById('badge_nonskid2').innerHTML = nonskid2Count;
+                                                document.getElementById('badge_nonskid3').innerHTML = nonskid3Count;
+                                                document.getElementById('badge_nonskid4').innerHTML = nonskid4Count;
 
                                                 $(".se-pre-con").fadeOut("slow");
                                             });
@@ -521,6 +581,8 @@
 
                 firebase.database().ref('attendance/'+plant+'/'+currentDate+query_ext+'/trucking').once('value', function(truckingSnapshot){
 
+                    truckingCount = 0;
+
                 myTableRow7 += "<tr><td colspan='4'><table class='table'><tbody><tr><th class='col-md-2' style='text-align: center;'>TRUCK NO.</th><th class='col-md-2' style='text-align: center;'>DRIVER</th><th class='col-md-2' style='text-align: center;'>PAHINANTE 1</th><th class='col-md-2' style='text-align: center;'>PAHINANTE 2</th><th class='col-md-3' style='text-align: center;'>COMMENT</th></tr></tbody><tbody></td></tr>";
 
                     truckingSnapshot.forEach(function(truckingChildSnapshot){
@@ -532,11 +594,25 @@
                         var comment = truckingChildSnapshot.val().comment;
 
                         myTableRow7 += "<tr align='center'><td>" + truck_no + "</td><td>" + driver + "</td><td>" + pahinante1 + "</td><td>" + pahinante2 + "</td><td>" + comment + "</td></tr>";
+
+                        if(driver != "N/A"){
+                            truckingCount++;
+                        }
+
+                        if(pahinante1 != "N/A"){
+                            truckingCount++;
+                        }
+
+                        if(pahinante2 != "N/A"){
+                            truckingCount++;
+                        }
                     });
 
                     myTableRow7 += "</tbody></table>";
 
                     document.getElementById('row7_list').innerHTML = myTableRow7;
+
+                    document.getElementById('badge_trucking').innerHTML = truckingCount;
                 });
 
             }else{
@@ -607,10 +683,10 @@
                                 <tbody id="row1_list"></tbody>
                                 <tbody>
                                     <tr class="header_line">
-                                        <th class="col-md-3">NON SKID 1</th>
-                                        <th class="col-md-3">NON SKID 2</th>
-                                        <th class="col-md-3">NON SKID 3</th>
-                                        <th class="col-md-3">NON SKID 4</th>
+                                        <th class="col-md-3">NON SKID 1 <span class="badge pull-right" id="badge_nonskid1"></span></th>
+                                        <th class="col-md-3">NON SKID 2 <span class="badge pull-right" id="badge_nonskid2"></span></th>
+                                        <th class="col-md-3">NON SKID 3 <span class="badge pull-right" id="badge_nonskid3"></span></th>
+                                        <th class="col-md-3">NON SKID 4 <span class="badge pull-right" id="badge_nonskid4"></span></th>
                                     </tr>
                                 </tbody>
                                 <tbody id="row2_list"></tbody>
@@ -637,7 +713,7 @@
                                 <tbody id="row5_list"></tbody>
                                 <tbody>
                                     <tr class="header_line">
-                                        <th colspan="4">TRUCKING</th>
+                                        <th colspan="4">TRUCKING <span class="badge pull-right" id="badge_trucking"></span></th>
                                     </tr>
                                 </tbody>
                                 <tbody id="row7_list"></tbody>
