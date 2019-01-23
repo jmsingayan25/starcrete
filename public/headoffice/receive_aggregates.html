@@ -1,24 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8">
+	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
     <meta name="author" content="GeeksLabs">
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="../img/favicon.png">
 
-    <title>Transmittal Incoming Items</title>
+	<title>Received Aggregates</title>
 
-    <!-- Firebase App is always required and must be first -->
-    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+	<!-- Firebase App is always required and must be first -->
+	<!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
+    <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase-app.js"></script>
 
-    <!-- Add additional services you want to use -->
-    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
-    <script src="../js_config/firebase_config.js"></script>
+	<!-- Add additional services you want to use -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+	<script src="../js_config/firebase_config.js"></script>
 
-    <!-- Bootstrap CSS -->    
+	<!-- Bootstrap CSS -->    
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <!-- bootstrap theme -->
     <link href="../css/bootstrap-theme.css" rel="stylesheet">
@@ -35,7 +36,7 @@
     <link href="../css/widgets.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/style-responsive.css" rel="stylesheet" />
-    <link href="../css/xcharts.min.css" rel=" stylesheet">  
+    <link href="../css/xcharts.min.css" rel=" stylesheet">	
     <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
 
     <!-- javascripts -->
@@ -80,6 +81,11 @@
     <script src="../js/jquery.slimscroll.min.js"></script>
     <script src="../js_config/function.js"></script>
 
+    <!-- Custom Javascript Datepicker -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
     <!-- =======================================================
     Theme Name: NiceAdmin
     Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -89,6 +95,10 @@
 
 <script>
 
+    var plant = getUrlParameter("plant");
+    var fromDate = "";
+    var endDate = "";
+    
     $(document).ready(function(){
 
         $('.filterable .btn-filter').click(function(){
@@ -128,12 +138,11 @@
             $filteredRows.hide();
             /* Prepend no-result row if all rows are filtered */
             if ($filteredRows.length === $rows.length) {
-                 $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="9" style="min-height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
+                 $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="10" style="height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
             }
         });
 
-        tableData();
-        refreshTransmittal();
+        submitForm();
         displayNotif();
 
         firebase.auth().onAuthStateChanged(function(user) {
@@ -142,12 +151,11 @@
                 var uid = user.uid;
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+
                     if(snapshot.val().office != 'Head Office'){
                         window.location.href = '../plant/index.html';
                     }
-
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
-
                 },(error) => {
                     console.log(error);
                 });
@@ -155,155 +163,111 @@
                 window.location.href = '../login.html';
             }
         });
-
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
-        // document.getElementById('id_breadcrumb').innerHTML = "<li><i class='icon_document'></i><a href='transmittal_input.html'>Transmittal Input</a></li><li><i class='icon_document'></i><a href='#'>Incoming Items</a></li><li><i class='icon_document'></i><a href='transmittal_outgoing.html'>Outgoing Items</a></li>";
+
+        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='receive_aggregates.html?plant=" + plant + "'>Received Aggregates</a></li>";
+
+        $('input[name="date_view"]').daterangepicker({
+            opens: 'right'
+        }, function(start, end, label) {
+            fromDate = start.format('YYYY-MM-DD');
+            endDate = end.format('YYYY-MM-DD');
+        });
 
     });
 
-    function tableData(){
-
-        var tBody = "";
-        count = 0;
-        var array = [];
-
-        firebase.database().ref('transmittal_input').once('value', function(dateSnapshot){
-            dateSnapshot.forEach(function(dateChildSnapshot){
-                firebase.database().ref('transmittal_input/'+dateChildSnapshot.key).once('value', function(transmittalSnapshot){
-                    transmittalSnapshot.forEach(function(transmittalChildSnapshot){
-                        firebase.database().ref('transmittal_input/'+dateChildSnapshot.key+'/'+transmittalChildSnapshot.key+'/Items').once('value', function(itemSnapshot){
-
-                            itemSnapshot.forEach(function(itemChildSnapshot){
-
-                                var date_holder = dateChildSnapshot.key;
-                                var key = transmittalChildSnapshot.key;
-                                var item_key = itemChildSnapshot.key;
-                                var delivered_by = transmittalChildSnapshot.val().delivered_by;
-                                var from_plant = transmittalChildSnapshot.val().from;
-                                var to_plant = transmittalChildSnapshot.val().to;
-                                var transmittal_no = transmittalChildSnapshot.val().transmittal_no;
-                                var comment = itemChildSnapshot.val().comment;
-                                var item_no = itemChildSnapshot.val().item_Batch;
-                                var purpose = itemChildSnapshot.val().purpose_batch;
-                                var quantity = itemChildSnapshot.val().quantity_Batch;
-                                var receive = itemChildSnapshot.val().receive_date;
-                                var status = itemChildSnapshot.val().status;
-
-                                var rowData = {
-                                    key: key,
-                                    item_key: item_key,
-                                    receive: receive,
-                                    date_holder: date_holder,
-                                    from_plant: from_plant,
-                                    to_plant: to_plant,
-                                    delivered_by: delivered_by,
-                                    transmittal_no: transmittal_no,
-                                    item_no: item_no,
-                                    quantity: quantity,
-                                    purpose: purpose,
-                                    comment: comment,
-                                    status: status
-                                }
-
-                                array.push(rowData);
-                            });
-                        });
-                    });
-                });
-            });
-
-            array.sort(function(a,b){
-                return Number(a.status) - Number(b.status);
-            });
-
-            for(var a = 0; a < array.length; a++){
-
-                var date_holder = array[a].date_holder;
-                var key = array[a].key;
-                var item_key = array[a].item_key;
-                var delivered_by = array[a].delivered_by;
-                var from_plant = array[a].from_plant;
-                var to_plant = array[a].to_plant;
-                var transmittal_no = array[a].transmittal_no;
-                var comment = array[a].comment;
-                var item_no = array[a].item_no;
-                var purpose = array[a].purpose;
-                var quantity = array[a].quantity;
-                var receive = array[a].receive;
-                var status = array[a].status;
-            
-                if(array[a].to_plant == "Head Office"){
-
-                    if(status == 0){
-
-                        tBody += "<tr><td class='text_center'><strong>" + date_holder + "</strong></td>";
-                        tBody += "<td class='text_center'><strong>" + from_plant + "</strong></td>";
-                        tBody += "<td class='text_center'><strong>" + delivered_by + "</strong></td>";
-                        tBody += "<td class='text_center'><strong>" + transmittal_no + "</strong></td>";
-                        tBody += "<td class='text_center'><strong>" + item_no + "</strong></td>";
-                        tBody += "<td class='text_center'><strong>" + quantity + "</strong></td>";
-                        tBody += "<td class='text_center'><strong>" + purpose + "</strong></td>";
-                        tBody += "<td><strong><input type='text' id='input_comment" + a + "' name='input_comment[]' class='form-control'></strong></td>";
-                        tBody += "<td class='text_center'><strong><button type='button' class='btn btn-primary btn-md' onclick=\"if(confirm('Proceed?')){submitForm(\'" + a + "\', \'" + date_holder + "\', \'" + key + "\', \'" + item_key + "\')}else{event.preventDefault();}\"><strong>Receive</strong></button></strong></td></tr>";
-
-                    }else if(status == 1){
-
-                        tBody += "<tr><td class='text_center'><strong>" + date_holder + "</strong></td>";
-                        tBody += "<td class='text_center'><strong>" + from_plant + "</strong></td>";
-                        tBody += "<td class='text_center'><strong>" + delivered_by + "</strong></td>";
-                        tBody += "<td class='text_center'><strong>" + transmittal_no + "</strong></td>";
-                        tBody += "<td class='text_center'><strong>" + item_no + "</strong></td>";
-                        tBody += "<td class='text_center'><strong>" + quantity + "</strong></td>";
-                        tBody += "<td class='text_center'><strong>" + purpose + "</strong></td>";
-                        tBody += "<td class='text_center'><strong>" + comment + "</strong></td>";
-                        tBody += "<td class='text_center' style='background-color: #33cc33; color: white;'><strong>ACCEPTED</strong></td></tr>";
-
-                    }
-                }
-            }
-
-            if(tBody == ''){
-
-                tBody += "<tr class='no-result text-center'><td colspan='9' style='min-height: 100%;background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-
-            }
-            
-            document.getElementById('itemBody').innerHTML = tBody;
-
-            $('.se-pre-con').fadeOut('slow');
-        });
-    }
-
-    function refreshTransmittal(){
-
-        firebase.database().ref('transmittal_input').on('child_changed', function(){
-            setTimeout(function() {
-                tableData();
-            }, 1000);
-        });
-    }
-
-    function submitForm(count,date,key,item_key){
+    function submitForm(){
 
         event.preventDefault();
 
-        var displayDate = new Date();
-        var option = {year: "numeric", month: "long", day: "numeric"};
-        displayDate = new Date(displayDate).toLocaleDateString('en',option);
-        var displayTime = new Date().toLocaleTimeString('en');
+        $(".se-pre-con").fadeIn("fast");
+        var myTbody = "";
 
-        var comment = document.getElementById('input_comment'+count).value;
+        firebase.database().ref('receive_aggregates/'+plant).once('value', function(snapshot){
 
-        var itemData = {
-            comment: comment,
-            receive_date: displayDate,
-            receive_time: displayTime,
-            status: "1"
+            if(snapshot.val() != null){
+
+                snapshot.forEach(function(childSnapshot){
+
+                    var date = childSnapshot.val().ra_date;
+                    var dr_no = childSnapshot.val().ra_dr;
+                    var plate_no = childSnapshot.val().ra_plate;
+                    var po_no = childSnapshot.val().ra_po;
+                    var quantity = childSnapshot.val().ra_quantity;
+                    var item = childSnapshot.val().ra_selectsys;
+                    var supplier = childSnapshot.val().ra_supplier;
+                    var time = childSnapshot.val().ra_time;
+                    var volume = childSnapshot.val().ra_volume;
+
+                    if(fromDate == '' && endDate == ''){
+
+                        // console.log(childSnapshot.val());
+                        myTbody += "<tr><td><strong>" + date + "</strong></td>";
+                        myTbody += "<td><strong>" + supplier + "</strong></td>";
+                        myTbody += "<td><strong>" + po_no + "</strong></td>";
+                        myTbody += "<td><strong>" + item + "</strong></td>";
+                        myTbody += "<td><strong>" + quantity + "</strong></td>";
+                        myTbody += "<td><strong>" + time + "</strong></td>";
+                        myTbody += "<td><strong>" + dr_no + "</strong></td>";
+                        myTbody += "<td><strong>" + plate_no + "</strong></td>";
+                        myTbody += "<td><strong>" + volume + "</strong></td></tr>";
+
+                    }else{
+
+                        newFromDate = new Date(fromDate).toLocaleDateString('en');
+                        fromDate = new Date(newFromDate);
+                        newEndDate = new Date(endDate).toLocaleDateString('en');
+                        endDate = new Date(newEndDate);
+
+                        receiveDate = new Date(childSnapshot.val().ra_date);
+
+                        if(receiveDate.getTime() >= fromDate.getTime() && receiveDate.getTime() <= endDate.getTime()){
+
+                            myTbody += "<tr><td><strong>" + date + "</strong></td>";
+                            myTbody += "<td><strong>" + supplier + "</strong></td>";
+                            myTbody += "<td><strong>" + po_no + "</strong></td>";
+                            myTbody += "<td><strong>" + item + "</strong></td>";
+                            myTbody += "<td><strong>" + quantity + " kg(s)</strong></td>";
+                            myTbody += "<td><strong>" + time + "</strong></td>";
+                            myTbody += "<td><strong>" + dr_no + "</strong></td>";
+                            myTbody += "<td><strong>" + plate_no + "</strong></td>";
+                            myTbody += "<td><strong>" + volume + "</strong></td></tr>";
+                        }
+                    }
+                });
+            }
+
+            if(myTbody != ''){
+
+                document.getElementById('receiveList').innerHTML = myTbody;
+
+                $(".se-pre-con").fadeOut("slow");
+
+            }else{
+
+                myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                document.getElementById('receiveList').innerHTML = myTbody;
+
+                $(".se-pre-con").fadeOut("slow");
+            }
+
+        });
+    }
+
+    function datePrint(){
+
+        event.preventDefault();
+        
+        if(fromDate == "" && endDate == ""){
+            date1 = "";
+            date2 = "";
+        }else{
+            date1 = new Date(fromDate).toLocaleDateString('en');
+            date2 = new Date(endDate).toLocaleDateString('en');
         }
 
-        firebase.database().ref('transmittal_input/'+date+'/'+key+'/Items/'+item_key).update(itemData);
-
-        window.location.reload();
+        window.open('receive_aggregates_print.html?plant=' + plant + "&fromdate=" + date1 + "&enddate=" + date2, '_blank');
     }
 
     function displayNotif(){
@@ -380,7 +344,7 @@
 }
 .text_white{
     color: white;
-}  
+}
 .filterable .panel-heading .pull-right {
     margin-top: -20px;
 }
@@ -395,24 +359,23 @@
 }
 .filterable .filters input[disabled]::-webkit-input-placeholder {
     color: white;
-    text-align: center;
+    text-align: left;
     font-weight: bold;
 }
 .filterable .filters input[disabled]::-moz-placeholder {
      color: white;
-     text-align: center;
+     text-align: left;
      font-weight: bold;
 }
 .filterable .filters input[disabled]:-ms-input-placeholder {
      color: white;
-     text-align: center;
+     text-align: left;
      font-weight: bold;
-} 
+}    
 </style>
 </head>
 <body>
     <div class="se-pre-con"></div>
-    <!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
@@ -463,9 +426,7 @@
                 </ul>
                 <!-- notificatoin dropdown end-->
             </div>
-        </header>      
-        <!--header end-->
-
+        </header>  
         <!--sidebar start-->
         <aside>
             <div id="sidebar"  class="nav-collapse ">
@@ -521,43 +482,60 @@
             <section class="wrapper">  
                 <div class="row">
                     <div class="col-md-12">
-                        <ol class="breadcrumb" id="id_breadcrumb">
-                            <li><i class='icon_document'></i><a href='transmittal_input.html'>Transmittal Input</a></li>
-                            <li><i class='icon_document'></i>Incoming Items</li>
-                            <li><i class='icon_document'></i><a href='transmittal_outgoing.html'>Outgoing Items</a></li>                      
-                        </ol>
+                        <ol class="breadcrumb" id="id_breadcrumb"></ol>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <section class="panel">
-                            <header class="panel-heading text_center" style="font-size: 20px;">
-                                INCOMING ITEMS
+                            <header class="panel-heading">
+                                <div class="row" style="margin-bottom: 5px;">
+                                    <form class="form-inline" onsubmit="return submitForm();">
+                                        <div class="col-md-6" style="margin: 5px 0px 0px 0px;">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-12" style=" white-space: nowrap;">
+                                                        <label for="date_view" class="col-md-3 control-label" style="white-space: nowrap;"><strong>Select Date:</strong></label>
+                                                        <div class="col-md-8">
+                                                            <input type="text" id="date_view" name="date_view" class="form-control">   
+                                                            <button type="submit" class="btn btn-md btn-info" style=""><strong>Go</strong></button>               
+                                                        </div> 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="col-md-6 pull-right" style="margin: 5px 0px 0px 0px;">
+                                        <div class="row">
+                                            <div class="col-md-1 col-md-offset-9">
+                                                <button type="button" class="btn btn-info btn-md" id="datePrint" onclick= "datePrint();" style="float: left;"><span class="fa fa-print"></span> <strong>Print Preview</strong></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </header>
                             <div class="panel-body">
-                                <form id="form" name="form" class="form-horizontal"></form>
                                 <div class="table-responsive filterable">
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr class="filterable">
-                                                <th colspan="9">
-                                                    <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button></span><br>
+                                                <th colspan="10">
+                                                    <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button><br>
                                                 </th>
                                             </tr>
                                             <tr class="filters" style="background-color: #00111a;">
-                                                <th colspan="1" class="text_center text_white">Date</th>
-                                                <th colspan="1" class="text_center text_white">From</th>
-                                                <th colspan="1" class="text_center text_white">Delivered By</th>
-                                                <th colspan="1" class="text_center text_white">Transmittal No.</th>
-                                                <!-- <th colspan="1" class="text_center text_white">Item</th> -->
-                                                <th colspan="1"><input type="text" class="form-control" placeholder="Item" disabled></th>
-                                                <th colspan="1" class="text_center text_white">Quantity</th>
-                                                <th colspan="1" class="text_center text_white">Purpose</th>
-                                                <th colspan="1" class="text_center text_white">Comment</th>
-                                                <th colspan="1" class="text_center text_white"></th>
+                                                <th class="col-md-1 text_white">Date</th>
+                                                <th class="col-md-1"><input type="text" class="form-control" id="input_supplier" placeholder="Supplier" disabled></th>
+                                                <th class="col-md-1"><input type="text" class="form-control" id="input_po_no" placeholder="P.O. No." disabled></th>
+                                                <th class="col-md-1"><input type="text" class="form-control" id="input_item" placeholder="Item" disabled></th>
+                                                <th class="col-md-1 text_white">Quantity</th>
+                                                <th class="col-md-1 text_white">Time</th>
+                                                <th class="col-md-1"><input type="text" class="form-control" id="input_dr_no" placeholder="DR No." disabled></th>
+                                                <th class="col-md-1"><input type="text" class="form-control" id="input_plate_no" placeholder="Plate No." disabled></th>
+                                                <th class="col-md-1 text_white">Volume</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="itemBody"></tbody>
+                                        <tbody id="receiveList"></tbody>
                                     </table>
                                 </div>
                             </div>

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
     <meta name="author" content="GeeksLabs">
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="../img/favicon.png">
 
-    <title>Line Up Form</title>
+    <title>Received Aggregates</title>
 
     <!-- Firebase App is always required and must be first -->
     <!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
@@ -82,52 +82,39 @@
     <script src="../js_config/function.js"></script>
 
 <script>
-    
+
     var plant = "";
-    var date_newSet = getUrlParameter('date');
+    $(function() {
+        
+        var $form = $( "#form" );
+        var $input = $form.find( "#ra_quantity" );
 
-    $(document).ready(function(){
-
-        $('.filterable .btn-filter').click(function(){
-            var $panel = $(this).parents('.filterable'),
-            $filters = $panel.find('.filters input'),
-            $tbody = $panel.find('.table tbody');
-            if ($filters.prop('disabled') == true) {
-                $filters.prop('disabled', false);
-                $filters.first().focus();
-            } else {
-                $filters.val('').prop('disabled', true);
-                $tbody.find('.no-result').remove();
-                $tbody.find('tr').show();
+        $form.on( "keyup", "#ra_quantity", function( event ) {
+            
+            // When user select text in the document, also abort.
+            var selection = window.getSelection().toString();
+            if ( selection !== '' ) {
+                return;
             }
-        });
-
-        $('.filterable .filters input').keyup(function(e){
-            /* Ignore tab key */
-            var code = e.keyCode || e.which;
-            if (code == '9') return;
-            /* Useful DOM data and selectors */
-            var $input = $(this),
-            inputContent = $input.val().toLowerCase(),
-            $panel = $input.parents('.filterable'),
-            column = $panel.find('.filters th').index($input.parents('th')),
-            $table = $panel.find('.table'),
-            $rows = $table.find('tbody tr');
-            /* Dirtiest filter function ever ;) */
-            var $filteredRows = $rows.filter(function(){
-                var value = $(this).find('td').eq(column).text().toLowerCase();
-                return value.indexOf(inputContent) === -1;
-            });
-            /* Clean previous no-result if exist */
-            $table.find('tbody .no-result').remove();
-            /* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
-            $rows.show();
-            $filteredRows.hide();
-            /* Prepend no-result row if all rows are filtered */
-            if ($filteredRows.length === $rows.length) {
-                 $table.find('tbody').prepend($('<tr class="no-result"><td colspan="3" style="min-height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
+            
+            // When the arrow keys are pressed, abort.
+            if ( $.inArray( event.keyCode, [38,40,37,39] ) !== -1 ) {
+                return;
             }
-        });
+            
+            
+            var $this = $( this );
+            
+            // Get the value.
+            var input = $this.val();
+            
+            var input = input.replace(/[\D\s\._\-]+/g, "");
+                    input = input ? parseInt( input, 10 ) : 0;
+
+                    $this.val( function() {
+                        return ( input === 0 ) ? "" : input.toLocaleString( "en-US" );
+                    } );
+        }); 
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -142,16 +129,14 @@
                         window.location.href = '../headoffice/index.html';
                     }
 
+                    displayNotif();
+
                     if(plant == 'Bravo'){
                         plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
                     }else{
                         plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
                     }
-
-                    tableData();
-                    displayNotif();
-                    refreshNotif();
-
+            
                     document.getElementById('id_plant_name').innerHTML = plant_name;
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
 
@@ -163,89 +148,45 @@
             }
         });
 
-        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
-
-        document.getElementById('header_form').innerHTML = "<h4><strong>EMPLOYEE</strong></h4>";
-
+        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);     
     });
-
-    function tableData(){
-
-        myTable = "";
-        count = 1;
-
-        firebase.database().ref('employee_list/'+plant).orderByChild('employee_name').once('value', function(employeeSnapshot){
-
-            if(employeeSnapshot.val() != null){
-
-                employeeSnapshot.forEach(function(employeeChildSnapshot){
-          
-                    myTable += "<tr><td>" + count + ".</td>";
-                    // myTable += "<td><div class='row'><div class='col-md-10'>" + employeeChildSnapshot.val().employee_name + "</div><div class='col-md-1'><button type='button' class='btn btn-sm btn-danger pull-right' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + employeeChildSnapshot.key + "\");}else{ event.preventDefault();}'><strong>Remove</strong></button></div></div></td></tr>";
-                    // myTable += "<td>" + employeeChildSnapshot.val().employee_name + "</td>";
-                    myTable += "<td>" + employeeChildSnapshot.val().employee_name + "<button type='button' class='btn btn-sm btn-danger pull-right' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + employeeChildSnapshot.key + "\");}else{ event.preventDefault();}'><strong>Remove</strong></button></td></tr>";
-
-                    count++;
-                });
-
-            }else{
-
-                myTable = "<tr><td style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-
-            }
-
-            document.getElementById('employee_list').innerHTML = myTable;
-
-            document.getElementById('count_employee').innerHTML = "Total: " + Number(count - 1);
-            
-        });
-    }
-
-    function removeEmployee(key){
-
-        event.preventDefault();
-
-        if(firebase.database().ref('employee_list/'+plant+'/'+key).remove()){
-            alert("Employee removed.");
-            window.location.reload();
-        }
-    }
-
-    function add_employee(){
-
-        event.preventDefault();
-
-        $rowno = $("#employee_table tr").length;
-        $rowno = $rowno + 1;
-        $count = $rowno - 1;
-
-        $("#employee_table tr:last").after("<tr id='employee_row"+$rowno+"'><td>"+$count+".</td><td><input type='text' name='employee_name[]' class='form-control input_type' required</td><td><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><span class='fa fa-minus'></span></td></tr>");
-    }
-
-    function remove_employee_row(rowno){
-        $('#'+rowno).remove();
-    }
 
     function submitForm(){
 
         event.preventDefault();
 
-        var input_employee_name = $("input[name='employee_name[]']").map(function(){return $(this).val();}).get();
+        var ra_date = dateFormat(document.getElementById('ra_date').value);
+        var ra_supplier = document.getElementById('ra_supplier').value;
+        var ra_po = document.getElementById('ra_po').value;
+        var ra_selectsys = document.getElementById('selectsys').value;
+        var ra_quantity = document.getElementById('ra_quantity').value;
+        var ra_time = document.getElementById('ra_time').value;
+        var ra_dr = document.getElementById('ra_dr').value;
+        var ra_plate = document.getElementById('ra_plate').value;
+        var ra_volume = document.getElementById('ra_volume').value;
 
-        count = 0;
-        for(var a = 0; a < input_employee_name.length; a++){
-
-            var employeeData = {
-                employee_name: input_employee_name[a].toUpperCase()
-            }
-
-            firebase.database().ref('employee_list/'+plant).push(employeeData);
-            count++;
+        if(document.getElementById('ra_time').value != ""){
+            var ra_time = startTime(document.getElementById('ra_time').value);
+        }else{
+            var ra_time = "";
         }
 
-        if(count == input_employee_name.length){
-            alert("Data added successfully");
-            window.location.href='lineup_form.html';
+        var ra_data = {
+            ra_date: ra_date,
+            ra_supplier: ra_supplier,
+            ra_po: ra_po,
+            ra_selectsys: ra_selectsys,
+            ra_quantity: ra_quantity,
+            ra_time: ra_time,
+            ra_dr: ra_dr,
+            ra_plate: ra_plate,
+            ra_volume
+        };
+
+        var postData = firebase.database().ref('receive_aggregates/' + plant);
+        var newPostRef = postData.push();
+        if (newPostRef.set(ra_data)) {
+            window.location.reload();
         }
     }
 
@@ -318,39 +259,7 @@
 
 </script>
 <style>
-.header_line{
-    text-align: center;
-}
-.input_type{
-    text-transform: uppercase;
-}
-.filterable .panel-heading .pull-right {
-    margin-top: -20px;
-}
-.filterable .filters input[disabled] {
-    background-color: transparent;
-    text-align: center;
-    border: none;
-    cursor: auto;
-    box-shadow: none;
-    padding: 0;
-    height: auto;
-}
-.filterable .filters input[disabled]::-webkit-input-placeholder {
-    color: white;
-    text-align: left;
-    font-weight: bold;
-}
-.filterable .filters input[disabled]::-moz-placeholder {
-     color: white;
-     text-align: left;
-     font-weight: bold;
-}
-.filterable .filters input[disabled]:-ms-input-placeholder {
-     color: white;
-     text-align: left;
-     font-weight: bold;
-}
+    
 </style>
 </head>
 <body>
@@ -405,6 +314,7 @@
                 <!-- notificatoin dropdown end-->
             </div>
         </header>  
+        <!--sidebar start-->
 
         <!--sidebar start-->
         <aside>
@@ -451,7 +361,7 @@
                             <span>Diesel</span>
                         </a>
                     </li>
-                    <li class="active">
+                    <li class="">
                         <a class="" href="lineup.html">
                             <i class="icon_document"></i>
                             <span>Line Up</span>
@@ -481,85 +391,109 @@
         </aside>
         <!--sidebar end-->
 
-        <!--main content start-->
         <section id="main-content">
-            <section class="wrapper">
-                 <!--overview start-->
-                <div class="row">
+            <section class="wrapper">  
+                <div class="row">  
                     <div class="col-md-12">
                         <ol class="breadcrumb">
-                            <li><i class="icon_document"></i><a href="lineup.html">Line Up</a></li>                       
-                            <li><i class="icon_document"></i><a href="lineup_form.html">Line Up Form</a></li>                       
-                            <li><i class="icon_document"></i>Employee Form</li>                       
+                            <li><i class="icon_document"></i>Received Aggregates</li>             
+                            <li><i class="icon_document"></i>Input</li>             
                         </ol>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-offset-1 col-md-4">
-                        <section class="panel">
-                            <header class="panel-heading">
-                                <div class="row">
-                                    <div class="col-md-12" style="text-align: center;">
-                                        <strong>EMPLOYEE LIST</strong>
-                                    </div>
-                                </div>
-                            </header>
-                            <div class="panel-body table-responsive filterable">
-                                <table class="table table-bordered table-condensed fixed_header">
-                                    <thead>
-                                        <tr class="filterable">
-                                            <th colspan="3">
-                                                <span id="count_employee"></span>
-                                                <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
-                                            </th>
-                                        </tr>
-                                        <tr class="filters" style="background-color: #00a3cc;">
-                                            <th class="col-md-1" style="color: white;">#</th>
-                                            <th colspan="2"><input type="text" class="form-control" placeholder="Name" disabled></th>
-                                            <!-- <th class="col-md-1"></th> -->
-                                        </tr>
-                                    </thead>
-                                    <tbody id="employee_list"></tbody>
-                                </table>
-                            </div>
-                        </section>
-                    </div>
-                    <div class="col-md-6">
-                        <section class="panel">
-                            <header class="panel-heading">
-                            </header>
-                            <form id="form" name="form" onsubmit="if(confirm('Proceed?')){submitForm();}else{ event.preventDefault();}">
+                <form id="form" name="form" class="form-horizontal" onsubmit="if(confirm('Proceed?')){submitForm();}else{ event.preventDefault();}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <section class="panel">
+                                <header class="panel-heading" style="font-size: 20px; text-align: center;">
+                                    RECEIVE AGGREGATES INPUT
+                                </header>
                                 <div class="panel-body">
-                                    <table class="table" id="employee_table">
-                                        <thead>
-                                            <tr>
-                                                <th class="col-md-1">#</th>
-                                                <th class="col-md-10 header_line">Name</th>
-                                                <th class="col-md-1"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr id="employee_row1">
-                                                <td>1.</td>
-                                                <td><input type="text" name="employee_name[]" class="form-control input_type" required></td>
-                                                <td><button type="button" class="btn btn-md btn-primary" onclick="add_employee();"><span class="fa fa-plus"></span></button></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <footer class="panel-footer">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <button type="submit" class="btn btn-primary btn-block"><strong>Submit</strong></button>
+                                    <div class="form-group">
+                                        <label for="ra_date" class="col-md-4 control-label">Date<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-7">
+                                            <input type="Date" name="ra_date" id="ra_date"class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
                                         </div>
                                     </div>
+
+                                    <div class="form-group">
+                                        <label for="ra_supplier" class="col-md-4 control-label">Supplier<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-7">
+                                            <input type="text" name="ra_supplier" id="ra_supplier"class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="ra_po" class="col-md-4 control-label">Po #<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-7">
+                                            <input type="text" name="ra_po" id="ra_po"class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ra_item" class="col-md-4 control-label">Item<span class="required" style="color: red;">*</span></label>
+                                         <div class="col-md-7">
+                                            <select id="selectsys" name="selectsys" class ="form-control">
+                                                <option>Select</option>
+                                                <option value="White Sand">White Sand</option>
+                                                <option value="Cement">Cement</option>
+                                                <option value="S1">S1</option>
+                                                <option value="3/8">3/8</option>
+                                                <option value="Lahar">Lahar</option>
+                                                <option value="Vibro">Vibro</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ra_quantity" class="col-md-4 control-label">Quantity<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-7">
+                                            <input type="text" name="ra_quantity" id="ra_quantity"class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                        <div class="col-md-6">
+                            <section class="panel">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label for="ra_time" class="col-md-4 control-label">Time<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-7">
+                                            <input type="Time" name="ra_time" id="ra_time"class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ra_dr" class="col-md-4 control-label">Dr #<span clas="required" style="color: red;">*</span></label>
+                                        <div class="col-md-7">
+                                            <input type="text" name="ra_dr" id="ra_dr" class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ra_plate" class="col-md-4 control-label">Plate #<span clas="required" style="color: red;">*</span></label>
+                                        <div class="col-md-7">
+                                            <input type="text" name="ra_plate" id="ra_plate" class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ra_volume" class="col-md-4 control-label">Volume<span clas="required" style="color: red;">*</span></label>
+                                        <div class="col-md-7">
+                                            <input type="text" name="ra_volume" id="ra_volume" class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-offset-9 col-md-1">
+                                            <input type="submit" name="submit" id="submit" value="Done" class="btn btn-primary" style="font-weight: bold;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <footer class="panel-footer">
+                                    <p class="help-block"><span class="required" style="color: red;">*</span> - required</p><p class="help-block">Note: <strong>N/A</strong> for not available.</p>
                                 </footer>
-                            </form>
-                        </section>
+                            </section>
+                        </div>
                     </div>
-                </div>
+                </form>
             </section>
         </section>
-    </section>
+    </section>  
 </body>
 </html>

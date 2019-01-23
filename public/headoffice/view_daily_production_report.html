@@ -93,7 +93,8 @@
 
     $(document).ready(function(){
 
-        // submitForm();
+        DropdownCategory();
+        submitForm();
         displayNotif();
 
         firebase.auth().onAuthStateChanged(function(user) {
@@ -118,11 +119,36 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
         document.getElementById('id_breadcrumb').innerHTML = "<li><i class='icon_document'></i><a href='#'>Daily Production Report</a></li>";
-        document.getElementById('view_btn').innerHTML = "<a href='view_production_report.html?plant=" + plant + "' class='btn btn-md btn-info'><strong>View Reports</strong></a>";
+        // document.getElementById('view_btn').innerHTML = "<a href='view_production_report.html?plant=" + plant + "' class='btn btn-md btn-info'><strong>View Reports</strong></a>";
 
         $(".se-pre-con").fadeOut("slow");
 
     });
+
+    function DropdownCategory(){
+        var dd_category = "<option value=''>Select</option>"
+
+        firebase.database().ref().child("Daily_Production_Report/" + plant).on('child_added',function(Snapshot){
+            // Snapshot.forEach(function(ChildSnapshot){
+
+                var date_list = Snapshot.key;
+                dd_category += "<option value ='" + date_list  + "'>" + date_list +"</option>";
+                document.getElementById("dropdown_date").innerHTML = dd_category;
+            // });
+        });
+    }
+
+    function submitDate(){
+
+        var get_dropdown_date = document.getElementById("dropdown_date").value;
+
+        var option = {year: "numeric", month: "numeric", day: "numeric"};
+        displayDate = new Date(get_dropdown_date).toLocaleDateString('fr-CA',option);
+
+        document.getElementById("date_selected").value = displayDate;
+
+        $('#prod_modal').modal('hide');
+    }
 
     function submitForm(){
 
@@ -144,6 +170,13 @@
         firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_of_batch).once('value', function(dailySnapshot){
 
             if(dailySnapshot.val() != null){
+
+                document.getElementById('data_result').innerHTML = "WITH DATA";
+
+                var actual_prod_array = [];
+                var pcs_batch_array = [];
+                var used_cement_array = [];
+                var bags_array = [];
                 
                 firebase.database().ref('Daily_Production_Report/'+plant+'/'+date_of_batch+'/Machine1').once('value', function(machine1Snapshot){
 
@@ -172,6 +205,25 @@
                             count++;
 
                         });
+
+                        var actual = machine1Snapshot.val().actual1_production;
+                        var pcs_batch = Number(actual) / Number(total);
+                        var used_cement = Number(kilos) * Number(total);
+                        var bags = Number(used_cement) / 40;
+
+                        actual_prod_array.push({actual: actual});
+                        pcs_batch_array.push({pcs_batch: pcs_batch});
+                        used_cement_array.push({used_cement: used_cement});
+                        bags_array.push({bags: bags});
+
+                        if(isNaN(pcs_batch)){
+                            pcs_batch = 0;
+                        }
+                        
+                        document.getElementById('machine1_total_pc').innerHTML = Number(actual).toLocaleString('en') + " pcs";
+                        document.getElementById('machine1_pcs_batch').innerHTML = Number(pcs_batch).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0}) + " pcs/batch";
+                        document.getElementById('machine1_used_cement').innerHTML = Number(used_cement).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0}) + " kg";
+                        document.getElementById('machine1_no_bags').innerHTML = Number(bags).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0}) + " bags"; 
                         
                         document.getElementById('machine1_total').innerHTML = Number(total).toLocaleString('en');
                     });
@@ -203,6 +255,25 @@
 
                         });
 
+                        var actual = Number(machine2Snapshot.val().actual2_production);
+                        var pcs_batch = Number(actual) / Number(total);
+                        var used_cement = Number(kilos) * Number(total);
+                        var bags = Number(used_cement) / 40;
+
+                        if(isNaN(pcs_batch)){
+                            pcs_batch = 0;
+                        }
+
+                        actual_prod_array.push({actual: actual});
+                        pcs_batch_array.push({pcs_batch: pcs_batch});
+                        used_cement_array.push({used_cement: used_cement});
+                        bags_array.push({bags: bags});
+                        
+                        document.getElementById('machine2_total_pc').innerHTML = Number(actual).toLocaleString('en') + " pcs";
+                        document.getElementById('machine2_pcs_batch').innerHTML = Number(pcs_batch).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0}) + " pcs/batch";
+                        document.getElementById('machine2_used_cement').innerHTML = Number(used_cement).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0}) + " kg";
+                        document.getElementById('machine2_no_bags').innerHTML = Number(bags).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0}) + " bags"; 
+
                         document.getElementById('machine2_total').innerHTML = Number(total).toLocaleString('en');
                     });
                 });
@@ -232,6 +303,25 @@
                             count++;
 
                         });
+
+                        var actual = Number(machine3Snapshot.val().actual3_production);
+                        var pcs_batch = Number(actual) / Number(total);
+                        var used_cement = Number(kilos) * Number(total);
+                        var bags = Number(used_cement) / 40;
+
+                        if(isNaN(pcs_batch)){
+                            pcs_batch = 0;
+                        }
+
+                        actual_prod_array.push({actual: actual});
+                        pcs_batch_array.push({pcs_batch: pcs_batch});
+                        used_cement_array.push({used_cement: used_cement});
+                        bags_array.push({bags: bags});
+                        
+                        document.getElementById('machine3_total_pc').innerHTML = Number(actual).toLocaleString('en') + " pcs";
+                        document.getElementById('machine3_pcs_batch').innerHTML = Number(pcs_batch).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0}) + " pcs/batch";
+                        document.getElementById('machine3_used_cement').innerHTML = Number(used_cement).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0}) + " kg";
+                        document.getElementById('machine3_no_bags').innerHTML = Number(bags).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0}) + " bags"; 
 
                         document.getElementById('machine3_total').innerHTML = Number(total).toLocaleString('en');
                     });
@@ -263,6 +353,25 @@
 
                         });
 
+                        var actual = Number(machine4Snapshot.val().actual4_production);
+                        var pcs_batch = Number(actual) / Number(total);
+                        var used_cement = Number(kilos) * Number(total);
+                        var bags = Number(used_cement) / 40;
+
+                        if(isNaN(pcs_batch)){
+                            pcs_batch = 0;
+                        }
+
+                        actual_prod_array.push({actual: actual});
+                        pcs_batch_array.push({pcs_batch: pcs_batch});
+                        used_cement_array.push({used_cement: used_cement});
+                        bags_array.push({bags: bags});
+                        
+                        document.getElementById('machine4_total_pc').innerHTML = Number(actual).toLocaleString('en') + " pcs";
+                        document.getElementById('machine4_pcs_batch').innerHTML = Number(pcs_batch).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0}) + " pcs/batch";
+                        document.getElementById('machine4_used_cement').innerHTML = Number(used_cement).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0}) + " kg";
+                        document.getElementById('machine4_no_bags').innerHTML = Number(bags).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0}) + " bags"; 
+
                         document.getElementById('machine4_total').innerHTML = Number(total).toLocaleString('en');
                     });
                 });
@@ -293,7 +402,52 @@
 
                         });
 
+                        var actual = Number(machine5Snapshot.val().actual5_production);
+                        var pcs_batch = Number(actual) / Number(total);
+                        var used_cement = Number(kilos) * Number(total);
+                        var bags = Number(used_cement) / 40;
+
+                        if(isNaN(pcs_batch)){
+                            pcs_batch = 0;
+                        }
+
+                        actual_prod_array.push({actual: actual});
+                        pcs_batch_array.push({pcs_batch: pcs_batch});
+                        used_cement_array.push({used_cement: used_cement});
+                        bags_array.push({bags: bags});
+                        
+                        document.getElementById('machine5_total_pc').innerHTML = Number(actual).toLocaleString('en') + " pcs";
+                        document.getElementById('machine5_pcs_batch').innerHTML = Number(pcs_batch).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0}) + " pcs/batch";
+                        document.getElementById('machine5_used_cement').innerHTML = Number(used_cement).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0}) + " kg";
+                        document.getElementById('machine5_no_bags').innerHTML = Number(bags).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0}) + " bags"; 
+
                         document.getElementById('machine5_total').innerHTML = Number(total).toLocaleString('en');
+
+                        var actual_prod_total = 0;
+                        var pcs_batch_total = 0;
+                        var used_cement_total = 0;
+                        var bags_total = 0;
+
+                        for(var i = 0; i < actual_prod_array.length; i++){
+                            actual_prod_total += Number(Number(actual_prod_array[i].actual).toFixed());
+                        }
+
+                        for(var i = 0; i < pcs_batch_array.length; i++){
+                            pcs_batch_total += Number(Number(pcs_batch_array[i].pcs_batch).toFixed());
+                        }
+
+                        for(var i = 0; i < used_cement_array.length; i++){
+                            used_cement_total += Number(Number(used_cement_array[i].used_cement).toFixed());
+                        }
+
+                        for(var i = 0; i < bags_array.length; i++){
+                            bags_total += Number(Number(bags_array[i].bags).toFixed());
+                        }
+
+                        document.getElementById('total_pc_sum').innerHTML = Number(actual_prod_total).toLocaleString('en') + " pcs";
+                        document.getElementById('pcs_batch_sum').innerHTML = Number(pcs_batch_total).toLocaleString('en') + " pcs/batch";
+                        document.getElementById('used_cement_sum').innerHTML = Number(used_cement_total).toLocaleString('en') + " kg";
+                        document.getElementById('no_bags_sum').innerHTML = Number(bags_total).toLocaleString('en') + " bags";
                     });
                 });
 
@@ -303,6 +457,37 @@
                 // window.location.reload();
                 // $(".se-pre-con").fadeOut("slow");
 
+                document.getElementById('data_result').innerHTML = "NO DATA";
+
+                document.getElementById('machine1_total_pc').innerHTML = "";
+                document.getElementById('machine1_pcs_batch').innerHTML = "";
+                document.getElementById('machine1_used_cement').innerHTML = "";
+                document.getElementById('machine1_no_bags').innerHTML = ""; 
+
+                document.getElementById('machine2_total_pc').innerHTML = "";
+                document.getElementById('machine2_pcs_batch').innerHTML = "";
+                document.getElementById('machine2_used_cement').innerHTML = "";
+                document.getElementById('machine2_no_bags').innerHTML = ""; 
+
+                document.getElementById('machine3_total_pc').innerHTML = "";
+                document.getElementById('machine3_pcs_batch').innerHTML = "";
+                document.getElementById('machine3_used_cement').innerHTML = "";
+                document.getElementById('machine3_no_bags').innerHTML = ""; 
+
+                document.getElementById('machine4_total_pc').innerHTML = "";
+                document.getElementById('machine4_pcs_batch').innerHTML = "";
+                document.getElementById('machine4_used_cement').innerHTML = "";
+                document.getElementById('machine4_no_bags').innerHTML = ""; 
+
+                document.getElementById('machine5_total_pc').innerHTML = "";
+                document.getElementById('machine5_pcs_batch').innerHTML = "";
+                document.getElementById('machine5_used_cement').innerHTML = "";
+                document.getElementById('machine5_no_bags').innerHTML = ""; 
+
+                document.getElementById('total_pc_sum').innerHTML = "";
+                document.getElementById('pcs_batch_sum').innerHTML = "";
+                document.getElementById('used_cement_sum').innerHTML = "";
+                document.getElementById('no_bags_sum').innerHTML = "";
 
                 document.getElementById('cement1').innerHTML = "";
                 document.getElementById('cement2').innerHTML = "";
@@ -522,6 +707,7 @@
                             <li><a class="" href="lineup.html?plant=Bravo">Line Up</a></li>
                             <li><a class="" href="diesel_category.html?plant=Bravo">Oil</a></li>
                             <li><a class="" href="parts.html?plant=Bravo">Parts</a></li>
+                            <li><a class="" href="receive_aggregates.html?plant=Bravo">Received</a></li>
                             <li><a class="" href="transmittal_input.html?plant=Bravo">Transmittal</a></li>
                         </ul>
                     </li>  
@@ -538,6 +724,7 @@
                             <li><a class="" href="lineup.html?plant=Delta">Line Up</a></li>
                             <li><a class="" href="diesel_category.html?plant=Delta">Oil</a></li>
                             <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
+                            <li><a class="" href="receive_aggregates.html?plant=Delta">Received</a></li>
                             <li><a class="" href="transmittal_input.html?plant=Delta">Transmittal</a></li>
                         </ul>
                     </li>  
@@ -571,13 +758,43 @@
                                         Date:
                                     </div>
                                     <button type="submit" class="btn btn-md btn-info" style="" onclick="submitForm()"><strong>Go</strong></button>
+                                    <button type="button" id="add_prod" class="btn btn-md btn-success" data-toggle="modal" data-target="#prod_modal"><strong>Available Date</strong></button>
+
+                                    <div class="modal fade" id="prod_modal" tabindex="-1" role="dialog" aria-labelledby="prod_modalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" id="prod_modalLabel"><strong>Available Date</strong></h4>
+                                              
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form class="form-horizontal">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label for="dropdown_date" class="col-md-3 control-label">Date</label>
+                                                                    <div class="col-md-8">
+                                                                        <select id="dropdown_date" class="form-control""></select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><strong>Close</strong></button>
+                                                    <button type="button" id="btn_prod" class="btn btn-primary" onclick="if(confirm('Proceed?')){ submitDate();}else{ event.preventDefault(); }"><strong>Done</strong></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-md-2">
                                         <input type="date" name="date_selected" id="date_selected" class="form-control" required>
                                     </div>
 
-                                    <div class="col-md-2 pull-right" style="margin-right: -50px">
+                                    <!-- <div class="col-md-2 pull-right" style="margin-right: -50px">
                                         <span id="view_btn"></span> 
-                                    </div>
+                                    </div> -->
                                 </div>  
                             </header>
                             <div class="panel-body">
@@ -585,7 +802,8 @@
                                     <thead>
                                         <tr>
                                             <th colspan="11">
-                                                Date:  <strong><span id="searched_Date"></span></strong>
+                                                Date:  <strong><span id="searched_Date"></span></strong><br>
+                                                Result: <span id="data_result"></span>
                                             </th>
                                         </tr>
                                         <tr>
@@ -886,6 +1104,57 @@
                                             <td colspan="2" class="text_center hour_color"><span id="machine3_total"></span></td>
                                             <td colspan="2" class="text_center hour_color"><span id="machine4_total"></span></td>
                                             <td colspan="2" class="text_center hour_color"><span id="machine5_total"></span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2" class="text_center"></th>
+                                            <th colspan="2" class="text_center">MACHINE 1</th>
+                                            <th colspan="2" class="text_center">MACHINE 2</th>
+                                            <th colspan="2" class="text_center">MACHINE 3</th>
+                                            <th colspan="2" class="text_center">MACHINE 4</th>
+                                            <th colspan="2" class="text_center">MACHINE 5</th>
+                                            <th colspan="2" class="text_center">TOTAL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2" class="text_center time_color"><strong>TOTAL NO. OF PCS</strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine1_total_pc"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine2_total_pc"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine3_total_pc"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine4_total_pc"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine5_total_pc"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="total_pc_sum"></span></strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="text_center time_color"><strong>PCS / BATCH</strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine1_pcs_batch"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine2_pcs_batch"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine3_pcs_batch"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine4_pcs_batch"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine5_pcs_batch"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="pcs_batch_sum"></span></strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="text_center time_color"><strong>USED CEMENT</strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine1_used_cement"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine2_used_cement"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine3_used_cement"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine4_used_cement"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine5_used_cement"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="used_cement_sum"></span></strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="text_center time_color"><strong>NO. OF BAGS</strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine1_no_bags"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine2_no_bags"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine3_no_bags"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine4_no_bags"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="machine5_no_bags"></span></strong></td>
+                                            <td colspan="2" class="text_center"><strong><span id="no_bags_sum"></span></strong></td>
                                         </tr>
                                     </tbody>
                                 </table>
