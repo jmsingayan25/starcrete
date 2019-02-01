@@ -163,467 +163,524 @@
                 $(".no_data_text").hide();
                 $(".btn-print").show();
 
+                var total_employee_array = [];
+
                 document.getElementById('id_time').innerHTML = "Time: "+ tableContentSnapshot.val().schedule;
 
                 firebase.database().ref('attendance/'+plant+'/'+currentDate+'/machine1').orderByChild('employee_name').once('value', function(machine1Snapshot){
-                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/machine3').orderByChild('employee_name').once('value', function(machine3Snapshot){
-                        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/forklift_operator').orderByChild('employee_name').once('value', function(forkliftSnapshot){
-                            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/mechanic').orderByChild('employee_name').once('value', function(mechanicSnapshot){
-                        
-                                machine1Count = 0;
-                                machine3Count = 0;
-                                mechanicCount = 0;
-                                forkliftCount = 0;
 
-                                myTableRow1 += "<tr><td>";
+                    myTableRow1 += "<tr><td>";
+                    machine1Count = 0;
 
-                                machine1Snapshot.forEach(function(machine1ChildSnapshot){
+                    machine1Snapshot.forEach(function(machine1ChildSnapshot){
 
-                                    var employee_name = machine1ChildSnapshot.val().employee_name;
-                                    var position = machine1ChildSnapshot.val().employee_position;
+                        var employee_name = machine1ChildSnapshot.val().employee_name;
+                        var position = machine1ChildSnapshot.val().employee_position;
 
-                                    if(employee_name != "N/A"){
+                        if(employee_name != "N/A"){
 
-                                        myTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong> - " + position + "</div></div>";
+                            myTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong> - " + position + "</div></div>";
 
-                                        machine1Count++;
-                                    }
-                                });
-
-                                if(machine1Count == 0){
-                                    myTableRow1 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
-                                }
-
-                                document.getElementById('badge_machine1').innerHTML = machine1Count;
-
-                                myTableRow1 += "</td><td>";
-                                machine3Snapshot.forEach(function(machine3ChildSnapshot){
-
-                                    var employee_name = machine3ChildSnapshot.val().employee_name;
-                                    var position = machine3ChildSnapshot.val().employee_position;
-
-                                    if(employee_name != "N/A"){
-
-                                        myTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong> - " + position + "</div></div>";
-
-                                        machine3Count++;
-                                    }
-                                });
-
-                                if(machine3Count == 0){
-                                    myTableRow1 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
-                                }
-
-                                document.getElementById('badge_machine3').innerHTML = machine3Count;
-
-                                myTableRow1 += "</td><td>";
-                                forkliftSnapshot.forEach(function(forkliftChildSnapshot){
-
-                                    var operator = forkliftChildSnapshot.val().operator;
-                                    
-                                    if(operator != "N/A"){
-                                        myTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + operator + "</strong></div></div>";
-
-                                        forkliftCount++;
-                                    }
-                                });
-
-                                if(forkliftCount == 0){
-                                    myTableRow1 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
-                                }
-
-                                document.getElementById('badge_forklift').innerHTML = forkliftCount;
-
-                                myTableRow1 += "</td><td>";
-
-                                mechanicSnapshot.forEach(function(mechanicChildSnapshot){
-
-                                    var employee_name = mechanicChildSnapshot.val().employee_name;
-
-                                    if(employee_name != "N/A"){
-
-                                        myTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
-
-                                        mechanicCount++;
-                                    }
-                                });
-
-                                if(mechanicCount == 0){
-                                    myTableRow1 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
-                                }
-
-                                document.getElementById('badge_mechanic').innerHTML = mechanicCount;
-
-                                myTableRow1 += "</td></tr>";
-
-                                document.getElementById('row1_list').innerHTML = myTableRow1;
-                            });
-                        });
+                            machine1Count++;
+                        }
                     });
+
+                    if(machine1Count == 0){
+                        myTableRow1 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                    }
+
+                    document.getElementById('badge_machine1').innerHTML = machine1Count;
+
+                    total_employee_array.push({count: machine1Count});
+
+                    myTableRow1 += "</td>";
                 });
 
-                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid1/employee').orderByChild('employee_name').once('value', function(nonskid1Snapshot){
-                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid2/employee').orderByChild('employee_name').once('value', function(nonskid2Snapshot){
-                        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid3/employee').orderByChild('employee_name').once('value', function(nonskid3Snapshot){
-                            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid4/employee').orderByChild('employee_name').once('value', function(nonskid4Snapshot){
-                                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid1/helper').orderByChild('employee_name').once('value', function(nonskid1HelperSnapshot){
-                                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid2/helper').orderByChild('employee_name').once('value', function(nonskid2HelperSnapshot){
-                                        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid3/helper').orderByChild('employee_name').once('value', function(nonskid3HelperSnapshot){
-                                            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid4/helper').orderByChild('employee_name').once('value', function(nonskid4HelperSnapshot){
+                
+                
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/machine3').orderByChild('employee_name').once('value', function(machine3Snapshot){
 
-                                                var nonskid1Count = 0;
-                                                var nonskid2Count = 0;
-                                                var nonskid3Count = 0;
-                                                var nonskid4Count = 0;
+                    myTableRow1 += "<td>";
+                    machine3Count = 0;
 
-                                                myTableRow2 += "<tr><td>";
+                    machine3Snapshot.forEach(function(machine3ChildSnapshot){
 
-                                                nonskid1Snapshot.forEach(function(nonskid1ChildSnapshot){
+                        var employee_name = machine3ChildSnapshot.val().employee_name;
+                        var position = machine3ChildSnapshot.val().employee_position;
 
-                                                    var employee_name = nonskid1ChildSnapshot.val().employee_name;
+                        if(employee_name != "N/A"){
 
-                                                    if(employee_name != "N/A"){
+                            myTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong> - " + position + "</div></div>";
 
-                                                        myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
-
-                                                        nonskid1Count++;
-                                                    }
-                                                });
-
-                                                if(nonskid1Count == 0){
-                                                    myTableRow2 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
-                                                }
-
-                                                myTableRow2 += "</td><td>";
-
-                                                nonskid2Snapshot.forEach(function(nonskid2ChildSnapshot){
-
-                                                    var employee_name = nonskid2ChildSnapshot.val().employee_name;
-
-                                                    if(employee_name != "N/A"){
-    
-                                                        myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
-
-                                                        nonskid2Count++;
-                                                    }
-                                                });
-
-                                                if(nonskid2Count == 0){
-                                                    myTableRow2 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
-                                                }
-
-                                                myTableRow2 += "</td><td>";
-
-                                                nonskid3Snapshot.forEach(function(nonskid3ChildSnapshot){
-
-                                                    var employee_name = nonskid3ChildSnapshot.val().employee_name;
-
-                                                    if(employee_name != "N/A"){
-
-                                                        myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
-
-                                                        nonskid3Count++;
-                                                    }
-                                                });
-
-                                                if(nonskid3Count == 0){
-                                                    myTableRow2 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
-                                                }
-
-                                                myTableRow2 += "</td><td>";
-
-                                                nonskid4Snapshot.forEach(function(nonskid4ChildSnapshot){
-
-                                                    var employee_name = nonskid4ChildSnapshot.val().employee_name;
-
-                                                    if(employee_name != "N/A"){
-
-                                                        myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
-
-                                                        nonskid4Count++;
-                                                    }
-                                                });
-
-                                                if(nonskid4Count == 0){
-                                                    myTableRow2 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
-                                                }
-
-                                                myTableRow2 += "</td></tr><tr><td>";
-
-                                                nonskid1HelperSnapshot.forEach(function(nonskid1HelperChildSnapshot){
-
-                                                    var helper_name = nonskid1HelperChildSnapshot.val().helper_name;
-
-                                                    if(helper_name == "N/A"){
-                                                        var ext = "N/A";
-                                                    }else{
-                                                        var ext = "<strong>" + helper_name + "</strong>";
-
-                                                        nonskid1Count++;
-                                                    }
-                                                    myTableRow2 += "Helper: " + ext;
-                                                });
-
-                                                myTableRow2 += "</td><td>";
-
-                                                nonskid2HelperSnapshot.forEach(function(nonskid2HelperChildSnapshot){
-
-                                                    var helper_name = nonskid2HelperChildSnapshot.val().helper_name;
-
-                                                    if(helper_name == "N/A"){
-                                                        var ext = "N/A";
-                                                    }else{
-                                                        var ext = "<strong>" + helper_name + "</strong>";
-
-                                                        nonskid2Count++;
-                                                    }
-
-                                                    myTableRow2 += "Helper: " + ext;
-                                                });
-
-                                                myTableRow2 += "</td><td>";
-
-                                                nonskid3HelperSnapshot.forEach(function(nonskid3HelperChildSnapshot){
-
-                                                    var helper_name = nonskid3HelperChildSnapshot.val().helper_name;
-
-                                                    if(helper_name == "N/A"){
-                                                        var ext = "N/A";
-                                                    }else{
-                                                        var ext = "<strong>" + helper_name + "</strong>";
-
-                                                        nonskid3Count++;
-                                                    }
-
-                                                    myTableRow2 += "Helper: " + ext;
-                                                });
-
-                                                myTableRow2 += "</td><td>";
-
-                                                nonskid4HelperSnapshot.forEach(function(nonskid4HelperChildSnapshot){
-
-                                                    var helper_name = nonskid4HelperChildSnapshot.val().helper_name;
-
-                                                    if(helper_name == "N/A"){
-                                                        var ext = "N/A";
-                                                    }else{
-                                                        var ext = "<strong>" + helper_name + "</strong>";
-
-                                                        nonskid4Count++;
-                                                    }
-
-                                                    myTableRow2 += "Helper: " + ext;
-                                                });
-                                                
-                                                myTableRow2 += "</td></tr>";
-
-                                                document.getElementById('row2_list').innerHTML = myTableRow2;
-
-                                                document.getElementById('badge_ns1').innerHTML = nonskid1Count;
-                                                document.getElementById('badge_ns2').innerHTML = nonskid2Count;
-                                                document.getElementById('badge_ns3').innerHTML = nonskid3Count;
-                                                document.getElementById('badge_ns4').innerHTML = nonskid4Count;
-
-                                                $(".se-pre-con").fadeOut("slow");
-                                            });
-                                        });
-                                    });
-                                });
-                            });
-                        });
+                            machine3Count++;
+                        }
                     });
+
+                    if(machine3Count == 0){
+                        myTableRow1 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                    }
+
+                    document.getElementById('badge_machine3').innerHTML = machine3Count;
+
+                    total_employee_array.push({count: machine3Count});
+
+                    myTableRow1 += "</td>";
+                });
+
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/forklift_operator').orderByChild('employee_name').once('value', function(forkliftSnapshot){
+
+                    myTableRow1 += "<td>";
+                    forkliftCount = 0;
+
+                    forkliftSnapshot.forEach(function(forkliftChildSnapshot){
+
+                        var operator = forkliftChildSnapshot.val().operator;
+                        
+                        if(operator != "N/A"){
+                            myTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + operator + "</strong></div></div>";
+
+                            forkliftCount++;
+                        }
+                    });
+
+                    if(forkliftCount == 0){
+                        myTableRow1 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                    }
+
+                    document.getElementById('badge_forklift').innerHTML = forkliftCount;
+
+                    total_employee_array.push({count: forkliftCount});
+
+                    myTableRow1 += "</td>";
+                });
+                
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/mechanic').orderByChild('employee_name').once('value', function(mechanicSnapshot){
+                             
+                    myTableRow1 += "<td>";
+                    mechanicCount = 0;
+
+                    mechanicSnapshot.forEach(function(mechanicChildSnapshot){
+
+                        var employee_name = mechanicChildSnapshot.val().employee_name;
+
+                        if(employee_name != "N/A"){
+
+                            myTableRow1 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
+
+                            mechanicCount++;
+                        }
+                    });
+
+                    if(mechanicCount == 0){
+                        myTableRow1 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                    }
+
+                    document.getElementById('badge_mechanic').innerHTML = mechanicCount;
+
+                    total_employee_array.push({count: mechanicCount});
+
+                    myTableRow1 += "</td></tr>";
+
+                    document.getElementById('row1_list').innerHTML = myTableRow1;
+                });
+
+                var nonskid1Count = 0;
+                var nonskid2Count = 0;
+                var nonskid3Count = 0;
+                var nonskid4Count = 0;
+
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid1/employee').orderByChild('employee_name').once('value', function(nonskid1Snapshot){
+
+                    myTableRow2 += "<tr><td>";
+
+                    nonskid1Snapshot.forEach(function(nonskid1ChildSnapshot){
+
+                        var employee_name = nonskid1ChildSnapshot.val().employee_name;
+
+                        if(employee_name != "N/A"){
+
+                            myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
+
+                            nonskid1Count++;
+                        }
+                    });
+
+                    if(nonskid1Count == 0){
+                        myTableRow2 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                    }
+
+                    myTableRow2 += "</td><td>";
+                });
+                
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid2/employee').orderByChild('employee_name').once('value', function(nonskid2Snapshot){
+
+                    nonskid2Snapshot.forEach(function(nonskid2ChildSnapshot){
+
+                        var employee_name = nonskid2ChildSnapshot.val().employee_name;
+
+                        if(employee_name != "N/A"){
+
+                            myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
+
+                            nonskid2Count++;
+                        }
+                    });
+
+                    if(nonskid2Count == 0){
+                        myTableRow2 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                    }
+
+                    myTableRow2 += "</td><td>";
+
+                });
+                
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid3/employee').orderByChild('employee_name').once('value', function(nonskid3Snapshot){
+
+                    nonskid3Snapshot.forEach(function(nonskid3ChildSnapshot){
+
+                        var employee_name = nonskid3ChildSnapshot.val().employee_name;
+
+                        if(employee_name != "N/A"){
+
+                            myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
+
+                            nonskid3Count++;
+                        }
+                    });
+
+                    if(nonskid3Count == 0){
+                        myTableRow2 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                    }
+
+                    myTableRow2 += "</td><td>";
+                });
+       
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid4/employee').orderByChild('employee_name').once('value', function(nonskid4Snapshot){
+
+                    nonskid4Snapshot.forEach(function(nonskid4ChildSnapshot){
+
+                        var employee_name = nonskid4ChildSnapshot.val().employee_name;
+
+                        if(employee_name != "N/A"){
+
+                            myTableRow2 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
+
+                            nonskid4Count++;
+                        }
+                    });
+
+                    if(nonskid4Count == 0){
+                        myTableRow2 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                    }
+
+                    myTableRow2 += "</td></tr><tr><td>";
+                });
+                
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid1/helper').orderByChild('employee_name').once('value', function(nonskid1HelperSnapshot){
+
+                    nonskid1HelperSnapshot.forEach(function(nonskid1HelperChildSnapshot){
+
+                        var helper_name = nonskid1HelperChildSnapshot.val().helper_name;
+
+                        if(helper_name == "N/A"){
+                            var ext = "N/A";
+                        }else{
+                            var ext = "<strong>" + helper_name + "</strong>";
+
+                            nonskid1Count++;
+                        }
+                        myTableRow2 += "Helper: " + ext;
+                    });
+
+                    myTableRow2 += "</td><td>";
+
+                    document.getElementById('badge_ns1').innerHTML = nonskid1Count;
+                    total_employee_array.push({count: nonskid1Count});
+                });
+                
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid2/helper').orderByChild('employee_name').once('value', function(nonskid2HelperSnapshot){
+
+                    nonskid2HelperSnapshot.forEach(function(nonskid2HelperChildSnapshot){
+
+                        var helper_name = nonskid2HelperChildSnapshot.val().helper_name;
+
+                        if(helper_name == "N/A"){
+                            var ext = "N/A";
+                        }else{
+                            var ext = "<strong>" + helper_name + "</strong>";
+
+                            nonskid2Count++;
+                        }
+
+                        myTableRow2 += "Helper: " + ext;
+                    });
+
+                    myTableRow2 += "</td><td>";
+
+                    document.getElementById('badge_ns2').innerHTML = nonskid2Count;
+                    total_employee_array.push({count: nonskid2Count});
+                });
+
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid3/helper').orderByChild('employee_name').once('value', function(nonskid3HelperSnapshot){
+
+                    nonskid3HelperSnapshot.forEach(function(nonskid3HelperChildSnapshot){
+
+                        var helper_name = nonskid3HelperChildSnapshot.val().helper_name;
+
+                        if(helper_name == "N/A"){
+                            var ext = "N/A";
+                        }else{
+                            var ext = "<strong>" + helper_name + "</strong>";
+
+                            nonskid3Count++;
+                        }
+
+                        myTableRow2 += "Helper: " + ext;
+                    });
+
+                    myTableRow2 += "</td><td>";
+
+                    document.getElementById('badge_ns3').innerHTML = nonskid3Count;
+                    total_employee_array.push({count: nonskid3Count});
+                });
+                
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid4/helper').orderByChild('employee_name').once('value', function(nonskid4HelperSnapshot){
+
+                    nonskid4HelperSnapshot.forEach(function(nonskid4HelperChildSnapshot){
+
+                        var helper_name = nonskid4HelperChildSnapshot.val().helper_name;
+
+                        if(helper_name == "N/A"){
+                            var ext = "N/A";
+                        }else{
+                            var ext = "<strong>" + helper_name + "</strong>";
+
+                            nonskid4Count++;
+                        }
+
+                        myTableRow2 += "Helper: " + ext;
+                    });
+                    
+                    myTableRow2 += "</td></tr>";
+
+                    document.getElementById('row2_list').innerHTML = myTableRow2;
+
+                    document.getElementById('badge_ns4').innerHTML = nonskid4Count;
+                    total_employee_array.push({count: nonskid4Count});
+
+                    $(".se-pre-con").fadeOut("slow");
                 });
 
                 firebase.database().ref('attendance/'+plant+'/'+currentDate+'/tagapukpok').orderByChild('employee_name').once('value', function(tagapukpokSnapshot){
-                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/checker').orderByChild('employee_name').once('value', function(checkerSnapshot){
 
-                        tagapukpokCount = 0;
-                        checkerCount = 0;
+                    tagapukpokCount = 0;
 
-                        myTableRow3 += "<tr><td colspan='2'>";
+                    myTableRow3 += "<tr><td colspan='2'>";
 
-                        tagapukpokSnapshot.forEach(function(tagapukpokChildSnapshot){
+                    tagapukpokSnapshot.forEach(function(tagapukpokChildSnapshot){
 
-                            var employee_name = tagapukpokChildSnapshot.val().employee_name;
-                            var position = tagapukpokChildSnapshot.val().employee_position;
+                        var employee_name = tagapukpokChildSnapshot.val().employee_name;
+                        var position = tagapukpokChildSnapshot.val().employee_position;
 
-                            if(employee_name != "N/A"){
+                        if(employee_name != "N/A"){
 
-                                myTableRow3 += "<div class='row'><div class='col-md-12'><strong>" + tagapukpokChildSnapshot.val().employee_name + "</strong> - " + tagapukpokChildSnapshot.val().employee_position + "</div></div>";
+                            myTableRow3 += "<div class='row'><div class='col-md-12'><strong>" + tagapukpokChildSnapshot.val().employee_name + "</strong> - " + tagapukpokChildSnapshot.val().employee_position + "</div></div>";
 
-                                tagapukpokCount++;
-                            }
-                        });
-
-                        if(tagapukpokCount == 0){
-                            myTableRow3 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                            tagapukpokCount++;
                         }
-
-                        document.getElementById('badge_tagapukpok').innerHTML = tagapukpokCount;
-
-                        myTableRow3 += "</td><td colspan='2'>";
-                        checkerSnapshot.forEach(function(checkerChildSnapshot){
-
-                            var employee_name = checkerChildSnapshot.val().employee_name;
-                            var position = checkerChildSnapshot.val().employee_position;
-
-                            if(employee_name != "N/A"){
-
-                                myTableRow3 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong> - " + position + "</div></div>";
-
-                                checkerCount++;
-                            }
-                        });
-
-                        if(checkerCount == 0){
-                            myTableRow3 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
-                        }
-
-                        document.getElementById('badge_checker').innerHTML = checkerCount;
-
-                        myTableRow3 += "</td></tr>";
-
-                        document.getElementById('row3_list').innerHTML = myTableRow3;
-
                     });
+
+                    if(tagapukpokCount == 0){
+                        myTableRow3 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                    }
+
+                    document.getElementById('badge_tagapukpok').innerHTML = tagapukpokCount;
+
+                    myTableRow3 += "</td><td colspan='2'>";
+
+                    total_employee_array.push({count: tagapukpokCount});
+                });
+
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/checker').orderByChild('employee_name').once('value', function(checkerSnapshot){
+
+                    checkerCount = 0;
+  
+                    checkerSnapshot.forEach(function(checkerChildSnapshot){
+
+                        var employee_name = checkerChildSnapshot.val().employee_name;
+                        var position = checkerChildSnapshot.val().employee_position;
+
+                        if(employee_name != "N/A"){
+
+                            myTableRow3 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong> - " + position + "</div></div>";
+
+                            checkerCount++;
+                        }
+                    });
+
+                    if(checkerCount == 0){
+                        myTableRow3 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                    }
+
+                    document.getElementById('badge_checker').innerHTML = checkerCount;
+
+                    myTableRow3 += "</td></tr>";
+
+                    document.getElementById('row3_list').innerHTML = myTableRow3;
+
+                    total_employee_array.push({count: checkerCount});
                 });
 
                 firebase.database().ref('attendance/'+plant+'/'+currentDate+'/kamador').orderByChild('employee_name').once('value', function(kamadorSnapshot){
-                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/loader').orderByChild('employee_name').once('value', function(loaderSnapshot){
-                        
-                        kamadorCount = 0;
-                        loaderCount = 0;
 
-                        myTableRow4 += "<tr><td colspan='2'>";
+                    kamadorCount = 0;
 
-                        kamadorSnapshot.forEach(function(kamadorChildSnapshot){
+                    myTableRow4 += "<tr><td colspan='2'>";
 
-                            var employee_name = kamadorChildSnapshot.val().employee_name;
+                    kamadorSnapshot.forEach(function(kamadorChildSnapshot){
 
-                            if(employee_name != "N/A"){
+                        var employee_name = kamadorChildSnapshot.val().employee_name;
 
-                                myTableRow4 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
+                        if(employee_name != "N/A"){
 
-                                kamadorCount++;
-                            }
-                        });
+                            myTableRow4 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
 
-                        if(kamadorCount == 0){
-                            myTableRow4 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                            kamadorCount++;
                         }
-
-                        document.getElementById('badge_kamador').innerHTML = kamadorCount;
-
-                        myTableRow4 += "</td><td colspan='2'>";
-                        loaderSnapshot.forEach(function(loaderChildSnapshot){
-
-                            var employee_name = loaderChildSnapshot.val().employee_name;
-
-                            if(employee_name != "N/A"){
-
-                                myTableRow4 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
-
-                                loaderCount++;
-                            }
-                        });
-
-                        if(loaderCount == 0){
-                            myTableRow4 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
-                        }
-
-                        document.getElementById('badge_loader').innerHTML = loaderCount;
-
-                        myTableRow4 += "</td></tr>";
-
-                        document.getElementById('row4_list').innerHTML = myTableRow4;
-                                
                     });
+
+                    if(kamadorCount == 0){
+                        myTableRow4 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                    }
+
+                    document.getElementById('badge_kamador').innerHTML = kamadorCount;
+
+                    myTableRow4 += "</td><td colspan='2'>";
+
+                    total_employee_array.push({count: kamadorCount});
                 });
 
-                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/motorpool').orderByChild('employee_name').once('value', function(absentMotorpoolSnapshot){
-                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/plant').orderByChild('employee_name').once('value', function(absentPlantSnapshot){
-                        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/trucking').orderByChild('employee_name').once('value', function(absentTruckingSnapshot){
-                            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/others').orderByChild('employee_name').once('value', function(othersSnapshot){
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/loader').orderByChild('employee_name').once('value', function(loaderSnapshot){
 
-                                absentCount = 0;
-                                othersCount = 0;
+                    loaderCount = 0;
+ 
+                    loaderSnapshot.forEach(function(loaderChildSnapshot){
 
-                                myTableRow5 += "<tr><td colspan='2'>";
+                        var employee_name = loaderChildSnapshot.val().employee_name;
 
-                                othersSnapshot.forEach(function(othersChildSnapshot){
+                        if(employee_name != "N/A"){
 
-                                    var employee_name = othersChildSnapshot.val().employee_name;
-                                    var position = othersChildSnapshot.val().employee_position;
+                            myTableRow4 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong></div></div>";
 
-                                    if(employee_name != "N/A"){
-
-                                        myTableRow5 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong> - " + position + "</div></div>";
-
-                                        othersCount++;
-                                    }
-                                });
-
-                                if(othersCount == 0){
-                                    myTableRow5 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
-                                }
-
-                                document.getElementById('badge_others').innerHTML = othersCount;
-
-                                myTableRow5 += "</td><td colspan='2'>";
-
-                                absentMotorpoolSnapshot.forEach(function(absentMotorpoolChildSnapshot){
-
-                                    var employee_name = absentMotorpoolChildSnapshot.val().employee_name;
-                                    var comment = absentMotorpoolChildSnapshot.val().employee_comment;
-
-                                    if(employee_name != "N/A"){
-
-                                        myTableRow5 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong> - " + comment + "</div></div>";
-
-                                        absentCount++;
-
-                                    }
-                                });
-
-                                absentPlantSnapshot.forEach(function(absentPlantChildSnapshot){
-
-                                    var employee_name = absentPlantChildSnapshot.val().employee_name;
-                                    var comment = absentPlantChildSnapshot.val().employee_comment;
-
-                                    if(employee_name != "N/A"){
-
-                                        myTableRow5 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong> - " + comment + "</div></div>";
-
-                                        absentCount++;
-                                    }
-                                });
-
-                                absentTruckingSnapshot.forEach(function(absentTruckingChildSnapshot){
-
-                                    var employee_name = absentTruckingChildSnapshot.val().employee_name;
-                                    var comment = absentTruckingChildSnapshot.val().employee_comment;
-
-                                    if(employee_name != "N/A"){
-
-                                        myTableRow5 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong> - " + comment + "</div></div>";
-
-                                        absentCount++;
-                                    }
-                                });
-
-                                if(absentCount == 0){
-                                    myTableRow5 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
-                                }
-
-                                document.getElementById('badge_absent').innerHTML = absentCount;
-
-                                myTableRow5 += "</td></tr>";
-
-                                document.getElementById('row5_list').innerHTML = myTableRow5;
-
-                            });
-                        });
+                            loaderCount++;
+                        }
                     });
+
+                    if(loaderCount == 0){
+                        myTableRow4 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                    }
+
+                    document.getElementById('badge_loader').innerHTML = loaderCount;
+
+                    myTableRow4 += "</td></tr>";
+
+                    document.getElementById('row4_list').innerHTML = myTableRow4;
+
+                    total_employee_array.push({count: loaderCount});
+                            
+                });
+
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/others').orderByChild('employee_name').once('value', function(othersSnapshot){
+
+                    othersCount = 0;
+
+                    myTableRow5 += "<tr><td colspan='2'>";
+
+                    othersSnapshot.forEach(function(othersChildSnapshot){
+
+                        var employee_name = othersChildSnapshot.val().employee_name;
+                        var position = othersChildSnapshot.val().employee_position;
+
+                        if(employee_name != "N/A"){
+
+                            myTableRow5 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong> - " + position + "</div></div>";
+
+                            othersCount++;
+                        }
+                    });
+
+                    if(othersCount == 0){
+                        myTableRow5 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                    }
+
+                    document.getElementById('badge_others').innerHTML = othersCount;
+
+                    myTableRow5 += "</td><td colspan='2'>";
+
+                    total_employee_array.push({count: othersCount});
+                });
+
+                absentCount = 0;
+
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/motorpool').orderByChild('employee_name').once('value', function(absentMotorpoolSnapshot){
+
+                    absentMotorpoolSnapshot.forEach(function(absentMotorpoolChildSnapshot){
+
+                        var employee_name = absentMotorpoolChildSnapshot.val().employee_name;
+                        var comment = absentMotorpoolChildSnapshot.val().employee_comment;
+
+                        if(employee_name != "N/A"){
+
+                            myTableRow5 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong> - " + comment + "</div></div>";
+
+                            absentCount++;
+
+                        }
+                    });
+                });
+                
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/plant').orderByChild('employee_name').once('value', function(absentPlantSnapshot){
+
+                    absentPlantSnapshot.forEach(function(absentPlantChildSnapshot){
+
+                        var employee_name = absentPlantChildSnapshot.val().employee_name;
+                        var comment = absentPlantChildSnapshot.val().employee_comment;
+
+                        if(employee_name != "N/A"){
+
+                            myTableRow5 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong> - " + comment + "</div></div>";
+
+                            absentCount++;
+                        }
+                    });
+                });
+            
+                firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/trucking').orderByChild('employee_name').once('value', function(absentTruckingSnapshot){
+
+                    absentTruckingSnapshot.forEach(function(absentTruckingChildSnapshot){
+
+                        var employee_name = absentTruckingChildSnapshot.val().employee_name;
+                        var comment = absentTruckingChildSnapshot.val().employee_comment;
+
+                        if(employee_name != "N/A"){
+
+                            myTableRow5 += "<div class='row'><div class='col-md-12'><strong>" + employee_name + "</strong> - " + comment + "</div></div>";
+
+                            absentCount++;
+                        }
+                    });
+
+                    if(absentCount == 0){
+                        myTableRow5 += "<div class='row'><div class='col-md-12'>N/A</div></div>";
+                    }
+
+                    document.getElementById('badge_absent').innerHTML = absentCount;
+
+                    myTableRow5 += "</td></tr>";
+
+                    document.getElementById('row5_list').innerHTML = myTableRow5;
+
+                    total_employee_array.push({count: absentCount});
                 });
 
                 firebase.database().ref('attendance/'+plant+'/'+currentDate+'/comment').once('value', function(commentSnapshot){
@@ -672,6 +729,17 @@
                     document.getElementById('row7_list').innerHTML = myTableRow7;
 
                     document.getElementById('badge_trucking').innerHTML = truckingCount;
+
+                    total_employee_array.push({count: truckingCount});
+
+                    var total_employee_sum = 0;
+
+                    for(var i = 0; i < total_employee_array.length; i++){
+
+                        total_employee_sum += (Number(total_employee_array[i].count));
+                    }
+
+                    document.getElementById('total_employee').innerHTML = total_employee_sum;
                 });
 
                 // firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new').once('value', function(newlineupSnapshot){

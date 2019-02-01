@@ -428,6 +428,8 @@
                         var used_cement_total = 0;
                         var bags_total = 0;
 
+                        console.log(actual_prod_array);
+
                         for(var i = 0; i < actual_prod_array.length; i++){
                             actual_prod_total += Number(Number(actual_prod_array[i].actual).toFixed());
                         }
@@ -611,6 +613,13 @@
         });
     }
 
+    function summaryPage(){
+
+        event.preventDefault();
+
+        window.location.href = 'view_batch_report_summary.html?plant='+plant;
+    }
+
 </script>
 <style>
 .text_center{
@@ -783,11 +792,12 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal"><strong>Close</strong></button>
-                                                    <button type="button" id="btn_prod" class="btn btn-primary" onclick="if(confirm('Proceed?')){ submitDate();}else{ event.preventDefault(); }"><strong>Done</strong></button>
+                                                    <button type="button" id="btn_prod" class="btn btn-primary" onclick="if(confirm('Proceed?')){ submitDate();}else{event.preventDefault(); }"><strong>Done</strong></button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <button type="button" class="btn btn-md btn-primary" onclick="summaryPage();"><strong>Monthly Summary</strong></button>
                                     <div class="col-md-2">
                                         <input type="date" name="date_selected" id="date_selected" class="form-control" required>
                                     </div>
