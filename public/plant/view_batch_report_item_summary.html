@@ -8,7 +8,7 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="../img/favicon.png">
 
-    <title>Received Aggregates</title>
+    <title>Batch Report Summary</title>
 
     <!-- Firebase App is always required and must be first -->
     <!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
@@ -81,59 +81,11 @@
     <script src="../js/jquery.slimscroll.min.js"></script>
     <script src="../js_config/function.js"></script>
 
-    <!-- Custom Javascript Datepicker -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-
 <script>
 
     var plant = "";
-    var fromDate = "";
-    var endDate = "";
 
     $(document).ready(function(){
-
-        $('.filterable .btn-filter').click(function(){
-            var $panel = $(this).parents('.filterable'),
-            $filters = $panel.find('.filters input'),
-            $tbody = $panel.find('.table tbody');
-            if ($filters.prop('disabled') == true) {
-                $filters.prop('disabled', false);
-                $filters.first().focus();
-            } else {
-                $filters.val('').prop('disabled', true);
-                $tbody.find('.no-result').remove();
-                $tbody.find('tr').show();
-            }
-        });
-
-        $('.filterable .filters input').keyup(function(e){
-            /* Ignore tab key */
-            var code = e.keyCode || e.which;
-            if (code == '9') return;
-            /* Useful DOM data and selectors */
-            var $input = $(this),
-            inputContent = $input.val().toLowerCase(),
-            $panel = $input.parents('.filterable'),
-            column = $panel.find('.filters th').index($input.parents('th')),
-            $table = $panel.find('.table'),
-            $rows = $table.find('tbody tr');
-            /* Dirtiest filter function ever ;) */
-            var $filteredRows = $rows.filter(function(){
-                var value = $(this).find('td').eq(column).text().toLowerCase();
-                return value.indexOf(inputContent) === -1;
-            });
-            /* Clean previous no-result if exist */
-            $table.find('tbody .no-result').remove();
-            /* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
-            $rows.show();
-            $filteredRows.hide();
-            /* Prepend no-result row if all rows are filtered */
-            if ($filteredRows.length === $rows.length) {
-                 $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="10" style="min-height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
-            }
-        });
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -148,127 +100,281 @@
                         window.location.href = '../headoffice/index.html';
                     }
 
+                    Go();
+                    viewList();
                     displayNotif();
-
+                    
                     if(plant == 'Bravo'){
                         plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
                     }else{
                         plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
                     }
-            
+
                     document.getElementById('id_plant_name').innerHTML = plant_name;
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
 
-                    
                 },(error) => {
                     console.log(error);
                 });
             } else {
                 window.location.href = '../login.html';
             }
-        });
 
-        $('input[name="date_view"]').daterangepicker({
-            opens: 'right'
-        }, function(start, end, label) {
-            fromDate = start.format('YYYY-MM-DD');
-            endDate = end.format('YYYY-MM-DD');
+            document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+
         });
-        $(".se-pre-con").fadeOut("slow");
-        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
+
+    function viewList(){
+
+        var myOption = "";
+        var array_type = [];
+
+        firebase.database().ref('Daily_Production_Report/'+plant).orderByChild('timestamp').once('value', function(monthSnapshot){
+
+            if(monthSnapshot.val() != null){
+
+                monthSnapshot.forEach(function(monthChildSnapshot){
+
+                    var date = monthChildSnapshot.key;
+
+                    firebase.database().ref('Daily_Production_Report/'+plant+'/'+date+'/Machine1').once('value', function(machine1Snapshot){
+
+                        var cement_type = machine1Snapshot.val().machine1_cementType;
+
+                        if(array_type.indexOf(cement_type) == -1 && cement_type != ''){
+                            array_type.push(cement_type);
+                        }
+                    });
+
+                    firebase.database().ref('Daily_Production_Report/'+plant+'/'+date+'/Machine2').once('value', function(machine2Snapshot){
+
+                        var cement_type = machine2Snapshot.val().machine2_cementType;
+
+                        if(array_type.indexOf(cement_type) == -1 && cement_type != ''){
+                            array_type.push(cement_type);
+                        }
+                    });
+
+                    firebase.database().ref('Daily_Production_Report/'+plant+'/'+date+'/Machine3').once('value', function(machine3Snapshot){
+
+                        var cement_type = machine3Snapshot.val().machine3_cementType;
+
+                        if(array_type.indexOf(cement_type) == -1 && cement_type != ''){
+                            array_type.push(cement_type);
+                        }
+                    });
+
+                    firebase.database().ref('Daily_Production_Report/'+plant+'/'+date+'/Machine4').once('value', function(machine4Snapshot){
+
+                        var cement_type = machine4Snapshot.val().machine4_cementType;
+
+                        if(array_type.indexOf(cement_type) == -1 && cement_type != ''){
+                            array_type.push(cement_type);
+                        }
+                    });
+
+                    firebase.database().ref('Daily_Production_Report/'+plant+'/'+date+'/Machine5').once('value', function(machine5Snapshot){
+
+                        var cement_type = machine5Snapshot.val().machine5_cementType;
+
+                        if(array_type.indexOf(cement_type) == -1 && cement_type != ''){
+                            array_type.push(cement_type);
+                        }
+                    });
+                });
+
+                firebase.database().ref('Daily_Production_Report/'+plant).once('value', function(monthSnapshot){
+
+                    var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+                    array_type.sort(collator.compare);
+
+                    myOption += "<option value=''>Select</option>";
+
+                    for(var i = 0; i < array_type.length; i++){
+
+                        var type = array_type[i];
+
+                        myOption += "<option value='" + type + "'>" + type + "</option>";
+                    }
+
+                    document.getElementById('itemList').innerHTML = myOption;
+                });
+            }
+        });
+    }
 
     function Go(){
 
-        $(".se-pre-con").fadeIn("fast");
         event.preventDefault();
+
+        $(".se-pre-con").fadeIn("fast");
         var myTbody = "";
 
-        if (fromDate == '' && endDate =='') {
-            firebase.database().ref('receive_aggregates/' + plant).once('value').then(function(receiveSnapshot) {
-                receiveSnapshot.forEach(function(ForeachReceive){
+        var array_totalprod = [];
+        var array_total = [];
+        var array_sort = [];
 
-                var ra_date = ForeachReceive.val().ra_date;
-                var ra_supplier = ForeachReceive.val().ra_supplier;
-                var ra_po = ForeachReceive.val().ra_po;
-                var ra_selectsys = ForeachReceive.val().ra_selectsys;
-                var ra_quantity = ForeachReceive.val().ra_quantity;
-                var ra_time = ForeachReceive.val().ra_time;
-                var ra_dr = ForeachReceive.val().ra_dr;
-                var ra_plate = ForeachReceive.val().ra_plate;
-                var ra_volume =ForeachReceive.val().ra_volume;
+        var option = {month: "long", year: "numeric"};
+        var currentMonthYear = new Date().toLocaleDateString('en', option);
+        var selectedMonth = new Date(document.getElementById('month').value).toLocaleDateString('en', option);
+        var selectedItem = document.getElementById('itemList').value;
 
-                myTbody += "<tr><td><strong>" + ra_date + "</strong></td>";
-                myTbody += "<td><strong>" + ra_supplier + "</strong></td>";
-                myTbody += "<td><strong>" + ra_po + "</strong></td>";
-                myTbody += "<td><strong>" + ra_selectsys + "</strong></td>";
-                myTbody += "<td><strong>" + ra_quantity + "</strong></td>";
-                myTbody += "<td><strong>" + ra_time + "</strong></td>";
-                myTbody += "<td><strong>" + ra_dr + "</strong></td>";
-                myTbody += "<td><strong>" + ra_plate + "</strong></td>";
-                myTbody += "<td><strong>" + ra_volume + "</strong></td>";
-
-                });
-
-                if (myTbody == ""){
-                    myTbody ="<tr><td colspan='9' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-                    document.getElementById("receive_list").innerHTML = myTbody;
-                }else{
-                    document.getElementById("receive_list").innerHTML = myTbody; 
-                }
-
-                $(".se-pre-con").fadeOut("slow");
-            });
+        if(document.getElementById('month').value == ''){
+            monthYear = currentMonthYear;
         }else{
-            firebase.database().ref('receive_aggregates/' + plant).once('value').then(function(receiveSnapshot) {
-                receiveSnapshot.forEach(function(ForeachReceive){
+            monthYear = selectedMonth;
+        }
 
-                    newFromDate = new Date(fromDate).toLocaleDateString('en');
-                    fromDate = new Date(newFromDate);
+        document.getElementById('id_monthyear').innerHTML = "For the Month of " + monthYear;
 
-                    newEndDate = new Date(endDate).toLocaleDateString('en');
-                    endDate = new Date(newEndDate);
+        firebase.database().ref('Daily_Production_Report/'+plant).orderByChild('timestamp').once('value', function(monthSnapshot){
 
-                    fromDateDisplay = new Date(newFromDate).toLocaleDateString('en');
-                    endDateDisplay = new Date(newEndDate).toLocaleDateString('en');
+            if(monthSnapshot.val() != null){
 
-                    getDate = new Date(ForeachReceive.val().ra_date);
+                monthSnapshot.forEach(function(monthChildSnapshot){
 
-                    if (getDate.getTime() >= fromDate.getTime() && getDate.getTime() <= endDate.getTime()){
+                    var date = monthChildSnapshot.key;
+                    var convertMonthYear = new Date(monthChildSnapshot.key).toLocaleDateString('en', option);
 
-                        var ra_date = ForeachReceive.val().ra_date;
-                        var ra_supplier = ForeachReceive.val().ra_supplier;
-                        var ra_po = ForeachReceive.val().ra_po;
-                        var ra_selectsys = ForeachReceive.val().ra_selectsys;
-                        var ra_quantity = ForeachReceive.val().ra_quantity;
-                        var ra_time = ForeachReceive.val().ra_time;
-                        var ra_dr = ForeachReceive.val().ra_dr;
-                        var ra_plate = ForeachReceive.val().ra_plate;
-                        var ra_volume =ForeachReceive.val().ra_volume;
+                    if(convertMonthYear == monthYear && selectedItem != ''){
 
-                        myTbody += "<tr><td><strong>" + ra_date + "</strong></td>";
-                        myTbody += "<td><strong>" + ra_supplier + "</strong></td>";
-                        myTbody += "<td><strong>" + ra_po + "</strong></td>";
-                        myTbody += "<td><strong>" + ra_selectsys + "</strong></td>";
-                        myTbody += "<td><strong>" + ra_quantity + "</strong></td>";
-                        myTbody += "<td><strong>" + ra_time + "</strong></td>";
-                        myTbody += "<td><strong>" + ra_dr + "</strong></td>";
-                        myTbody += "<td><strong>" + ra_plate + "</strong></td>";
-                        myTbody += "<td><strong>" + ra_volume + "</strong></td>";
+                        firebase.database().ref('Daily_Production_Report/'+plant+'/'+date+'/Machine1').once('value', function(machine1Snapshot){
 
+                            var dayDate = new Date(date).getDate();
+                            var cement_type = machine1Snapshot.val().machine1_cementType;
+
+                            if(cement_type == selectedItem){
+
+                                var actual_prod = machine1Snapshot.val().actual1_production;
+                            
+                                var prod_data = {
+                                    date: dayDate,
+                                    total_prod: actual_prod
+                                }
+
+                                array_totalprod.push(prod_data);
+                            }
+                        });
+
+                        firebase.database().ref('Daily_Production_Report/'+plant+'/'+date+'/Machine2').once('value', function(machine2Snapshot){
+
+                            var dayDate = new Date(date).getDate();
+                            var cement_type = machine2Snapshot.val().machine2_cementType;
+
+                            if(cement_type == selectedItem){
+
+                                var actual_prod = machine2Snapshot.val().actual2_production;
+                            
+                                var prod_data = {
+                                    date: dayDate,
+                                    total_prod: actual_prod
+                                }
+
+                                array_totalprod.push(prod_data);
+                            }
+                        });
+
+                        firebase.database().ref('Daily_Production_Report/'+plant+'/'+date+'/Machine3').once('value', function(machine3Snapshot){
+
+                            var dayDate = new Date(date).getDate();
+                            var cement_type = machine3Snapshot.val().machine3_cementType;
+
+                            if(cement_type == selectedItem){
+
+                                var actual_prod = machine3Snapshot.val().actual3_production;
+                            
+                                var prod_data = {
+                                    date: dayDate,
+                                    total_prod: actual_prod
+                                }
+
+                                array_totalprod.push(prod_data);
+                            }
+                        });
+
+                        firebase.database().ref('Daily_Production_Report/'+plant+'/'+date+'/Machine4').once('value', function(machine4Snapshot){
+
+                            var dayDate = new Date(date).getDate();
+                            var cement_type = machine4Snapshot.val().machine4_cementType;
+
+                            if(cement_type == selectedItem){
+
+                                var actual_prod = machine4Snapshot.val().actual4_production;
+                            
+                                var prod_data = {
+                                    date: dayDate,
+                                    total_prod: actual_prod
+                                }
+
+                                array_totalprod.push(prod_data);
+                            }
+                        });
+
+                        firebase.database().ref('Daily_Production_Report/'+plant+'/'+date+'/Machine5').once('value', function(machine5Snapshot){
+
+                            var dayDate = new Date(date).getDate();
+                            var cement_type = machine5Snapshot.val().machine5_cementType;
+
+                            if(cement_type == selectedItem){
+
+                                var actual_prod = machine5Snapshot.val().actual5_production;
+                            
+                                var prod_data = {
+                                    date: dayDate,
+                                    total_prod: actual_prod
+                                }
+
+                                array_totalprod.push(prod_data);
+                            }
+                        });
                     }
                 });
 
-                if (myTbody == ""){
-                    myTbody ="<tr><td colspan='9' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-                    document.getElementById("receive_list").innerHTML = myTbody;
-                }else{
-                    document.getElementById("receive_list").innerHTML = myTbody; 
-                }
+                firebase.database().ref('Daily_Production_Report/'+plant).once('value', function(monthSnapshot){
+                
+                    if(array_totalprod.length == 0){
 
-                $(".se-pre-con").fadeOut("slow");
-            });
-        }
+                        myTbody += "<tr><td colspan='2' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+                    }else{
+
+                        array_totalprod.sort(function(a,b){
+                            return Number(a.date) - Number(b.date);
+                        });
+
+                        //startactualprod
+                        var grand_total = 0;
+                        
+                        for (var i = 0; i < array_totalprod.length; i++) {
+
+                            grand_total += Number(Number(array_totalprod[i].total_prod).toFixed());
+                        }
+
+                        myTbody += "<tr><td class='col-md-2 color_blue'><strong>DATE</strong></td>";
+                        myTbody += "<td class='col-md-10 color_blue'><strong>TOTAL NO. OF PCS</strong></td></tr>";
+                    
+                        for(var i = 0; i < array_totalprod.length; i++){
+
+                            var date = array_totalprod[i].date;
+                            var prod_total = array_totalprod[i].total_prod;
+
+                            myTbody += "<tr><td class='color_blue'><strong>" + date + "</strong></td>";
+                            myTbody += "<td style='text-align: center'><strong>" + Number(prod_total).toLocaleString('en') + "</strong></td></tr>";
+
+                        }
+                        
+                        myTbody += "<tr><td class='total_color' style=' text-align:center'><strong>TOTAL</strong></td>";
+                        myTbody += "<td class='total_color' style=' text-align:center'><strong>" + Number(grand_total).toLocaleString('en') + "</strong></td></tr>";
+
+                    
+                    }
+
+                    document.getElementById('table_data').innerHTML = myTbody;
+
+                    $(".se-pre-con").fadeOut("slow");
+                });               
+            }
+        });
     }
 
     function displayNotif(){
@@ -340,52 +446,15 @@
 
 </script>
 <style>
-
-#example1 {
-    border: 0px solid;
-    padding: 10px;
-    box-shadow: 3px 5px 4px #888888;
-}
-
-.filterable .panel-heading .pull-right {
-    margin-top: -20px;
-}
-.filterable .filters input[disabled] {
-    background-color: transparent;
-    text-align: center;
-    border: none;
-    cursor: auto;
-    box-shadow: none;
-    padding: 0;
-    height: auto;
-}
-.filterable .filters input[disabled]::-webkit-input-placeholder {
+.color_blue{
+    background-color: #00a3cc;
     color: white;
     text-align: center;
-    font-weight: bold;
 }
-.filterable .filters input[disabled]::-moz-placeholder {
-     color: white;
-     text-align: center;
-     font-weight: bold;
-}
-.filterable .filters input[disabled]:-ms-input-placeholder {
-     color: white;
-     text-align: center;
-     font-weight: bold;
-}
-
-.no-js #loader { display: none;  }
-.js #loader { display: block; position: absolute; left: 100px; top: 0; }
-.se-pre-con {
-    position: fixed; 
-    top: 60px;
-    width: 100%;
-    height: 100%;
-    z-index: 9999;
-    background: url(../images/loader-64x/Preloader_2.gif) center no-repeat #fff;
-}
-    
+.total_color{
+    background-color: #00111a; 
+    color: white;
+}   
 </style>
 </head>
 <body>
@@ -520,60 +589,65 @@
         </aside>
         <!--sidebar end-->
 
+        <!--main content start-->
         <section id="main-content">
-            <section class="wrapper">  
-                <div class="row">  
+            <section class="wrapper">
+                 <!--overview start-->
+                 <div class="row">
                     <div class="col-md-12">
+                        <h3 class="page-header"><a href="view_batch_report_summary.html" style="color: inherit;">Batch Report Item Summary</a></h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- <h3 class="page-header"><i class="fa fa-home"></i> History</h3> -->
                         <ol class="breadcrumb">
-                            <li><i class="icon_document"></i>Received Aggregates</li>             
-                            <li><i class="icon_document"></i>Report</li>             
+                            <li><i class="fa fa-building"></i>Batch Report Item Summary</li>                     
                         </ol>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <section class="panel">
-                            <form class="form-inline" onsubmit="return Go()">
-                                <header class="panel-heading">
-                                    <div class="row" style="margin-bottom: 5px;">
-                                        <div class="col-md-6" style="margin: 5px 0px 0px 0px;">
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-md-12" style=" white-space: nowrap;">
-                                                        <label for="date_view" class="col-md-3 control-label" style="white-space: nowrap;"><strong>Select Date:</strong></label>
-                                                        <div class="col-md-8">
-                                                            <input type="text" id = "date_view" name="date_view" class="form-control" >   
-                                                            <button type="submit" id = "submitGo" class="btn btn-md btn-info" style=""><strong>Go</strong></button>                      
-                                                        </div> 
-                                                    </div>
-                                                </div>
+                            <header class="panel-heading">
+                                <!-- <form class="form" onsubmit="submitForm();"> -->
+                                    <div class="row">
+                                        <div class="form-group" style="margin-top: 5px; margin-bottom: 5px;">
+                                            <label for="month" class="col-md-1 control-label" style="margin-right: -10px;">Date:</label>
+                                            <div class="col-md-3" style="margin-right: -25px;">
+                                                <input type="month" id="month" name="month" class="form-control">
                                             </div>
-                                        </div>
+                                            <div class="col-md-2" style="margin-right: 25px;">
+                                                <button type="button" class="btn btn-info" onclick="Go();" name="search_table">
+                                                    <i class="fa fa-search"></i>
+                                                </button>  
+                                            </div>
+
+                                        </div>                                  
                                     </div>
-                                </header>
-                            </form>
-                            <div class="table-responsive filterable">
-                                <table class="table table-bordered " id = "mainTable">
-                                    <thead>
-                                        <tr class="filterable">
-                                            <th colspan="11">
-                                                <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
-                                            </th>
-                                        </tr>
-                                        <tr class="filters" style="background-color: #00111a;">
-                                            <th class="col-md-1"><input type="text" class="form-control" placeholder="Date" disabled></th>
-                                            <th class="col-md-2"><input type="text" class="form-control" placeholder="Supplier" disabled></th>
-                                            <th class="col-md-1" style="text-align:center; color:white">Po #</th>
-                                            <th class="col-md-1" style="text-align:center; color:white">Item</th>
-                                            <th class="col-md-1" style="text-align:center; color:white">Quantity</th>
-                                            <th class="col-md-1" style="text-align:center; color:white">Time</th>
-                                            <th class="col-md-1"><input type="text" class="form-control" placeholder="Dr #" disabled ></th>
-                                            <th class="col-md-1" style="text-align:center; color:white">Plate #</th>
-                                            <th class="col-md-1" style="text-align:center; color:white">Volume</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="receive_list"></tbody>
-                                </table>
+                                <!-- </form> -->
+                            </header>
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <td colspan="5" style="background-color: #00a3cc; color: white;">
+                                                    <div class="form-check">    
+                                                        <strong>View by Item:</strong>
+                                                        <select id="itemList">
+                                                            <option value="">Select</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5" style="background-color: #00a3cc; color: white;"><strong><span id="id_monthyear"></span></strong></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table_data"></tbody>
+                                    </table>
+                                </div>
                             </div>
                         </section>
                     </div>

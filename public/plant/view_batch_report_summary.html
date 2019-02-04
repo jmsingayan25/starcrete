@@ -8,7 +8,7 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="../img/favicon.png">
 
-    <title>Line Up</title>
+    <title>Batch Report Summary</title>
 
     <!-- Firebase App is always required and must be first -->
     <!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
@@ -136,7 +136,12 @@
         var myTotalhead = "";
 
         var options = {month: "long",year: "numeric"};
-        var getDate = new Date(document.getElementById("date_view").value).toLocaleDateString("en",options);
+
+        if(document.getElementById("date_view").value != ''){
+            var getDate = new Date(document.getElementById("date_view").value).toLocaleDateString("en",options);
+        }else{
+            var getDate = new Date().toLocaleDateString("en",options);
+        }
         var optionsYear = {year: "numeric"};
         var getDateyear = new Date(document.getElementById("date_view").value).toLocaleDateString("en",optionsYear);
 
@@ -668,6 +673,7 @@
                             <li><a class="" href="batch_report_input.html">Daily Production Input</a></li>
                             <li><a class="" href="view_daily_production_report.html">Daily Production Report</a></li>
                             <li><a class="" href="view_batch_report_summary.html">Production Summary</a></li>
+                            <li><a class="" href="view_batch_report_item_summary.html">Item Summary</a></li>
                         </ul>
                     </li> 
                     <li class="">
@@ -676,7 +682,7 @@
                             <span>Diesel</span>
                         </a>
                     </li>
-                    <li class="active">
+                    <li class="">
                         <a class="" href="lineup.html">
                             <i class="icon_document"></i>
                             <span>Line Up</span>
