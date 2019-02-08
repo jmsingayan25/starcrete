@@ -442,6 +442,20 @@
         });
     }
 
+    function printSummary(){
+
+        var option = {month: "long", year: "numeric"};
+        var item = document.getElementById('itemList').value;
+
+        if(document.getElementById('month').value != ""){
+            var date = new Date(document.getElementById('month').value).toLocaleDateString('en', option);
+        }else{
+            var date = new Date().toLocaleDateString('en', option);
+        }
+
+        window.open("view_batch_report_item_summary_print.html?plant="+plant+"&date="+date+"&item="+item, "_blank");
+    }
+
 </script>
 <style>
 .color_blue{
@@ -587,7 +601,7 @@
                                                 <button type="button" class="btn btn-info" onclick="submitForm();" name="search_table">
                                                     <i class="fa fa-search"></i>
                                                 </button>
-                                                <!-- <button class="btn btn-info btn-md" onclick="printSummary();"><strong><span class="fa fa-print"></span> Print</strong></button>     -->
+                                                <button class="btn btn-info btn-md" onclick="printSummary();"><strong><span class="fa fa-print"></span> Print</strong></button>    
                                             </div>
 
                                         </div>                                  

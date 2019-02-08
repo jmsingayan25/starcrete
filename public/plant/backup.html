@@ -86,21 +86,30 @@
 
     $(document).ready(function(){
 
-        displayNotif();
-        
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
 
                 var uid = user.uid;
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-                    if(snapshot.val().office != 'Head Office'){
-                        window.location.href = '../plant/index.html';
+
+                    plant = snapshot.val().office;
+
+                    if(plant == 'Head Office'){
+                        window.location.href = '../headoffice/index.html';
                     }
 
+                    displayNotif();
+                                        
+                    if(plant == 'Bravo'){
+                        plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
+                    }else{
+                        plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
+                    }
+
+                    document.getElementById('id_plant_name').innerHTML = plant_name;
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
 
-                    $(".se-pre-con").fadeOut("slow");
                 },(error) => {
                     console.log(error);
                 });
@@ -126,13 +135,11 @@
 
                 if(firebase.database().ref().set(result)){
                     alert("Import successful.");
-                    // window.location.reload();
                 }
             }
 
             fr.readAsText(files.item(0));
         };
-
     });
 
     function WriteToFile(){
@@ -171,7 +178,7 @@
 
                 notifSnapshot.forEach(function(notifChildSnapshot){
 
-                    if(notifChildSnapshot.val().toOffice == "Head Office"){
+                    if(notifChildSnapshot.val().toOffice == plant){
 
                         date = notifChildSnapshot.val().date;
                         var dateDate = new Date(date);
@@ -222,6 +229,7 @@
 </style>
 </head>
 <body>
+    <!-- <div class="se-pre-con"></div> -->
     <section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
@@ -231,7 +239,7 @@
             <!--logo start-->
 
             <!--logo end-->
-            <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
+            <span id="id_plant_name"></span>
             <div class="top-nav notification-row">                
                 <!-- notificatoin dropdown start-->
                 <ul class="nav pull-right top-menu">
@@ -274,6 +282,8 @@
             </div>
         </header>  
         <!--sidebar start-->
+
+        <!--sidebar start-->
         <aside>
             <div id="sidebar"  class="nav-collapse ">
                 <!-- sidebar menu start-->
@@ -283,43 +293,69 @@
                             <i class="icon_house"></i>
                             <span>Dashboard</span>
                         </a>
-                    </li> 
+                    </li>
                     <li class="sub-menu">
                         <a href="javascript:;" class="">
                             <i class="fa fa-building"></i>
-                            <span>Bravo</span>
+                            <span>Aggregates</span>
                             <span class="menu-arrow arrow_carrot-down"></span>
                         </a>
                         <ul class="sub">
-                            <li><a class="" href="attendance.html?plant=Bravo">Attendance</a></li>
-                            <li><a class="" href="view_daily_production_report.html?plant=Bravo">Daily Production</a></li>
-                            <li><a class="" href="diesel.html?plant=Bravo">Diesel</a></li>
-                            <li><a class="" href="lineup.html?plant=Bravo">Line Up</a></li>
-                            <li><a class="" href="diesel_category.html?plant=Bravo">Oil</a></li>
-                            <li><a class="" href="parts.html?plant=Bravo">Parts</a></li>
-                            <li><a class="" href="receive_aggregates.html?plant=Bravo">Received</a></li>
-                            <li><a class="" href="transmittal_input.html?plant=Bravo">Transmittal</a></li>
+                            <li><a class="" href="receive_aggregates.html">Input</a></li>
+                            <li><a class="" href="receive_aggregates_report.html">Report</a></li>
                         </ul>
+                    </li>
+                    <li class="">
+                        <a class="" href="attendance.html">
+                            <i class="icon_document"></i>
+                            <span>Attendance</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Daily Production</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="batch_report_input.html">Daily Production Input</a></li>
+                            <li><a class="" href="view_daily_production_report.html">Daily Production Report</a></li>
+                            <li><a class="" href="view_batch_report_summary.html">Production Summary</a></li>
+                            <li><a class="" href="view_batch_report_item_summary.html">Item Summary</a></li>
+                        </ul>
+                    </li>    
+                    <li class="">
+                        <a class="" href="diesel.html">
+                            <i class="fa fa-building"></i>
+                            <span>Diesel</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a class="" href="lineup.html">
+                            <i class="icon_document"></i>
+                            <span>Line Up</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a class="" href="diesel_category.html">
+                            <i class="fa fa-building"></i>
+                            <span>Oil</span>
+                        </a>
                     </li>  
                     <li class="sub-menu">
                         <a href="javascript:;" class="">
                             <i class="fa fa-building"></i>
-                            <span>Delta</span>
+                            <span>Transmittal</span>
                             <span class="menu-arrow arrow_carrot-down"></span>
                         </a>
                         <ul class="sub">
-                            <li><a class="" href="attendance.html?plant=Delta">Attendance</a></li>
-                            <li><a class="" href="view_daily_production_report.html?plant=Delta">Daily Production</a></li>
-                            <li><a class="" href="diesel.html?plant=Delta">Diesel</a></li>
-                            <li><a class="" href="lineup.html?plant=Delta">Line Up</a></li>
-                            <li><a class="" href="diesel_category.html?plant=Delta">Oil</a></li>
-                            <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
-                            <li><a class="" href="receive_aggregates.html?plant=Delta">Received</a></li>
-                            <li><a class="" href="transmittal_input.html?plant=Delta">Transmittal</a></li>
+                            <li><a class="" href="transmittal_input.html">Transfer Form</a></li>
+                            <li><a class="" href="transmittal_receive.html">Incoming Items</a></li>
+                            <li><a class="" href="transmittal_outgoing.html">Outgoing Items</a></li>
                         </ul>
                     </li>  
                     <li class="active">
-                        <a class="" href="index.html">
+                        <a class="" href="backup.html">
                             <i class="fa fa-cog"></i>
                             <span>Backup & Restore</span>
                         </a>
@@ -370,7 +406,6 @@
                         </section>
                     </div>
                 </div>
-
             </section>
         </section>
     </section>
