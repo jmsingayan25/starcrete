@@ -87,7 +87,7 @@
 <script>
     
     var plant = "";
-    var date_newSet = getUrlParameter('date');
+    // var date_newSet = getUrlParameter('date');
 
     $(document).ready(function(){
 
@@ -129,16 +129,16 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
-        if(date_newSet != ''){
+        // if(date_newSet != ''){
             
-            chosen_date = dateDashFormat(date_newSet);
+        //     chosen_date = dateDashFormat(date_newSet);
 
-            document.getElementById('date_selected').value = chosen_date;
-            document.getElementById('date_selected').readOnly = true;
-            document.getElementById('header_form').innerHTML = "<h4><strong>PLANT NEW LINE UP</strong></h4>";
-        }else{
+        //     document.getElementById('date_selected').value = chosen_date;
+        //     document.getElementById('date_selected').readOnly = true;
+        //     document.getElementById('header_form').innerHTML = "<h4><strong>PLANT NEW LINE UP</strong></h4>";
+        // }else{
             document.getElementById('header_form').innerHTML = "<h4><strong>PLANT LINE UP</strong></h4>";
-        }
+        // }
     });
 
     function displayYesterday(date){
@@ -320,17 +320,17 @@
         timeStamp = timeStamp * -1;
         message = "Line Up details for " + passDate + " is available.";
 
-        if(date_newSet == ""){
-            query_ext = "";
-        }else{
-            query_ext = "/new";
-        }
+        // if(date_newSet == ""){
+            // query_ext = "";
+        // }else{
+            // query_ext = "/new";
+        // }
 
         var scheduleData = {
             schedule: input_schedule
         }
 
-        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext).set(scheduleData);
+        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance).set(scheduleData);
 
         var commentData = {
             comment_lineup_plant: input_note_lineup.toUpperCase() || "N/A",
@@ -339,7 +339,7 @@
             comment_attendance_headoffice: "N/A"
         }
 
-        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/comment').push(commentData);
+        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/comment').push(commentData);
 
         /*OFFICE EMPLOYEE*/
         for(a = 0; a < input_employee_name.length; a++){
@@ -356,7 +356,7 @@
                     employee_timeout: input_employee_timeout[a]
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/office').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/office').push(employeeData);
         }
         /*END OFFICE EMPLOYEE*/
 
@@ -373,7 +373,7 @@
                     employee_comment: input_plant_comment[a].toUpperCase()
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/absent/plant').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/absent/plant').push(employeeData);
         }
         /*END ABSENT PLANT EMPLOYEE*/
 
@@ -390,7 +390,7 @@
                     employee_comment: input_motorpool_comment[a].toUpperCase()
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/absent/motorpool').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/absent/motorpool').push(employeeData);
         }
         /*END ABSENT MOTORPOOL EMPLOYEE*/
 
@@ -407,7 +407,7 @@
                     employee_comment: input_trucking_comment[a].toUpperCase()
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/absent/trucking').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/absent/trucking').push(employeeData);
         }
         /*END ABSENT TRUCKING EMPLOYEE*/
 
@@ -424,7 +424,7 @@
 
                 firebase.database().ref('employee_list/'+plant).push(employeeData);
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/new_employee').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/new_employee').push(employeeData);
         }
         /*END NEW EMPLOYEE*/
 
@@ -441,7 +441,7 @@
                     employee_position: input_machine1_position[a].toUpperCase()
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/machine1').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/machine1').push(employeeData);
         }
         /*END MACHINE 1 EMPLOYEE*/
 
@@ -458,7 +458,7 @@
                     employee_position: input_machine3_position[a].toUpperCase()
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/machine3').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/machine3').push(employeeData);
         }
         /*END MACHINE 2 EMPLOYEE*/
 
@@ -475,7 +475,7 @@
                     employee_position: input_tagapukpok_position[a].toUpperCase()
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/tagapukpok').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/tagapukpok').push(employeeData);
         }
         /*END TAGAPUKPOK 1 EMPLOYEE*/
 
@@ -492,7 +492,7 @@
                     employee_position: input_checker_position[a].toUpperCase()
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/checker').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/checker').push(employeeData);
         }
         /*END CHECKER 1 EMPLOYEE*/
 
@@ -507,7 +507,7 @@
                     employee_name: input_kamador_name[a].toUpperCase()
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/kamador').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/kamador').push(employeeData);
         }
         /*END KAMADOR 1 EMPLOYEE*/
 
@@ -522,7 +522,7 @@
                     employee_name: input_mechanic_name[a].toUpperCase()
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/mechanic').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/mechanic').push(employeeData);
         }
         /*END MECHANIC 1 EMPLOYEE*/
 
@@ -537,7 +537,7 @@
                     employee_name: input_loader_name[a].toUpperCase()
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/loader').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/loader').push(employeeData);
         }
         /*END LOADER 1 EMPLOYEE*/
 
@@ -554,7 +554,7 @@
                     employee_position: input_others_position[a].toUpperCase()
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/others').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/others').push(employeeData);
         }
         /*END OTHERS 1 EMPLOYEE*/
 
@@ -569,14 +569,14 @@
                     employee_name: input_ns1_name[a].toUpperCase()
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/nonskid1/employee').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid1/employee').push(employeeData);
         }
 
         var helper1Data = {
             helper_name: input_ns1_helper.toUpperCase() || "N/A"
         }
 
-        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/nonskid1/helper').push(helper1Data);
+        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid1/helper').push(helper1Data);
         /*END NON-SKID 1 EMPLOYEE*/
 
         /*NON-SKID 2 EMPLOYEE*/
@@ -590,14 +590,14 @@
                     employee_name: input_ns2_name[a].toUpperCase()
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/nonskid2/employee').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid2/employee').push(employeeData);
         }
 
         var helper2Data = {
             helper_name: input_ns2_helper.toUpperCase() || "N/A"
         }
 
-        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/nonskid2/helper').push(helper2Data);
+        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid2/helper').push(helper2Data);
         /*END NON-SKID 2 EMPLOYEE*/
 
         /*NON-SKID 3 EMPLOYEE*/
@@ -611,14 +611,14 @@
                     employee_name: input_ns3_name[a].toUpperCase()
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/nonskid3/employee').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid3/employee').push(employeeData);
         }
 
         var helper3Data = {
             helper_name: input_ns3_helper.toUpperCase() || "N/A"
         }
 
-        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/nonskid3/helper').push(helper3Data);
+        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid3/helper').push(helper3Data);
         /*END NON-SKID 3 EMPLOYEE*/
 
         /*NON-SKID 4 EMPLOYEE*/
@@ -632,14 +632,14 @@
                     employee_name: input_ns4_name[a].toUpperCase()
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/nonskid4/employee').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid4/employee').push(employeeData);
         }
 
         var helper4Data = {
             helper_name: input_ns4_helper.toUpperCase() || "N/A"
         }
 
-        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/nonskid4/helper').push(helper4Data);
+        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid4/helper').push(helper4Data);
         /*END NON-SKID 4 EMPLOYEE*/
 
         /*TRUCKING*/
@@ -651,7 +651,7 @@
                 pahinante2: input_trucking_pahinante2[a].toUpperCase() || "N/A",
                 comment: input_trucking_reason[a].toUpperCase() || "N/A"
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/trucking').push(truckingData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/trucking').push(truckingData);
         }
         /*END TRUCKING*/
 
@@ -662,7 +662,7 @@
                 operator: input_forklift_operator[a].toUpperCase() || "N/A",
                 comment: input_forklift_comment[a].toUpperCase() || "N/A"
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/forklift_operator').push(forkliftData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/forklift_operator').push(forkliftData);
         }
         /*END FORKLIFT EMPLOYEE*/
 
@@ -671,14 +671,14 @@
             agency_name: input_guard_agency_name.toUpperCase() || "N/A"
         }
 
-        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/guard').set(agencyData);
+        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/guard').set(agencyData);
 
         for(a = 0; a < input_dayshift_name.length; a++){
             var dayshiftGuardData = {
                 guard_name: input_dayshift_name[a].toUpperCase() || "N/A",
                 guard_position: input_dayshift_position[a].toUpperCase() || "N/A"
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/guard/dayshift').push(dayshiftGuardData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/guard/dayshift').push(dayshiftGuardData);
         }
 
         count = 0;
@@ -687,7 +687,7 @@
                 guard_name: input_nightshift_name[a].toUpperCase() || "N/A",
                 guard_position: input_nightshift_position[a].toUpperCase() || "N/A"
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+query_ext+'/guard/nightshift').push(nightshiftGuardData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/guard/nightshift').push(nightshiftGuardData);
             count++;
         }
         /*END GUARD EMPLOYEE*/
