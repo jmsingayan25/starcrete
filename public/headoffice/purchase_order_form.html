@@ -266,62 +266,73 @@
         var time_timestamp = new Date(date).getTime() * -1;
 
         firebase.database().ref('project/'+client_id+'/'+project_id).once('value', function(projectSnapshot){
+            firebase.database().ref('client/'+client_id).once('value', function(clientSnapshot){
 
-            var poData = {
-                po_no: po_no,
-                date: date,
-                time: time,
-                reverseDate: time_timestamp,
-                status: 1,
-                issued_po_plant: plant
-            }
-
-            // console.log(poData);
-
-            var postData = firebase.database().ref('purchase_order');
-            var newPostRef = postData.push();
-            newPostRef.set(poData);
-
-            var postId = newPostRef.key;
-            var count = 0;
-            for(var i = 0; i < item_no.length; i++){
-
-                var itemData = {
-                    item_no: item_no[i],
-                    psi: psi[i],
-                    quantity: quantity[i].replace(",",""),
-                    balance: quantity[i].replace(",","")
+                var poData = {
+                    po_no: po_no,
+                    date: date,
+                    time: time,
+                    reverseDate: time_timestamp,
+                    status: 0,
+                    issued_po_plant: plant,
+                    client_key: client_id,
+                    project_key: project_id
                 }
 
-                firebase.database().ref('purchase_order/'+postId+'/item/').push(itemData);
-                
-                count++;
-            }
+                // console.log(poData);
 
-            var projectData = {
-                project_name: projectSnapshot.val().project_name,
-                project_address: projectSnapshot.val().project_address,
-            }
+                var postData = firebase.database().ref('purchase_order');
+                var newPostRef = postData.push();
+                newPostRef.set(poData);
 
-            firebase.database().ref('purchase_order/'+postId+'/project_detail/'+project_id).set(projectData);
+                var postId = newPostRef.key;
+                var count = 0;
+                for(var i = 0; i < item_no.length; i++){
 
-            firebase.database().ref('project/'+client_id+'/'+project_id+'/contact').once('value', function(snapshot){
-                snapshot.forEach(function(childSnapshot){
-
-                    var contactData = {
-                        contact_name: childSnapshot.val().project_contact_name,
-                        contact_no: childSnapshot.val().project_contact_no
+                    var itemData = {
+                        item_no: item_no[i],
+                        psi: psi[i],
+                        quantity: quantity[i].replace(",",""),
+                        balance: quantity[i].replace(",","")
                     }
 
-                    firebase.database().ref('purchase_order/'+postId+'/contact/'+childSnapshot.key).set(contactData);
+                    firebase.database().ref('purchase_order/'+postId+'/item/').push(itemData);
                     
-                });
-            });
+                    count++;
+                }
 
-            if(count == item_no.length){
-                document.getElementById('msg').innerHTML = "Transaction complete. You can view the order on <a href='purchase_order.html?plant=" + plant + "'>" + plant + " Purchase Order Page</a>.<a href='purchase_order_form.html'>Click here for another P.O. No.</a>";
-                    $('#success_msg').show();
-            }
+                // var projectData = {
+                //     project_name: projectSnapshot.val().project_name,
+                //     project_address: projectSnapshot.val().project_address
+                // }
+
+                // firebase.database().ref('purchase_order/'+postId+'/project_detail/'+project_id).set(projectData);
+
+                // var clientData = {
+                //     client_name: clientSnapshot.val().client_name,
+                //     client_address: clientSnapshot.val().client_address
+                // }
+
+                // firebase.database().ref('purchase_order/'+postId+'/client_detail/'+client_id).set(clientData);
+
+                // firebase.database().ref('project/'+client_id+'/'+project_id+'/contact').once('value', function(snapshot){
+                //     snapshot.forEach(function(childSnapshot){
+
+                //         var contactData = {
+                //             contact_name: childSnapshot.val().project_contact_name,
+                //             contact_no: childSnapshot.val().project_contact_no
+                //         }
+
+                //         firebase.database().ref('purchase_order/'+postId+'/contact/'+childSnapshot.key).set(contactData);
+                        
+                //     });
+                // });
+
+                if(count == item_no.length){
+                    document.getElementById('msg').innerHTML = "Transaction complete. You can view the order on <a href='purchase_order.html?plant=" + plant + "'>" + plant + " Purchase Order Page</a>.<a href='purchase_order_form.html'>Click here for another P.O. No.</a>";
+                        $('#success_msg').show();
+                }
+            });
         });
     }
 
