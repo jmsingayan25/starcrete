@@ -204,8 +204,9 @@
                                                     text_item_no = itemChildSnapshot.val().item_no.toLowerCase();
                                                     text_project_name = projectSnapshot.val().project_name.toLowerCase();
                                                     text_project_address = projectSnapshot.val().project_address.toLowerCase();
+                                                    text_client_name = clientSnapshot.val().client_name;
 
-                                                    all_text = text_po + " " + text_item_no + " " + text_project_name + " " + text_project_address;
+                                                    all_text = text_po + " " + text_item_no + " " + text_project_name + " " + text_project_address + " " + text_client_name;
                                                     search = searchMatch(search_text, all_text);
 
                                                     if(search != null){
@@ -342,8 +343,9 @@
                                                     text_item_no = itemChildSnapshot.val().item_no.toLowerCase();
                                                     text_project_name = projectSnapshot.val().project_name.toLowerCase();
                                                     text_project_address = projectSnapshot.val().project_address.toLowerCase();
+                                                    text_client_name = clientSnapshot.val().client_name;
 
-                                                    all_text = text_po + " " + text_item_no + " " + text_project_name + " " + text_project_address;
+                                                    all_text = text_po + " " + text_item_no + " " + text_project_name + " " + text_project_address + " " + text_client_name;
                                                     search = searchMatch(search_text, all_text);
 
                                                     if(search != null){
