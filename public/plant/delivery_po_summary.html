@@ -8,7 +8,7 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="../img/favicon.png">
 
-	<title>Delivered Order</title>
+	<title>P.O. Delivery Summary</title>
 
 	<!-- Firebase App is always required and must be first -->
 	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
@@ -162,8 +162,6 @@
             }
         });
 
-        document.getElementById("orderList").innerHTML = "<tr><td colspan='10' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
-
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
@@ -303,14 +301,14 @@
             });
         });
 
-        firebase.database().ref('delivery_ongoing_order').once('value', function(){
-            firebase.database().ref('delivery_delivered_order').once('value', function(){
-                firebase.database().ref('delivery_backloaded_order').once('value', function(){
-                    firebase.database().ref('purchase_order').once('value', function(){
-
-                        array.sort(function(a,b){
-                            return Number(a.timestamp) - Number(b.timestamp);
-                        });
+        firebase.database().ref('purchase_order').once('value', function(){
+            firebase.database().ref('delivery_ongoing_order').once('value', function(){
+                firebase.database().ref('delivery_delivered_order').once('value', function(){
+                    firebase.database().ref('delivery_backloaded_order').once('value', function(){
+                    
+                        // array.sort(function(a,b){
+                        //     return Number(a.timestamp) - Number(b.timestamp);
+                        // });
 
                         for(var i = 0; i < array.length; i++){
 
@@ -343,7 +341,7 @@
                             myTbody += "<td><strong>" + gate_pass + "</strong></td>";
                             myTbody += "<td><strong>" + date + "</strong></td>";
                             myTbody += "<td><strong>" + issued_plant + "</strong></td>";
-                            myTbody += "<td><strong>" + status_ext + "</strong></td>";
+                            myTbody += "<td><strong>" + status_ext + "</strong></td></tr>";
                         }
 
                         document.getElementById('orderList').innerHTML = myTbody;
@@ -356,6 +354,9 @@
 
             var client_key = orderSnapshot.val().client_key;
             var project_key = orderSnapshot.val().project_key;
+            var po_no = orderSnapshot.val().po_no;
+
+            document.getElementById('id_po_no').innerHTML = po_no;
 
             firebase.database().ref('client/'+client_key).once('value', function(clientSnapshot){
                 firebase.database().ref('project/'+client_key+'/'+project_key).once('value', function(projectSnapshot){
@@ -629,7 +630,8 @@
                                                     <th colspan="9">
                                                         Client Name: <strong><span id="id_client_name"></span></strong><br>
                                                         Project Name: <strong><span id="id_project_name"></span></strong><br>
-                                                        Project Address: <strong><span id="id_project_address"></span></strong>
+                                                        Project Address: <strong><span id="id_project_address"></span></strong><br>
+                                                        Purchase Order No.: <strong><span id="id_po_no"></span></strong>
                                                         <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                                     </th>
                                                 </tr>

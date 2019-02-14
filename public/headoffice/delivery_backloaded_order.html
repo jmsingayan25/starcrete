@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,17 +8,18 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="../img/favicon.png">
 
-	<title>Delivered Order</title>
+    <title>Backloaded Order</title>
 
-	<!-- Firebase App is always required and must be first -->
-	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+    <!-- Firebase App is always required and must be first -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
+    <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase-app.js"></script>
 
-	<!-- Add additional services you want to use -->
-	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
-	<script src="../js_config/firebase_config.js"></script>
+    <!-- Add additional services you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+    <script src="../js_config/firebase_config.js"></script>
 
-	<!-- Bootstrap CSS -->    
+    <!-- Bootstrap CSS -->    
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <!-- bootstrap theme -->
     <link href="../css/bootstrap-theme.css" rel="stylesheet">
@@ -35,7 +36,7 @@
     <link href="../css/widgets.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/style-responsive.css" rel="stylesheet" />
-    <link href="../css/xcharts.min.css" rel=" stylesheet">	
+    <link href="../css/xcharts.min.css" rel=" stylesheet">  
     <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
 
     <!-- javascripts -->
@@ -85,15 +86,14 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
-
 <script>
 
-    var input_date = getUrlParameter('date');
+    var plant = getUrlParameter('plant');
     var fromDate = "";
     var endDate = "";
-    var plant = "";
 
     $(document).ready(function(){
+
         $('.filterable .btn-filter').click(function(){
             var $panel = $(this).parents('.filterable'),
             $filters = $panel.find('.filters input'),
@@ -131,9 +131,12 @@
             $filteredRows.hide();
             /* Prepend no-result row if all rows are filtered */
             if ($filteredRows.length === $rows.length) {
-                 $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="11" style="min-height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
+                 $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="10" style="height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
             }
         });
+
+        submitForm();
+        displayNotif();
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -141,33 +144,31 @@
                 var uid = user.uid;
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-
-                    plant = snapshot.val().office;
-
-                    if(plant == 'Head Office'){
-                        window.location.href = '../headoffice/index.html';
+                    if(snapshot.val().office != 'Head Office'){
+                        window.location.href = '../plant/index.html';
                     }
-                    
-                    submitForm();
-                    totalCountBadge();
                     
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
-
-                    if(plant == 'Bravo'){
-                        plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
-                    }else{
-                        plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
-                    }
-
-                    document.getElementById('id_plant_name').innerHTML = plant_name;
-
                 },(error) => {
-                    console.log(error);
+                    console.error(error);
                 });
             } else {
                 window.location.href = '../login.html';
             }
         });
+
+        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+
+        document.getElementById('id_page_header').innerHTML = "<a href='delivery_backloaded_order.html?plant=" + plant + "' style='color: inherit;'>" + plant + " Backloaded Order</a>";
+
+        // document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='delivery_ongoing_order.html?plant=" + plant + "'>Ongoing Delivery <span id='id_count_ongoing_order'></span></a></li><li><i class='fa fa-info-circle'></i><a href='delivery_pending_order.html?plant=" + plant + "'>Existing P.O. <span id='id_count_existing_po'></span></a></li><li><i class='fa fa-truck'></i><a href='delivery_delivered_order.html?plant=" + plant + "'>Delivered</a></li><li><i class='fa fa-reply'></i>Backloaded</li>";
+
+        document.getElementById('li_plant').innerHTML = plant;
+        document.getElementById('li_ongoing_order').innerHTML = "<a href='delivery_ongoing_order.html?plant="+plant+"'>Ongoing <span id='id_count_ongoing_order'></span></a>";
+        // document.getElementById('li_pending_order').innerHTML = "<a href='delivery_pending_order.html?plant="+plant+"'>Pending <span id='id_count_existing_po'></span></a>";
+        document.getElementById('li_delivered_order').innerHTML = "<a href='delivery_delivered_order.html?plant="+plant+"'>Delivered</a>";
+
+        totalCountBadge();
 
         $('input[name="daterange"]').daterangepicker({
             opens: 'right'
@@ -176,7 +177,6 @@
             endDate = end.format('YYYY-MM-DD');
         });
 
-        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
     function submitForm(){
@@ -184,47 +184,37 @@
         event.preventDefault();
 
         $(".se-pre-con").fadeIn("fast");
-
         var myTbody = "";
         var count = 1;
         var search_text = document.getElementById('search').value;
-        // var plant = document.getElementById('hidden_plant').value;
 
         if(fromDate == '' && endDate == ''){
 
-            firebase.database().ref('delivery_delivered_order').orderByChild('reverseDate').once('value', function(deliveredSnapshot){
+            firebase.database().ref('delivery_backloaded_order').orderByChild('reverseDate').once('value', function(backloadSnapshot){
 
-                if(deliveredSnapshot.val() != null){
+                if(backloadSnapshot.val() != null){
 
-                    deliveredSnapshot.forEach(function(deliveredChildSnapshot){
+                    backloadSnapshot.forEach(function(backloadChildSnapshot){
 
-                        var dr_no_key = deliveredChildSnapshot.val().dr_no_key;
+                        var dr_no_key = backloadChildSnapshot.val().dr_no_key;
                         
-                        if(deliveredChildSnapshot.val().delivered_plant == plant){
+                        if(backloadChildSnapshot.val().backloaded_plant == plant){
 
-                            // var deliveryDate = new Date(deliveredChildSnapshot.val().date);
-                            // var currentDate = new Date().toLocaleDateString('en');
-                            // var currentDateConvert = new Date(currentDate);
 
-                            // var deliveryDateTimestamp = deliveryDate.getTime();
-                            // var currentDateTimestamp = currentDateConvert.getTime();
-
-                            // if(deliveryDateTimestamp == currentDateTimestamp){
-
-                            var deliveredDate = new Date(deliveredChildSnapshot.val().date);
+                            var backloadDate = new Date(backloadChildSnapshot.val().date);
                             var dateV = new Date();
                             var currentMonth = dateV.getMonth() + 1;
-                            var deliveredMonth = deliveredDate.getMonth() + 1;
+                            var backloadMonth = backloadDate.getMonth() + 1;
                             var currentYear = dateV.getFullYear();
-                            var deliveredYear = deliveredDate.getFullYear();
+                            var backloadYear = backloadDate.getFullYear();
 
-                            if(deliveredMonth == currentMonth && deliveredYear == currentYear){
+                            if(backloadMonth == currentMonth && backloadYear == currentYear){
 
-                                firebase.database().ref('delivery_ongoing_order/'+dr_no_key).once('value', function(ongoingOrderSnapshot){
+                                firebase.database().ref('delivery_ongoing_order/'+dr_no_key).once('value', function(ongoingSnapshot){
 
-                                    var po_no_key = ongoingOrderSnapshot.val().po_no_key;
-                                    var item_key = ongoingOrderSnapshot.val().item_key;
-                                    
+                                    var po_no_key = ongoingSnapshot.val().po_no_key;
+                                    var item_key = ongoingSnapshot.val().item_key;
+
                                     firebase.database().ref('purchase_order/'+po_no_key).once('value', function(orderSnapshot){
 
                                         var client_key = orderSnapshot.val().client_key;
@@ -235,7 +225,7 @@
                                                 firebase.database().ref('project/'+client_key+'/'+project_key).once('value', function(projectSnapshot){
                                                     firebase.database().ref('project/'+client_key+'/'+project_key+'/contact').once('value', function(contactSnapshot){
 
-                                                        text_dr_no = ongoingOrderSnapshot.val().dr_no.toLowerCase();
+                                                        text_dr_no = ongoingSnapshot.val().dr_no.toLowerCase();
                                                         text_po_no = orderSnapshot.val().po_no.toLowerCase();
                                                         text_item_no = itemSnapshot.val().item_no.toLowerCase();
                                                         text_project_name = projectSnapshot.val().project_name.toLowerCase();
@@ -248,30 +238,31 @@
 
                                                         if(search != null){
 
-                                                            var status = deliveredChildSnapshot.val().status;
-                                                            var gate_pass = ongoingOrderSnapshot.val().gate_pass;
-                                                            var date = dateFormat(deliveredChildSnapshot.val().date);
-                                                            var dr_no = ongoingOrderSnapshot.val().dr_no;
+                                                            var dr_no = ongoingSnapshot.val().dr_no;
                                                             var po_no = orderSnapshot.val().po_no;
-                                                            var item_no = itemSnapshot.val().item_no;
+                                                            var item_no = itemSnapshot.val().item_no || "";
                                                             var psi = itemSnapshot.val().psi || "";
-                                                            var quantity = Number(itemSnapshot.val().quantity).toLocaleString('en');
-                                                            var client_name = clientSnapshot.val().client_name;
-                                                            var project_name = projectSnapshot.val().project_name;
-                                                            var project_address = projectSnapshot.val().project_address;
-                                                            var truck_no = ongoingOrderSnapshot.val().truck_no;
 
                                                             if(psi != ""){
                                                                 psi_ext = " (" + psi + " psi)";
                                                             }else{
                                                                 psi_ext = "";
                                                             }
-                                                            
+
+                                                            var quantity = Number(ongoingSnapshot.val().quantity).toLocaleString('en');
+                                                            var client_name = clientSnapshot.val().client_name;
+                                                            var project_name = projectSnapshot.val().project_name;
+                                                            var project_address = projectSnapshot.val().project_address;
+                                                            var gate_pass = ongoingSnapshot.val().gate_pass;
+                                                            var status = backloadChildSnapshot.val().status;
+                                                            var date = dateFormat(backloadChildSnapshot.val().date);
+                                                            var truck_no = ongoingSnapshot.val().truck_no;
+
                                                             myTbody += "<tr><td><strong>" + gate_pass + "</strong></td>";
                                                             myTbody += "<td><strong>" + dr_no + "</strong></td>";
                                                             myTbody += "<td><strong>" + client_name + "</strong></td>";
                                                             myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + po_no_key + "'\"><strong>" + po_no + "</strong></div></td>";
-                                                            myTbody += "<td><strong>" + project_name + " <br> " +  project_address + "</strong></td>";
+                                                            myTbody += "<td><strong>" + project_name + " <br> " + project_address + "</strong></td>";
                                                             myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
                                                             myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
                                                             myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
@@ -280,15 +271,15 @@
 
                                                                 contact_name = contactChildSnapshot.val().project_contact_name;
                                                                 contact_no = contactChildSnapshot.val().project_contact_no;
-                                                                
+
                                                                 myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
                                                             });
 
                                                             myTbody += "</td>";
                                                             myTbody += "<td><strong>" + truck_no + "</strong></td>";
                                                             myTbody += "<td><strong>" + date + "</strong></td>";
-                                                            myTbody += "<td><span class='label' style='background-color: #388e3c; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
-                                                    
+                                                            myTbody += "<td><span class='label' style='background-color: #d32f2f; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
+
                                                             count++;
                                                         }
                                                     });
@@ -296,12 +287,13 @@
                                             });
                                         });
                                     });
-                                });
-                            }
+                                });  
+
+                            }       
                         }
                     });
 
-                    firebase.database().ref('delivery_delivered_order').once('value', function(){
+                    firebase.database().ref('delivery_backloaded_order').once('value', function(){
                         firebase.database().ref('delivery_ongoing_order').once('value', function(){
                             firebase.database().ref('purchase_order').once('value', function(){
                                 firebase.database().ref('client').once('value', function(){
@@ -320,7 +312,6 @@
                                         }
 
                                         $(".se-pre-con").fadeOut("slow");
-
                                     });
                                 });
                             });
@@ -332,7 +323,7 @@
                     myTbody = "<tr><td colspan='11' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                     document.getElementById("orderList").innerHTML = myTbody;
-
+                
                     $(".se-pre-con").fadeOut("slow");
                 }
             });
@@ -355,24 +346,24 @@
                 endDate = new Date(newEndDate);
             }
 
-            firebase.database().ref('delivery_delivered_order').orderByChild('reverseDate').once('value', function(deliveredSnapshot){
+            firebase.database().ref('delivery_backloaded_order').orderByChild('reverseDate').once('value', function(backloadSnapshot){
 
-                if(deliveredSnapshot.val() != null){
+                if(backloadSnapshot.val() != null){
 
-                    deliveredSnapshot.forEach(function(deliveredChildSnapshot){
+                    backloadSnapshot.forEach(function(backloadChildSnapshot){
 
-                        var dr_no_key = deliveredChildSnapshot.val().dr_no_key;
-                        orderDate = new Date(deliveredChildSnapshot.val().date);
+                        var dr_no_key = backloadChildSnapshot.val().dr_no_key;
+                        orderDate = new Date(backloadChildSnapshot.val().date);
 
                         if(orderDate.getTime() >= fromDate.getTime() && orderDate.getTime() <= endDate.getTime()){
 
-                            if(deliveredChildSnapshot.val().delivered_plant == plant){
+                            if(backloadChildSnapshot.val().backloaded_plant == plant){
 
-                                firebase.database().ref('delivery_ongoing_order/'+dr_no_key).once('value', function(ongoingOrderSnapshot){
+                                firebase.database().ref('delivery_ongoing_order/'+dr_no_key).once('value', function(ongoingSnapshot){
 
-                                    var po_no_key = ongoingOrderSnapshot.val().po_no_key;
-                                    var item_key = ongoingOrderSnapshot.val().item_key;
-                                    
+                                    var po_no_key = ongoingSnapshot.val().po_no_key;
+                                    var item_key = ongoingSnapshot.val().item_key;
+
                                     firebase.database().ref('purchase_order/'+po_no_key).once('value', function(orderSnapshot){
 
                                         var client_key = orderSnapshot.val().client_key;
@@ -383,7 +374,7 @@
                                                 firebase.database().ref('project/'+client_key+'/'+project_key).once('value', function(projectSnapshot){
                                                     firebase.database().ref('project/'+client_key+'/'+project_key+'/contact').once('value', function(contactSnapshot){
 
-                                                        text_dr_no = ongoingOrderSnapshot.val().dr_no.toLowerCase();
+                                                        text_dr_no = ongoingSnapshot.val().dr_no.toLowerCase();
                                                         text_po_no = orderSnapshot.val().po_no.toLowerCase();
                                                         text_item_no = itemSnapshot.val().item_no.toLowerCase();
                                                         text_project_name = projectSnapshot.val().project_name.toLowerCase();
@@ -396,30 +387,31 @@
 
                                                         if(search != null){
 
-                                                            var status = deliveredChildSnapshot.val().status;
-                                                            var gate_pass = ongoingOrderSnapshot.val().gate_pass;
-                                                            var date = dateFormat(deliveredChildSnapshot.val().date);
-                                                            var dr_no = ongoingOrderSnapshot.val().dr_no;
+                                                            var dr_no = ongoingSnapshot.val().dr_no;
                                                             var po_no = orderSnapshot.val().po_no;
-                                                            var item_no = itemSnapshot.val().item_no;
+                                                            var item_no = itemSnapshot.val().item_no || "";
                                                             var psi = itemSnapshot.val().psi || "";
-                                                            var quantity = Number(itemSnapshot.val().quantity).toLocaleString('en');
-                                                            var client_name = clientSnapshot.val().client_name;
-                                                            var project_name = projectSnapshot.val().project_name;
-                                                            var project_address = projectSnapshot.val().project_address;
-                                                            var truck_no = ongoingOrderSnapshot.val().truck_no;
 
                                                             if(psi != ""){
                                                                 psi_ext = " (" + psi + " psi)";
                                                             }else{
                                                                 psi_ext = "";
                                                             }
-                                                            
+
+                                                            var quantity = Number(ongoingSnapshot.val().quantity).toLocaleString('en');
+                                                            var client_name = clientSnapshot.val().client_name;
+                                                            var project_name = projectSnapshot.val().project_name;
+                                                            var project_address = projectSnapshot.val().project_address;
+                                                            var gate_pass = ongoingSnapshot.val().gate_pass;
+                                                            var status = backloadChildSnapshot.val().status;
+                                                            var date = dateFormat(backloadChildSnapshot.val().date);
+                                                            var truck_no = ongoingSnapshot.val().truck_no;
+
                                                             myTbody += "<tr><td><strong>" + gate_pass + "</strong></td>";
                                                             myTbody += "<td><strong>" + dr_no + "</strong></td>";
                                                             myTbody += "<td><strong>" + client_name + "</strong></td>";
                                                             myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + po_no_key + "'\"><strong>" + po_no + "</strong></div></td>";
-                                                            myTbody += "<td><strong>" + project_name + " <br> " +  project_address + "</strong></td>";
+                                                            myTbody += "<td><strong>" + project_name + " <br> " + project_address + "</strong></td>";
                                                             myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
                                                             myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
                                                             myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
@@ -428,29 +420,28 @@
 
                                                                 contact_name = contactChildSnapshot.val().project_contact_name;
                                                                 contact_no = contactChildSnapshot.val().project_contact_no;
-                                                                
+
                                                                 myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
                                                             });
 
                                                             myTbody += "</td>";
                                                             myTbody += "<td><strong>" + truck_no + "</strong></td>";
                                                             myTbody += "<td><strong>" + date + "</strong></td>";
-                                                            myTbody += "<td><span class='label' style='background-color: #388e3c; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
-                                                    
+                                                            myTbody += "<td><span class='label' style='background-color: #d32f2f; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
+
                                                             count++;
                                                         }
-
                                                     });
                                                 });
                                             });
                                         });
                                     });
-                                });
+                                });  
                             }
                         }
                     });
 
-                    firebase.database().ref('delivery_delivered_order').once('value', function(){
+                    firebase.database().ref('delivery_backloaded_order').once('value', function(){
                         firebase.database().ref('delivery_ongoing_order').once('value', function(){
                             firebase.database().ref('purchase_order').once('value', function(){
                                 firebase.database().ref('client').once('value', function(){
@@ -469,7 +460,6 @@
                                         }
 
                                         $(".se-pre-con").fadeOut("slow");
-
                                     });
                                 });
                             });
@@ -481,69 +471,121 @@
                     myTbody = "<tr><td colspan='11' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                     document.getElementById("orderList").innerHTML = myTbody;
-
+                
                     $(".se-pre-con").fadeOut("slow");
                 }
             });
         }
     }
-
+    
     function totalCountBadge(){
 
-        pending_order_count = 0;
-        ongoing_order_count = 0;
-
-        firebase.database().ref('purchase_order').once('value', function(pendingOrderSnapshot){
-
-            if(pendingOrderSnapshot.val() != null){
-
-                pendingOrderSnapshot.forEach(function(pendingOrderChildSnapshot){
-
-                    firebase.database().ref('purchase_order/'+pendingOrderChildSnapshot.key+'/item').once('value', function(itemSnapshot){
-
+        po_count = 0;
+        firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
+            if(orderSnapshot.val() != null){
+                if(orderSnapshot.val().issued_po_plant == plant){
+                    firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').on('value', function(itemSnapshot){
                         itemSnapshot.forEach(function(itemChildSnapshot){
-
-                            if(itemChildSnapshot.val().balance != 0){
-
-                                pending_order_count++;
+                            if(Number(itemChildSnapshot.val().balance) != 0){
+                                po_count++;
+                                document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
                             }
                         });
-
-                        document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + Number(pending_order_count).toLocaleString('en') + "</span>";
-
                     });
-                });
+                }
+                
+            }else{
+                document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
             }
         });
 
-        if(pending_order_count == 0){
-            document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + pending_order_count + "</span>";
-        }
-
-        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).once('value', function(ongoingOrderSnapshot) {
-
-            ongoing_order_count = 0;
-
+        do_count = 0;
+        firebase.database().ref('delivery_ongoing_order').on('child_added', function(ongoingOrderSnapshot) {
+            // console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val()); 
             if(ongoingOrderSnapshot.val() != null){
+                if(ongoingOrderSnapshot.val().issued_dr_plant == plant){
 
-                ongoingOrderSnapshot.forEach(function(ongoingOrderChildSnapshot){
-
-                    var status = ongoingOrderChildSnapshot.val().status;
+                    var status = ongoingOrderSnapshot.val().status;
 
                     if(status == 0){
-                        ongoing_order_count = ongoing_order_count + 1;
+                        do_count++;
                     }
-                });
-                
-                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" +  Number(ongoing_order_count).toLocaleString('en') + "</span>";
+
+                    document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+                }
+            }else{
+                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
             }
         });
-
-        if(ongoing_order_count == 0){
-            document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + ongoing_order_count + "</span>";
-        }
     }
-    
+
+    function displayNotif(){
+
+        var myList = "";
+        count_employee = 0;
+        var option = {year: "numeric", month: "long", day: "numeric"}
+        var currentDate = new Date().toLocaleDateString('en', option);
+        var currentDate1 = new Date().toLocaleDateString('en', option);
+
+        var currentDate_date = new Date(currentDate);
+        var currentDate1_date = new Date(currentDate1);
+        currentDate1_date.setDate(currentDate1_date.getDate() - 1);
+        currentDate1_date = new Date(currentDate1_date);
+
+        var currentDateTimestamp = currentDate_date.getTime();
+        var yesterDateTimestamp = currentDate1_date.getTime();
+
+        firebase.database().ref('notification').orderByChild('reverseDate').limitToFirst(20).once('value', function(notifSnapshot){
+
+            if(notifSnapshot.val() != null){
+
+                notifSnapshot.forEach(function(notifChildSnapshot){
+
+                    if(notifChildSnapshot.val().toOffice == "Head Office"){
+
+                        date = notifChildSnapshot.val().date;
+                        var dateDate = new Date(date);
+                        var dateTimestamp = dateDate.getTime();
+
+                        if(dateTimestamp == currentDateTimestamp){
+                            var date_status = "Today";
+                        }else if(dateTimestamp == yesterDateTimestamp){
+                            var date_status = "Yesterday";
+                        }else if(dateTimestamp < yesterDateTimestamp){
+                            var date_status = date;
+                        }
+
+                        fromOffice = notifChildSnapshot.val().fromOffice;
+                        message = notifChildSnapshot.val().message;
+                        page = notifChildSnapshot.val().page;
+                        time = notifChildSnapshot.val().time;
+                        key = notifChildSnapshot.key;
+
+                        if(notifChildSnapshot.val().isRead == 1){
+
+                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\"><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
+
+                            count_employee++;
+
+                        }else if(notifChildSnapshot.val().isRead == 0){
+
+                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\" style='color: #595959;'><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
+
+                        }
+                    }
+                });
+
+                document.getElementById('id_notif_list').innerHTML = myList;
+
+                if(count_employee != 0){
+                    document.getElementById('id_badge').innerHTML = "<span class='badge bg-important'>" + count_employee + "</span>";
+                } 
+            }
+
+            $('.class_notif').text(count_employee);
+        });
+    }
+
 </script>
 <style>
 .tooltips {
@@ -581,12 +623,11 @@
      color: white;
      text-align: left;
      font-weight: bold;
-}    
+}     
 </style>
 </head>
 <body>
     <div class="se-pre-con"></div>
-    <!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
@@ -596,8 +637,7 @@
             <!--logo start-->
 
             <!--logo end-->
-            <!-- <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a> -->
-            <span id="id_plant_name"></span>
+            <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
             <div class="top-nav notification-row">                
                 <!-- notificatoin dropdown start-->
                 <ul class="nav pull-right top-menu">
@@ -639,7 +679,6 @@
                 <!-- notificatoin dropdown end-->
             </div>
         </header>  
-
         <!--sidebar start-->
         <aside>
             <div id="sidebar"  class="nav-collapse ">
@@ -650,80 +689,43 @@
                             <i class="icon_house"></i>
                             <span>Dashboard</span>
                         </a>
-                    </li>
-                    <li class="sub-menu">
-                        <a href="javascript:;" class="">
-                            <i class="fa fa-building"></i>
-                            <span>Aggregates</span>
-                            <span class="menu-arrow arrow_carrot-down"></span>
-                        </a>
-                        <ul class="sub">
-                            <li><a class="" href="receive_aggregates.html">Input</a></li>
-                            <li><a class="" href="receive_aggregates_report.html">Report</a></li>
-                        </ul>
-                    </li>
-                    <li class="">
-                        <a class="" href="attendance.html">
-                            <i class="icon_document"></i>
-                            <span>Attendance</span>
-                        </a>
-                    </li>
-                    <li class="sub-menu">
-                        <a href="javascript:;" class="">
-                            <i class="fa fa-building"></i>
-                            <span>Daily Production</span>
-                            <span class="menu-arrow arrow_carrot-down"></span>
-                        </a>
-                        <ul class="sub">
-                            <li><a class="" href="batch_report_input.html">Daily Production Input</a></li>
-                            <li><a class="" href="view_daily_production_report.html">Daily Production Report</a></li>
-                            <li><a class="" href="view_batch_report_summary.html">Production Summary</a></li>
-                            <li><a class="" href="view_batch_report_item_summary.html">Item Summary</a></li>
-                        </ul>
                     </li> 
                     <li class="sub-menu">
                         <a href="javascript:;" class="">
                             <i class="fa fa-building"></i>
-                            <span>Delivery Order</span>
+                            <span>Bravo</span>
                             <span class="menu-arrow arrow_carrot-down"></span>
                         </a>
                         <ul class="sub">
-                            <li><a class="" href="delivery_pending_order.html">Pending Order <span id="id_count_existing_po"></span></a></li>    
-                            <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span id="id_count_ongoing_order"></span></a></li>                          
-                            <li><a class="" href="delivery_delivered_order.html">Delivered Order</a></li>
-                            <li><a class="" href="delivery_backloaded_order.html">Backloaded Order</a></li>
+                            <li><a class="" href="attendance.html?plant=Bravo">Attendance</a></li>
+                            <li><a class="" href="view_daily_production_report.html?plant=Bravo">Daily Production</a></li>
+                            <li><a class="" href="diesel.html?plant=Bravo">Diesel</a></li>
+                            <li><a class="" href="lineup.html?plant=Bravo">Line Up</a></li>
+                            <li><a class="" href="diesel_category.html?plant=Bravo">Oil</a></li>
+                            <li><a class="" href="parts.html?plant=Bravo">Parts</a></li>
+                            <li><a class="" href="purchase_order.html?plant=Bravo">Purchase Order</a></li>
+                            <li><a class="" href="receive_aggregates.html?plant=Bravo">Received</a></li>
+                            <li><a class="" href="transmittal_input.html?plant=Bravo">Transmittal</a></li>
                         </ul>
-                    </li>
-                    <li class="">
-                        <a class="" href="diesel.html">
-                            <i class="fa fa-building"></i>
-                            <span>Diesel</span>
-                        </a>
-                    </li>
-                    <li class="">
-                        <a class="" href="lineup.html">
-                            <i class="icon_document"></i>
-                            <span>Line Up</span>
-                        </a>
-                    </li>
-                    <li class="">
-                        <a class="" href="diesel_category.html">
-                            <i class="fa fa-building"></i>
-                            <span>Oil</span>
-                        </a>
-                    </li>
+                    </li>  
                     <li class="sub-menu">
                         <a href="javascript:;" class="">
                             <i class="fa fa-building"></i>
-                            <span>Transmittal</span>
+                            <span>Delta</span>
                             <span class="menu-arrow arrow_carrot-down"></span>
                         </a>
                         <ul class="sub">
-                            <li><a class="" href="transmittal_input.html">Transfer Form</a></li>
-                            <li><a class="" href="transmittal_receive.html">Incoming Items</a></li>
-                            <li><a class="" href="transmittal_outgoing.html">Outgoing Items</a></li>
+                            <li><a class="" href="attendance.html?plant=Delta">Attendance</a></li>
+                            <li><a class="" href="view_daily_production_report.html?plant=Delta">Daily Production</a></li>
+                            <li><a class="" href="diesel.html?plant=Delta">Diesel</a></li>
+                            <li><a class="" href="lineup.html?plant=Delta">Line Up</a></li>
+                            <li><a class="" href="diesel_category.html?plant=Delta">Oil</a></li>
+                            <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
+                            <li><a class="" href="purchase_order.html?plant=Delta">Purchase Order</a></li>
+                            <li><a class="" href="receive_aggregates.html?plant=Delta">Received</a></li>
+                            <li><a class="" href="transmittal_input.html?plant=Delta">Transmittal</a></li>
                         </ul>
-                    </li> 
+                    </li>   
                 </ul>
                 <!-- sidebar menu end-->
             </div>
@@ -736,14 +738,17 @@
                 <!--overview start-->
                 <div class="row">
                     <div class="col-md-12">
-                        <h3 class="page-header"><a href="delivery_delivered_order.html" style="color: inherit;">Delivered Order</a></h3>
+                        <h3 class="page-header" id="id_page_header"></h3>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <ol class="breadcrumb">
-                            <li><i class="fa fa-building"></i>Delivery Order</li>
-                            <li><i class="fa fa-truck"></i>Delivered Order</li>                         
+                        <ol class="breadcrumb" id="id_breadcrumb">
+                           <li><i class="fa fa-building"></i><span id="li_plant"></span></li>
+                            <li><i class="icon_document"></i><span id="li_ongoing_order"></span></li>
+                            <!-- <li><i class="fa fa-info-circle"></i><span id="li_pending_order"></span></li> -->
+                            <li><i class="fa fa-truck"></i><span id="li_delivered_order"></span></li>
+                            <li><i class="fa fa-reply"></i>Backloaded</li>                      
                         </ol>
                     </div>
                 </div>
@@ -758,7 +763,7 @@
                                                 <label for="start_date">Select Date Range:</label>
                                                 <input type="text" name="daterange" id="daterange" value="" class="form-control" autocomplete="off">
                                             </div>
-                                        </div> 
+                                        </div>
                                         <div class="input-group col-md-5" style="margin: 38px 0px 0px 0px;">
                                             <div class="tooltips" data-original-title="Search DR No., P.O. No., Item, Project Name, Address or Contact" data-placement="top">
                                                 <input type="text" id="search" name="search" class="form-control" placeholder="Search...">
@@ -773,11 +778,11 @@
                                 </header>
                             </form>
                             <div class="table-responsive filterable">
-                                <table class="table table-striped table-bordered table-condensed">
+                                <table class="table table-striped table-bordered">
                                     <thead>
                                         <tr class="filterable">
                                             <th colspan="11">
-                                <!--                 <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button> -->
+                                                <button class="btn btn-info btn-md" id="printPo" style="display: none;" onclick="printPo();"><strong><span class="fa fa-print"></span> Print Preview</strong></button>
                                                 <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                             </th>
                                         </tr>
@@ -789,9 +794,9 @@
                                             <th class="col-md-2"><input type="text" class="form-control" placeholder="Project Site" disabled></th>
                                             <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
                                             <th class="col-md-1" style="color: white;">Quantity</th>
-                                            <th class="col-md-1"><input type="text" class="form-control" placeholder="Contact" disabled></th>
                                             <th class="col-md-1" style="color: white;">Truck No.</th>
-                                            <th class="col-md-1" style="color: white;">Date Delivered</th>
+                                            <th class="col-md-1"><input type="text" class="form-control" placeholder="Contact" disabled></th>
+                                            <th class="col-md-1" style="color: white;">Date</th>
                                             <th class="col-md-1" style="color: white;">Status</th>
                                         </tr>
                                     </thead>

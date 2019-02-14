@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
     <meta name="author" content="GeeksLabs">
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="../img/favicon.png">
 
-	<title>Client</title>
+    <title>P.O. Delivery Summary</title>
 
-	<!-- Firebase App is always required and must be first -->
-	<!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
+    <!-- Firebase App is always required and must be first -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
     <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase-app.js"></script>
 
-	<!-- Add additional services you want to use -->
-	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
-	<script src="../js_config/firebase_config.js"></script>
+    <!-- Add additional services you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+    <script src="../js_config/firebase_config.js"></script>
 
-	<!-- Bootstrap CSS -->    
+    <!-- Bootstrap CSS -->    
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <!-- bootstrap theme -->
     <link href="../css/bootstrap-theme.css" rel="stylesheet">
@@ -36,7 +36,7 @@
     <link href="../css/widgets.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/style-responsive.css" rel="stylesheet" />
-    <link href="../css/xcharts.min.css" rel=" stylesheet">	
+    <link href="../css/xcharts.min.css" rel=" stylesheet">  
     <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
 
     <!-- javascripts -->
@@ -81,8 +81,10 @@
     <script src="../js/jquery.slimscroll.min.js"></script>
     <script src="../js_config/function.js"></script>
 
-
 <script>
+
+    // var plant = getUrlParameter('plant');
+    var po_no_key = getUrlParameter('po_no_key');
     
     $(document).ready(function(){
 
@@ -123,11 +125,11 @@
             $filteredRows.hide();
             /* Prepend no-result row if all rows are filtered */
             if ($filteredRows.length === $rows.length) {
-                 $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="3" style="height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
+                 $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="7" style="height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
             }
         });
 
-        submitForm();
+        tableData();
         displayNotif();
 
         firebase.auth().onAuthStateChanged(function(user) {
@@ -139,6 +141,7 @@
                     if(snapshot.val().office != 'Head Office'){
                         window.location.href = '../plant/index.html';
                     }
+                    
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.error(error);
@@ -149,79 +152,228 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+
     });
 
-    function submitForm(){
-
-        event.preventDefault();
-
-        $(".se-pre-con").fadeIn("fast");
+    function tableData(){
 
         var myTbody = "";
-        var search_text = document.getElementById('search').value;
+        var contactTbody = "";
         var array = [];
 
-        firebase.database().ref('client').once('value', function(clientSnapshot){
+        firebase.database().ref('delivery_ongoing_order').once('value', function(ongoingSnapshot){
+            ongoingSnapshot.forEach(function(ongoingChildSnapshot){
 
-            if(clientSnapshot.val() != null){
+                var order_po_no_key = ongoingChildSnapshot.val().po_no_key;
+                var status = ongoingChildSnapshot.val().status;
 
-                clientSnapshot.forEach(function(clientChildSnapshot){
+                if(order_po_no_key == po_no_key && status == 0){
 
-                    firebase.database().ref('client/'+clientChildSnapshot.key+'/contact').once('value', function(contactSnapshot){
+                    var item_key = ongoingChildSnapshot.val().item_key;
 
-                        text_client_name = clientChildSnapshot.val().client_name;
-                        text_client_address = clientChildSnapshot.val().client_address;
+                    firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
 
-                        all_text = text_client_name + " " + text_client_address;
+                        var dr_no = ongoingChildSnapshot.val().dr_no;
+                        var quantity = ongoingChildSnapshot.val().quantity;
+                        var gate_pass = ongoingChildSnapshot.val().gate_pass;
+                        var date = ongoingChildSnapshot.val().date;
+                        var issued_plant = ongoingChildSnapshot.val().issued_dr_plant;
+                        var timestamp = ongoingChildSnapshot.val().reverseDate;
+                        var item_no = itemSnapshot.val().item_no;
+                        var psi = itemSnapshot.val().psi || "";
 
-                        search = searchMatch(search_text, all_text);
+                        var data = {
+                            dr_no: dr_no,
+                            item_no: item_no,
+                            psi: psi,
+                            quantity: quantity,
+                            gate_pass: gate_pass,
+                            date: date,
+                            issued_plant: issued_plant,
+                            status: status,
+                            timestamp: timestamp
+                        }
 
-                        if(search != null){
+                        array.push(data);
 
-                            client_name = clientChildSnapshot.val().client_name;
-                            client_address = clientChildSnapshot.val().client_address;
-                            clientKey = clientChildSnapshot.key;
+                    });
+                }
+            });
+        });
+
+        firebase.database().ref('delivery_delivered_order').once('value', function(deliveredSnapshot){
+            deliveredSnapshot.forEach(function(deliveredChildSnapshot){
+
+                var dr_no_key = deliveredChildSnapshot.val().dr_no_key;
+
+                firebase.database().ref('delivery_ongoing_order/'+dr_no_key).once('value', function(ongoingSnapshot){
+
+                    var order_po_no_key = ongoingSnapshot.val().po_no_key;
+
+                    if(order_po_no_key == po_no_key){
+
+                        var item_key = ongoingSnapshot.val().item_key;
+
+                        firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
+
+                            var dr_no = ongoingSnapshot.val().dr_no;
+                            var quantity = ongoingSnapshot.val().quantity;
+                            var gate_pass = ongoingSnapshot.val().gate_pass;
+                            var date = ongoingSnapshot.val().date;
+                            var issued_plant = ongoingSnapshot.val().issued_dr_plant;
+                            var status = ongoingSnapshot.val().status;
+                            var timestamp = ongoingSnapshot.val().reverseDate;
+                            var item_no = itemSnapshot.val().item_no;
+                            var psi = itemSnapshot.val().psi || "";
 
                             var data = {
-                                client_name: client_name,
-                                client_address: client_address,
-                                clientKey: clientKey
+                                dr_no: dr_no,
+                                item_no: item_no,
+                                psi: psi,
+                                quantity: quantity,
+                                gate_pass: gate_pass,
+                                date: date,
+                                issued_plant: issued_plant,
+                                status: status,
+                                timestamp: timestamp
                             }
 
                             array.push(data);
 
-                            myTbody += "<tr><td><strong>" + client_name + "</strong></td>";
-                            myTbody += "<td><strong>" + client_address + "</strong></td>";
-                            myTbody += "<td>";
+                        });
+                    }
+                });
+            });
+        });
 
-                            contactSnapshot.forEach(function(contactChildSnapshot){
+        firebase.database().ref('delivery_backloaded_order').once('value', function(backloadSnapshot){
+            backloadSnapshot.forEach(function(backloadChildSnapshot){
 
-                                client_contact_name = contactChildSnapshot.val().client_contact_name;
-                                client_contact_no = contactChildSnapshot.val().client_contact_no;
-                                
-                                myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-6'><strong>" + client_contact_name + "</strong></div><div class='col-md-1'>-</div><div class='col-md-5'><strong>" + client_contact_no + "</strong></div></div>";
+                var dr_no_key = backloadChildSnapshot.val().dr_no_key;
 
-                            });
-                            
-                            myTbody += "</td>";
-                            myTbody += "<td><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='client_add_contact.html?key=" + clientKey + "'><button class='btn btn-xs btn-block' style='background-color: #1976d2; color: white;'><span class='fa fa-plus'></span> <strong>Add Contact</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='client_update.html?key=" + clientKey + "'><button class='btn btn-xs btn-block' style='background-color: #ffa000; color: white;'><span class='fa fa-edit'></span> <strong>Update</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='project.html?key=" + clientKey + "' class='btn btn-xs btn-block' style='background-color: #388e3c; color: white;'><span class='fa fa-info-circle'></span> <strong>Projects</strong></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'> <a href='client_list_po.html?clientKey=" + clientKey + "'> <button class='btn btn-xs btn-block' style='background-color: #697b99; color: white;'><span class='fa fa-info-circle'></span> <strong>List of P.O.</strong></button> </a></div></div></td></tr>";
+                firebase.database().ref('delivery_ongoing_order/'+dr_no_key).once('value', function(ongoingSnapshot){
 
+                    var order_po_no_key = ongoingSnapshot.val().po_no_key;
+
+                    if(order_po_no_key == po_no_key){
+
+                        var item_key = ongoingSnapshot.val().item_key;
+
+                        firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
+
+                            var dr_no = ongoingSnapshot.val().dr_no;
+                            var quantity = ongoingSnapshot.val().quantity;
+                            var gate_pass = ongoingSnapshot.val().gate_pass;
+                            var date = ongoingSnapshot.val().date;
+                            var issued_plant = ongoingSnapshot.val().issued_dr_plant;
+                            var status = ongoingSnapshot.val().status;
+                            var timestamp = ongoingSnapshot.val().reverseDate;
+                            var item_no = itemSnapshot.val().item_no;
+                            var psi = itemSnapshot.val().psi || "";
+
+                            var data = {
+                                dr_no: dr_no,
+                                item_no: item_no,
+                                psi: psi,
+                                quantity: quantity,
+                                gate_pass: gate_pass,
+                                date: date,
+                                issued_plant: issued_plant,
+                                status: status,
+                                timestamp: timestamp
+                            }
+
+                            array.push(data);
+
+                        });
+                    }
+                });
+            });
+        });
+
+        firebase.database().ref('purchase_order').once('value', function(){
+            firebase.database().ref('delivery_ongoing_order').once('value', function(){
+                firebase.database().ref('delivery_delivered_order').once('value', function(){
+                    firebase.database().ref('delivery_backloaded_order').once('value', function(){
+                    
+                        // array.sort(function(a,b){
+                        //     return Number(a.timestamp) - Number(b.timestamp);
+                        // });
+                        
+                        for(var i = 0; i < array.length; i++){
+
+                            var dr_no = array[i].dr_no;
+                            var quantity = Number(array[i].quantity).toLocaleString('en');
+                            var gate_pass = array[i].gate_pass;
+                            var date = array[i].date;
+                            var issued_plant = array[i].issued_plant;
+                            var status = array[i].status;
+                            var item_no = array[i].item_no;
+                            var psi = array[i].psi || "";
+
+                            if(psi != ""){
+                                psi_ext = " (" + psi + " psi)";
+                            }else{
+                                psi_ext = "";
+                            }
+
+                            if(status == 0){
+                                status_ext = "<span class='label' style='background-color: #ffa000; font-size: 12px;'><strong>ONGOING</strong></span>";
+                            }else if(status == 1){
+                                status_ext = "<span class='label' style='background-color: #388e3c; font-size: 12px;'><strong>DELIVERED</strong></span>";
+                            }else if(status == 2){
+                                status_ext = "<span class='label' style='background-color: #d32f2f; font-size: 12px;'><strong>BACKLOADED</strong></span>";
+                            }
+
+                            myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
+                            myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+                            myTbody += "<td><strong>" + quantity + "</strong></td>";
+                            myTbody += "<td><strong>" + gate_pass + "</strong></td>";
+                            myTbody += "<td><strong>" + date + "</strong></td>";
+                            myTbody += "<td><strong>" + issued_plant + "</strong></td>";
+                            myTbody += "<td><strong>" + status_ext + "</strong></td></tr>";
                         }
+
+                        document.getElementById('orderList').innerHTML = myTbody;
                     });
                 });
+            });
+        });
 
-                firebase.database().ref('client').once('value', function(){
+        firebase.database().ref('purchase_order/'+po_no_key).once('value', function(orderSnapshot){
 
-                    if(array.length == 0){
+            var client_key = orderSnapshot.val().client_key;
+            var project_key = orderSnapshot.val().project_key;
+            var po_no = orderSnapshot.val().po_no;
 
-                        myTbody = "<tr><td colspan='4' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-                    }
+            document.getElementById('id_po_no').innerHTML = po_no;
 
-                    document.getElementById("clientList").innerHTML = myTbody;
+            firebase.database().ref('client/'+client_key).once('value', function(clientSnapshot){
+                firebase.database().ref('project/'+client_key+'/'+project_key).once('value', function(projectSnapshot){
 
-                    $(".se-pre-con").fadeOut("slow");
+                    var client_name = clientSnapshot.val().client_name;
+                    var project_name = projectSnapshot.val().project_name;
+                    var project_address = projectSnapshot.val().project_address;
+
+                    document.getElementById('id_client_name').innerHTML = client_name;
+                    document.getElementById('id_project_name').innerHTML = project_name;
+                    document.getElementById('id_project_address').innerHTML = project_address;
+
                 });
-            }
+            });
+
+            firebase.database().ref('project/'+client_key+'/'+project_key+'/contact').once('value', function(contactSnapshot){
+                contactSnapshot.forEach(function(contactChildSnapshot){
+
+                    var contact_name = contactChildSnapshot.val().project_contact_name;
+                    var contact_no = contactChildSnapshot.val().project_contact_no;
+
+                    contactTbody += "<tr><td><strong>" + contact_name + "</strong></td>";
+                    contactTbody += "<td><strong>" + contact_no + "</strong></td></tr>";
+                });
+
+                document.getElementById('contactList').innerHTML = contactTbody;
+            });
         });
     }
 
@@ -320,11 +472,11 @@
      color: white;
      text-align: left;
      font-weight: bold;
-}  
+}        
 </style>
 </head>
 <body>
-    <div class="se-pre-con"></div>
+    <!-- <div class="se-pre-con"></div> -->
     <section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
@@ -400,6 +552,7 @@
                             <li><a class="" href="lineup.html?plant=Bravo">Line Up</a></li>
                             <li><a class="" href="diesel_category.html?plant=Bravo">Oil</a></li>
                             <li><a class="" href="parts.html?plant=Bravo">Parts</a></li>
+                            <li><a class="" href="purchase_order.html?plant=Bravo">Purchase Order</a></li>
                             <li><a class="" href="receive_aggregates.html?plant=Bravo">Received</a></li>
                             <li><a class="" href="transmittal_input.html?plant=Bravo">Transmittal</a></li>
                         </ul>
@@ -417,6 +570,7 @@
                             <li><a class="" href="lineup.html?plant=Delta">Line Up</a></li>
                             <li><a class="" href="diesel_category.html?plant=Delta">Oil</a></li>
                             <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
+                            <li><a class="" href="purchase_order.html?plant=Delta">Purchase Order</a></li>
                             <li><a class="" href="receive_aggregates.html?plant=Delta">Received</a></li>
                             <li><a class="" href="transmittal_input.html?plant=Delta">Transmittal</a></li>
                         </ul>
@@ -433,51 +587,63 @@
                 <!--overview start-->
                 <div class="row">
                     <div class="col-md-12">
-                        <!-- <h3 class="page-header">Client</h3> -->
                         <ol class="breadcrumb">
-                            <!-- <li><i class="fa fa-home"></i>Home</li> -->
-                            <li><i class="fa fa-address-book"></i>Clients</li>                            
+                            <li><i class="fa fa-building"></i>Delivery Order</li>
+                            <!-- <li><i class="fa fa-exclamation-circle"></i><a href="delivery_pending_order.html">Existing P.O. <span class='badge'></span></a></li>  
+                            <li><i class="fa fa-truck"></i><a href="delivery_ongoing_order.html">Ongoing Delivery <span class="badge"></span></a></li>   
+                            <li><i class="fa fa-truck"></i><a href="delivery_delivered_order.html">Delivered Order</a></li> 
+                            <li><i class="fa fa-truck"></i><a href="delivery_backloaded_order.html">Backloaded Order</a></li> -->
+                            <li><i class="icon_document"></i>Details</li>                          
                         </ol>
                     </div>
                 </div>
+
                 <div class="row">
-                    <div class="col-md-12">
-                        <section class="panel">
-                            <header class="panel-heading">
-                                <div class="row">
-                                    <form id="form" onsubmit="submitForm();">
-                                        <div class="input-group col-md-8" style="margin: 5px 0px 5px 0px;">
-                                            <div class="tooltips" data-original-title="Search Client or Address" data-placement="top">
-                                                <input type="text" name="search" id="search" class="form-control" placeholder="Search..." autocomplete="off">
-                                            </div>
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-info" type="submit" id="search_client" name="search_client">
-                                                    <i class="fa fa-search"></i>
-                                                </button>
-                                            </span>
-                                        </div>
-                                    </form>
-                                    <div class="pull-right" style="margin-top: 5px; margin-right: 5px;">
-                                         <a href="client_add.html" class="btn btn-info"><span class="fa fa-plus"></span> <strong>Add Client</strong></a>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <section class="panel">
+                                    <div class="table-responsive filterable">
+                                        <table class="table table-striped table-bordered table-condensed">
+                                            <thead>
+                                                <tr class="filterable">
+                                                    <th colspan="9">
+                                                        Client Name: <strong><span id="id_client_name"></span></strong><br>
+                                                        Project Name: <strong><span id="id_project_name"></span></strong><br>
+                                                        Project Address: <strong><span id="id_project_address"></span></strong><br>
+                                                        Purchase Order No.: <strong><span id="id_po_no"></span></strong>
+                                                        <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
+                                                    </th>
+                                                </tr>
+                                                <tr class="filters" style="background-color: #00a3cc;">
+                                                    <th class="col-md-1"><input type="text" class="form-control" placeholder="DR No." disabled></th>
+                                                    <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
+                                                    <th class="col-md-1" style="color: white">Quantity</th>
+                                                    <th class="col-md-1" style="color: white">Gate Pass</th>
+                                                    <th class="col-md-1" style="color: white">Date Transaction</th>
+                                                    <th class="col-md-1" style="color: white">Plant</th>
+                                                    <th class="col-md-2" style="color: white">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="orderList">
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </div>
-                            </header>
-                            <div class="table-responsive filterable">
-                                <table class="table table-striped table-bordered" id="myTable">
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <section class="panel">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-condensed">
                                     <thead>
-                                        <tr class="filterable">
-                                            <th colspan="4">
-                                                <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
-                                            </th>
-                                        </tr>
-                                        <tr class="filters" style="background-color: #00a3cc;">
-                                            <th class="col-md-4"><input type="text" class="form-control" placeholder="Client" disabled></th>
-                                            <th class="col-md-4"><input type="text" class="form-control" placeholder="Address" disabled></th>
-                                            <th class="col-md-4"><input type="text" class="form-control" placeholder="Contact" disabled></th>
-                                            <th class="col-md-1" style="color: white;">Option</th>
+                                        <tr style="background-color: #00a3cc;">
+                                            <th style="color: white;">Name</th>
+                                            <th style="color: white;">Contact No.</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="clientList">        
+                                    <tbody id="contactList">
                                     </tbody>
                                 </table>
                             </div>

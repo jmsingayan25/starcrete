@@ -128,6 +128,7 @@
         });
 
         submitForm();
+        displayNotif();
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -209,7 +210,7 @@
                             });
 
                             myTbody += "</td>";
-                            myTbody += "<td><div class='row' style='margin-bottom: 2px;'> <div class='col-md-12'> <a href='project_add_contact.html?projectKey=" + projectChildSnapshot.key + "&clientKey=" + clientKeyId + "'><button class='btn btn-sm btn-block' style='background-color: #1976d2; color: white;'><span class='fa fa-plus'></span> <strong>Add Contact</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='project_update.html?projectKey=" + projectChildSnapshot.key + "&clientKey=" + clientKeyId + "'><button class='btn btn-sm btn-block' style='background-color: #ffa000; color: white;'><span class='fa fa-edit'></span> <strong>Update</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'> <a href='project_list_po.html?projectKey=" + projectChildSnapshot.key + "&clientKey=" + clientKeyId + "'> <button class='btn btn-sm btn-block' style='background-color: #388e3c; color: white;'><span class='fa fa-info-circle'></span> <strong>List of P.O.</strong></button> </a></div></div></td></tr>";
+                            myTbody += "<td><div class='row' style='margin-bottom: 2px;'> <div class='col-md-12'> <a href='project_add_contact.html?projectKey=" + projectChildSnapshot.key + "&clientKey=" + clientKeyId + "'><button class='btn btn-sm btn-block' style='background-color: #1976d2; color: white;'><span class='fa fa-plus'></span> <strong>Add Contact</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='project_update.html?projectKey=" + projectChildSnapshot.key + "&clientKey=" + clientKeyId + "'><button class='btn btn-sm btn-block' style='background-color: #ffa000; color: white;'><span class='fa fa-edit'></span> <strong>Update</strong></button></a></div></div></td></tr>";
 
                         }
                     });
@@ -236,6 +237,73 @@
                 $(".se-pre-con").fadeOut("slow");
 
             }
+        });
+    }
+
+    function displayNotif(){
+
+        var myList = "";
+        count_employee = 0;
+        var option = {year: "numeric", month: "long", day: "numeric"}
+        var currentDate = new Date().toLocaleDateString('en', option);
+        var currentDate1 = new Date().toLocaleDateString('en', option);
+
+        var currentDate_date = new Date(currentDate);
+        var currentDate1_date = new Date(currentDate1);
+        currentDate1_date.setDate(currentDate1_date.getDate() - 1);
+        currentDate1_date = new Date(currentDate1_date);
+
+        var currentDateTimestamp = currentDate_date.getTime();
+        var yesterDateTimestamp = currentDate1_date.getTime();
+
+        firebase.database().ref('notification').orderByChild('reverseDate').limitToFirst(20).once('value', function(notifSnapshot){
+
+            if(notifSnapshot.val() != null){
+
+                notifSnapshot.forEach(function(notifChildSnapshot){
+
+                    if(notifChildSnapshot.val().toOffice == "Head Office"){
+
+                        date = notifChildSnapshot.val().date;
+                        var dateDate = new Date(date);
+                        var dateTimestamp = dateDate.getTime();
+
+                        if(dateTimestamp == currentDateTimestamp){
+                            var date_status = "Today";
+                        }else if(dateTimestamp == yesterDateTimestamp){
+                            var date_status = "Yesterday";
+                        }else if(dateTimestamp < yesterDateTimestamp){
+                            var date_status = date;
+                        }
+
+                        fromOffice = notifChildSnapshot.val().fromOffice;
+                        message = notifChildSnapshot.val().message;
+                        page = notifChildSnapshot.val().page;
+                        time = notifChildSnapshot.val().time;
+                        key = notifChildSnapshot.key;
+
+                        if(notifChildSnapshot.val().isRead == 1){
+
+                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\"><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
+
+                            count_employee++;
+
+                        }else if(notifChildSnapshot.val().isRead == 0){
+
+                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\" style='color: #595959;'><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
+
+                        }
+                    }
+                });
+
+                document.getElementById('id_notif_list').innerHTML = myList;
+
+                if(count_employee != 0){
+                    document.getElementById('id_badge').innerHTML = "<span class='badge bg-important'>" + count_employee + "</span>";
+                } 
+            }
+
+            $('.class_notif').text(count_employee);
         });
     }
 
