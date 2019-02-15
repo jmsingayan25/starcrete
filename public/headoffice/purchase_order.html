@@ -160,7 +160,8 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
-        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='icon_document'></i><a href='purchase_order.html?plant=" + plant + "'>Pending P.O.</a></li><li><i class='icon_document'></i><a href='purchase_order_closed.html?plant=" + plant + "'>Closed P.O.</a></li>";
+        document.getElementById('id_page_header').innerHTML = "<a href='purchase_order.html?plant=" + plant + "' style='color: inherit;'>" + plant + " Purchase Order</a>";
+        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='icon_document'></i>Pending P.O.</li><li><i class='icon_document'></i><a href='purchase_order_closed.html?plant=" + plant + "'>Closed P.O.</a></li>";
 
         $('input[name="daterange"]').daterangepicker({
             opens: 'right'
@@ -656,6 +657,11 @@
             <section class="wrapper">  
                 <div class="row">
                     <div class="col-md-12">
+                        <h3 class="page-header" id="id_page_header"></h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
                         <ol class="breadcrumb" id="id_breadcrumb"></ol>
                     </div>
                 </div>
@@ -685,31 +691,29 @@
                                     </div>
                                 </form>
                             </header>
-                            <div class="panel-body">
-                                <div class="table-responsive filterable">
-                                    <table class="table table-striped table-bordered table-condensed" id="myTable">
-                                        <thead>
-                                            <tr class="filterable">
-                                                <th colspan="9">
-                                                    <button class="btn btn-info btn-md" id="printPo" style="display: none;" onclick="printPo();"><strong><span class="fa fa-print"></span> Print Preview</strong></button>
-                                                    <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
-                                                </th>
-                                            </tr>
-                                            <tr class="filters" style="background-color: #00a3cc;">
-                                                <th class="col-md-1" style="color: white;">#</th>
-                                                <th class="col-md-2"><input type="text" class="form-control" placeholder="Client Name" disabled></th>
-                                                <th class="col-md-2"><input type="text" class="form-control" placeholder="Project Site" disabled></th>
-                                                <th class="col-md-1"><input type="text" class="form-control" placeholder="P.O. No." disabled></th>
-                                                <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
-                                                <th class="col-md-2" style="color: white;">Ordered / Remaining</th>
-                                                <th class="col-md-1"><input type="text" class="form-control" placeholder="Contact" disabled></th>
-                                                <th class="col-md-1" style="color: white;">Date Order</th>
-                                                <!-- <th class="col-md-1">Action</th> -->
-                                            </tr>
-                                        </thead>
-                                        <tbody id="orderList"></tbody>
-                                    </table>
-                                </div>
+                            <div class="table-responsive filterable">
+                                <table class="table table-striped table-bordered table-condensed" id="myTable">
+                                    <thead>
+                                        <tr class="filterable">
+                                            <th colspan="9">
+                                                <button class="btn btn-info btn-md" id="printPo" style="display: none;" onclick="printPo();"><strong><span class="fa fa-print"></span> Print Preview</strong></button>
+                                                <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
+                                            </th>
+                                        </tr>
+                                        <tr class="filters" style="background-color: #00a3cc;">
+                                            <th class="col-md-1" style="color: white;">#</th>
+                                            <th class="col-md-2"><input type="text" class="form-control" placeholder="Client Name" disabled></th>
+                                            <th class="col-md-2"><input type="text" class="form-control" placeholder="Project Site" disabled></th>
+                                            <th class="col-md-1"><input type="text" class="form-control" placeholder="P.O. No." disabled></th>
+                                            <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
+                                            <th class="col-md-2" style="color: white;">Ordered / Remaining</th>
+                                            <th class="col-md-1"><input type="text" class="form-control" placeholder="Contact" disabled></th>
+                                            <th class="col-md-1" style="color: white;">Date Order</th>
+                                            <!-- <th class="col-md-1">Action</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody id="orderList"></tbody>
+                                </table>
                             </div>
                         </section>
                     </div>
