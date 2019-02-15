@@ -8,7 +8,7 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="../img/favicon.png">
 
-	<title>Client</title>
+	<title>List of P.O.</title>
 
 	<!-- Firebase App is always required and must be first -->
 	<!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
@@ -83,7 +83,9 @@
 
 
 <script>
-    
+
+    var poNoKeyId = getUrlParameter('key') || "0";
+
     $(document).ready(function(){
 
         $('.filterable .btn-filter').click(function(){
@@ -127,7 +129,7 @@
             }
         });
 
-        submitForm();
+        tableData();
         displayNotif();
 
         firebase.auth().onAuthStateChanged(function(user) {
@@ -151,176 +153,14 @@
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
-    function submitForm(){
+    function tableData(){
 
-        event.preventDefault();
-
-        $(".se-pre-con").fadeIn("fast");
-
-        var myTbody = "";
-        var search_text = document.getElementById('search').value;
-        var array = [];
-
-        firebase.database().ref('client').once('value', function(clientSnapshot){
-
-            if(clientSnapshot.val() != null){
-
-                clientSnapshot.forEach(function(clientChildSnapshot){
-
-                    firebase.database().ref('client/'+clientChildSnapshot.key+'/contact').once('value', function(contactSnapshot){
-
-                        text_client_name = clientChildSnapshot.val().client_name;
-                        text_client_address = clientChildSnapshot.val().client_address;
-
-                        all_text = text_client_name + " " + text_client_address;
-
-                        search = searchMatch(search_text, all_text);
-
-                        if(search != null){
-
-                            client_name = clientChildSnapshot.val().client_name;
-                            client_address = clientChildSnapshot.val().client_address;
-                            clientKey = clientChildSnapshot.key;
-
-                            var data = {
-                                client_name: client_name,
-                                client_address: client_address,
-                                clientKey: clientKey
-                            }
-
-                            array.push(data);
-
-                            myTbody += "<tr><td><strong>" + client_name + "</strong></td>";
-                            myTbody += "<td><strong>" + client_address + "</strong></td>";
-                            myTbody += "<td>";
-
-                            contactSnapshot.forEach(function(contactChildSnapshot){
-
-                                client_contact_name = contactChildSnapshot.val().client_contact_name;
-                                client_contact_no = contactChildSnapshot.val().client_contact_no;
-                                
-                                myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-6'><strong>" + client_contact_name + "</strong></div><div class='col-md-1'>-</div><div class='col-md-5'><strong>" + client_contact_no + "</strong></div></div>";
-
-                            });
-                            
-                            myTbody += "</td>";
-                            myTbody += "<td><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='client_add_contact.html?key=" + clientKey + "'><button class='btn btn-xs btn-block' style='background-color: #1976d2; color: white;'><span class='fa fa-plus'></span> <strong>Add Contact</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='client_update.html?key=" + clientKey + "'><button class='btn btn-xs btn-block' style='background-color: #ffa000; color: white;'><span class='fa fa-edit'></span> <strong>Update</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='project.html?key=" + clientKey + "' class='btn btn-xs btn-block' style='background-color: #388e3c; color: white;'><span class='fa fa-info-circle'></span> <strong>Projects</strong></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'> <a href='client_list_po.html?key=" + clientKey + "'> <button class='btn btn-xs btn-block' style='background-color: #697b99; color: white;'><span class='fa fa-info-circle'></span> <strong>List of P.O.</strong></button> </a></div></div></td></tr>";
-
-                        }
-                    });
-                });
-
-                firebase.database().ref('client').once('value', function(){
-
-                    if(array.length == 0){
-
-                        myTbody = "<tr><td colspan='4' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-                    }
-
-                    document.getElementById("clientList").innerHTML = myTbody;
-
-                    $(".se-pre-con").fadeOut("slow");
-                });
-            }
-        });
-    }
-
-    function displayNotif(){
-
-        var myList = "";
-        count_employee = 0;
-        var option = {year: "numeric", month: "long", day: "numeric"}
-        var currentDate = new Date().toLocaleDateString('en', option);
-        var currentDate1 = new Date().toLocaleDateString('en', option);
-
-        var currentDate_date = new Date(currentDate);
-        var currentDate1_date = new Date(currentDate1);
-        currentDate1_date.setDate(currentDate1_date.getDate() - 1);
-        currentDate1_date = new Date(currentDate1_date);
-
-        var currentDateTimestamp = currentDate_date.getTime();
-        var yesterDateTimestamp = currentDate1_date.getTime();
-
-        firebase.database().ref('notification').orderByChild('reverseDate').limitToFirst(20).once('value', function(notifSnapshot){
-
-            if(notifSnapshot.val() != null){
-
-                notifSnapshot.forEach(function(notifChildSnapshot){
-
-                    if(notifChildSnapshot.val().toOffice == "Head Office"){
-
-                        date = notifChildSnapshot.val().date;
-                        var dateDate = new Date(date);
-                        var dateTimestamp = dateDate.getTime();
-
-                        if(dateTimestamp == currentDateTimestamp){
-                            var date_status = "Today";
-                        }else if(dateTimestamp == yesterDateTimestamp){
-                            var date_status = "Yesterday";
-                        }else if(dateTimestamp < yesterDateTimestamp){
-                            var date_status = date;
-                        }
-
-                        fromOffice = notifChildSnapshot.val().fromOffice;
-                        message = notifChildSnapshot.val().message;
-                        page = notifChildSnapshot.val().page;
-                        time = notifChildSnapshot.val().time;
-                        key = notifChildSnapshot.key;
-
-                        if(notifChildSnapshot.val().isRead == 1){
-
-                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\"><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
-
-                            count_employee++;
-
-                        }else if(notifChildSnapshot.val().isRead == 0){
-
-                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\" style='color: #595959;'><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
-
-                        }
-                    }
-                });
-
-                document.getElementById('id_notif_list').innerHTML = myList;
-
-                if(count_employee != 0){
-                    document.getElementById('id_badge').innerHTML = "<span class='badge bg-important'>" + count_employee + "</span>";
-                } 
-            }
-
-            $('.class_notif').text(count_employee);
-        });
+        
     }
 
 </script>
 <style>
-.filterable .panel-heading .pull-right {
-    margin-top: -20px;
-}
-.filterable .filters input[disabled] {
-    background-color: transparent;
-    text-align: center;
-    border: none;
-    cursor: auto;
-    box-shadow: none;
-    padding: 0;
-    height: auto;
-}
-.filterable .filters input[disabled]::-webkit-input-placeholder {
-    color: white;
-    text-align: left;
-    font-weight: bold;
-}
-.filterable .filters input[disabled]::-moz-placeholder {
-     color: white;
-     text-align: left;
-     font-weight: bold;
-}
-.filterable .filters input[disabled]:-ms-input-placeholder {
-     color: white;
-     text-align: left;
-     font-weight: bold;
-}  
+    
 </style>
 </head>
 <body>
@@ -400,6 +240,7 @@
                             <li><a class="" href="lineup.html?plant=Bravo">Line Up</a></li>
                             <li><a class="" href="diesel_category.html?plant=Bravo">Oil</a></li>
                             <li><a class="" href="parts.html?plant=Bravo">Parts</a></li>
+                            <li><a class="" href="purchase_order.html?plant=Bravo">Purchase Order</a></li>
                             <li><a class="" href="receive_aggregates.html?plant=Bravo">Received</a></li>
                             <li><a class="" href="transmittal_input.html?plant=Bravo">Transmittal</a></li>
                         </ul>
@@ -417,6 +258,7 @@
                             <li><a class="" href="lineup.html?plant=Delta">Line Up</a></li>
                             <li><a class="" href="diesel_category.html?plant=Delta">Oil</a></li>
                             <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
+                            <li><a class="" href="purchase_order.html?plant=Delta">Purchase Order</a></li>
                             <li><a class="" href="receive_aggregates.html?plant=Delta">Received</a></li>
                             <li><a class="" href="transmittal_input.html?plant=Delta">Transmittal</a></li>
                         </ul>
@@ -427,65 +269,7 @@
         </aside>
         <!--sidebar end-->
 
-        <!--main content start-->
-        <section id="main-content">
-            <section class="wrapper">            
-                <!--overview start-->
-                <div class="row">
-                    <div class="col-md-12">
-                        <!-- <h3 class="page-header">Client</h3> -->
-                        <ol class="breadcrumb">
-                            <!-- <li><i class="fa fa-home"></i>Home</li> -->
-                            <li><i class="fa fa-address-book"></i>Clients</li>                            
-                        </ol>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <section class="panel">
-                            <header class="panel-heading">
-                                <div class="row">
-                                    <form id="form" onsubmit="submitForm();">
-                                        <div class="input-group col-md-8" style="margin: 5px 0px 5px 0px;">
-                                            <div class="tooltips" data-original-title="Search Client or Address" data-placement="top">
-                                                <input type="text" name="search" id="search" class="form-control" placeholder="Search..." autocomplete="off">
-                                            </div>
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-info" type="submit" id="search_client" name="search_client">
-                                                    <i class="fa fa-search"></i>
-                                                </button>
-                                            </span>
-                                        </div>
-                                    </form>
-                                    <div class="pull-right" style="margin-top: 5px; margin-right: 5px;">
-                                         <a href="client_add.html" class="btn btn-info"><span class="fa fa-plus"></span> <strong>Add Client</strong></a>
-                                    </div>
-                                </div>
-                            </header>
-                            <div class="table-responsive filterable">
-                                <table class="table table-striped table-bordered" id="myTable">
-                                    <thead>
-                                        <tr class="filterable">
-                                            <th colspan="4">
-                                                <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
-                                            </th>
-                                        </tr>
-                                        <tr class="filters" style="background-color: #00a3cc;">
-                                            <th class="col-md-4"><input type="text" class="form-control" placeholder="Client" disabled></th>
-                                            <th class="col-md-4"><input type="text" class="form-control" placeholder="Address" disabled></th>
-                                            <th class="col-md-4"><input type="text" class="form-control" placeholder="Contact" disabled></th>
-                                            <th class="col-md-1" style="color: white;">Option</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="clientList">        
-                                    </tbody>
-                                </table>
-                            </div>
-                        </section>
-                    </div>
-                </div>
-            </section>
-        </section>
+
     </section>
 </body>
 </html>

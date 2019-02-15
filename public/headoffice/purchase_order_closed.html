@@ -252,19 +252,23 @@
                                                         total = Number(quantity_total).toLocaleString('en');
 
                                                         if(quantity != ""){
-                                                            closed_quantity = Number(quantity).toLocaleString('en');
+                                                            closed_quantity = Number(quantity).toLocaleString('en') + " pcs";
                                                         }else{
-                                                            closed_quantity = Number(balance).toLocaleString('en');
+                                                            closed_quantity = Number(balance).toLocaleString('en') + " pcs";
                                                         }
 
-                                                        
+                                                        if(Number(quantity_total) > quantity){
+                                                            total_ext = "<span style='color: red'>" + total + " pcs</span>";
+                                                        }else{
+                                                            total_ext = total + " pcs";
+                                                        }
 
                                                         myTbody += "<tr><td><strong>" + count + "</strong></td>";
                                                         myTbody += "<td><strong>" + client_name + "</strong></td>";
                                                         myTbody += "<td><strong>" + project_name + " <br> " + project_address + "</strong></td>";
                                                         myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
                                                         myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
-                                                        myTbody += "<td><strong>" + closed_quantity + " pcs / " + total + " pcs</strong></td>";
+                                                        myTbody += "<td><strong>" + closed_quantity + " / " + total_ext + "</strong></td>";
                                                         myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
 
                                                         contactSnapshot.forEach(function(contactChildSnapshot){
@@ -416,19 +420,23 @@
                                                             total = Number(quantity_total).toLocaleString('en');
 
                                                             if(quantity != ""){
-                                                                closed_quantity = Number(quantity).toLocaleString('en');
+                                                                closed_quantity = Number(quantity).toLocaleString('en') + " pcs";
                                                             }else{
-                                                                closed_quantity = Number(balance).toLocaleString('en');
+                                                                closed_quantity = Number(balance).toLocaleString('en') + " pcs";
                                                             }
 
-                                                            
+                                                            if(Number(quantity_total) > quantity){
+                                                                total_ext = "<span style='color: red'>" + total + " pcs</span>";
+                                                            }else{
+                                                                total_ext = total + " pcs";
+                                                            }
 
                                                             myTbody += "<tr><td><strong>" + count + "</strong></td>";
                                                             myTbody += "<td><strong>" + client_name + "</strong></td>";
                                                             myTbody += "<td><strong>" + project_name + " <br> " + project_address + "</strong></td>";
                                                             myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
                                                             myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
-                                                            myTbody += "<td><strong>" + closed_quantity + " pcs / " + total + " pcs</strong></td>";
+                                                            myTbody += "<td><strong>" + closed_quantity + " / " + total_ext + "</strong></td>";
                                                             myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
 
                                                             contactSnapshot.forEach(function(contactChildSnapshot){
@@ -603,7 +611,7 @@
 </style>
 </head>
 <body>
-    <!-- <div class="se-pre-con"></div> -->
+    <div class="se-pre-con"></div>
     <section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
@@ -721,7 +729,6 @@
                     <div class="col-md-12">
                         <ol class="breadcrumb" id="id_breadcrumb"></ol>
                     </div>
-                    
                 </div>
                 <div class="row">
                     <div class="col-md-12">
@@ -729,22 +736,6 @@
                             <form class="form-inline" onsubmit="return submitForm();">
                                 <header class="panel-heading">
                                     <div class="row" style="margin-bottom: 5px;">
-                                        <!-- <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label for="start_date">From:</label>
-                                                <div class="tooltips" data-original-title="Start date of transaction" data-placement="top">
-                                                    <input type="date" id="start_date" name="start_date" class="form-control">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label for="end_date">To:</label>
-                                                <div class="tooltips" data-original-title="End date of transaction" data-placement="top">
-                                                    <input type="date" id="end_date" name="end_date" class="form-control">
-                                                </div>
-                                            </div>
-                                        </div>   -->
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="start_date">Select Date Range:</label>

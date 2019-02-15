@@ -393,7 +393,7 @@
         firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
             firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
                 itemSnapshot.forEach(function(itemChildSnapshot){
-                    if(itemChildSnapshot.val().balance != 0){
+                    if(itemChildSnapshot.val().balance > 0){
                         po_count++;
                         document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
                     }

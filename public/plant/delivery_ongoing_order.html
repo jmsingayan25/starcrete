@@ -561,11 +561,11 @@
                 // }); 
         
                 // firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
-                    balance = itemSnapshot.val().balance;
+                    balance = Number(itemSnapshot.val().balance);
                     // quantity_order = itemSnapshot.val().quantity;
 
                     countItemOngoingDelivery(orderKey, plant, function(response){
-                        if(response == null && balance == 0){
+                        if(response == null && balance <= 0){
 
                             var closedStatus = {
                                 status: 1
@@ -803,7 +803,15 @@
 
             firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
 
-                var new_balance = Number(itemSnapshot.val().balance) + Number(quantity);
+                var balance = itemSnapshot.val().balance;
+                var order = itemSnapshot.val().quantity;
+
+                if(quantity > order){
+                    var new_balance = Number(order);
+                }else{
+                    var new_balance = Number(itemSnapshot.val().balance) + Number(quantity);
+                }
+
                 var updateBalance = {
                     balance: new_balance
                 }
@@ -864,7 +872,7 @@
 
                         itemSnapshot.forEach(function(itemChildSnapshot){
 
-                            if(itemChildSnapshot.val().balance != 0){
+                            if(itemChildSnapshot.val().balance > 0){
 
                                 pending_order_count++;
                             }

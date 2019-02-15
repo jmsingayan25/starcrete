@@ -333,7 +333,7 @@
 
         setTimeout(function () {
             if((number > balance || number <= 0) && input != ''){
-                submit.disabled = true;
+                // submit.disabled = true;
                 quantity_textbox.style.borderColor = 'red';
             }else if(input == ''){
                 quantity_textbox.style.borderColor = '';
@@ -352,7 +352,7 @@
             if(orderSnapshot.val() != null){
                 firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
                     itemSnapshot.forEach(function(itemChildSnapshot){
-                        if(itemChildSnapshot.val().balance != 0){
+                        if(itemChildSnapshot.val().balance > 0){
                             po_count++;
                             document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
                         }

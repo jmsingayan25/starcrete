@@ -299,42 +299,53 @@
                         // array.sort(function(a,b){
                         //     return Number(a.timestamp) - Number(b.timestamp);
                         // });
+
+                        if(array.length > 0){
+
+                            for(var i = 0; i < array.length; i++){
+
+                                var dr_no = array[i].dr_no;
+                                var quantity = Number(array[i].quantity).toLocaleString('en');
+                                var gate_pass = array[i].gate_pass;
+                                var date = array[i].date;
+                                var issued_plant = array[i].issued_plant;
+                                var status = array[i].status;
+                                var item_no = array[i].item_no;
+                                var psi = array[i].psi || "";
+
+                                if(psi != ""){
+                                    psi_ext = " (" + psi + " psi)";
+                                }else{
+                                    psi_ext = "";
+                                }
+
+                                if(status == 0){
+                                    status_ext = "<span class='label' style='background-color: #ffa000; font-size: 12px;'><strong>ONGOING</strong></span>";
+                                }else if(status == 1){
+                                    status_ext = "<span class='label' style='background-color: #388e3c; font-size: 12px;'><strong>DELIVERED</strong></span>";
+                                }else if(status == 2){
+                                    status_ext = "<span class='label' style='background-color: #d32f2f; font-size: 12px;'><strong>BACKLOADED</strong></span>";
+                                }
+
+                                myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
+                                myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+                                myTbody += "<td><strong>" + quantity + "</strong></td>";
+                                myTbody += "<td><strong>" + gate_pass + "</strong></td>";
+                                myTbody += "<td><strong>" + date + "</strong></td>";
+                                myTbody += "<td><strong>" + issued_plant + "</strong></td>";
+                                myTbody += "<td><strong>" + status_ext + "</strong></td></tr>";
+                            }
+
+                            document.getElementById('orderList').innerHTML = myTbody;
                         
-                        for(var i = 0; i < array.length; i++){
+                        }else{
 
-                            var dr_no = array[i].dr_no;
-                            var quantity = Number(array[i].quantity).toLocaleString('en');
-                            var gate_pass = array[i].gate_pass;
-                            var date = array[i].date;
-                            var issued_plant = array[i].issued_plant;
-                            var status = array[i].status;
-                            var item_no = array[i].item_no;
-                            var psi = array[i].psi || "";
+                            myTbody += "<tr class='no-result text-center'><td colspan='7' style='height: 100%;background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
-                            if(psi != ""){
-                                psi_ext = " (" + psi + " psi)";
-                            }else{
-                                psi_ext = "";
-                            }
-
-                            if(status == 0){
-                                status_ext = "<span class='label' style='background-color: #ffa000; font-size: 12px;'><strong>ONGOING</strong></span>";
-                            }else if(status == 1){
-                                status_ext = "<span class='label' style='background-color: #388e3c; font-size: 12px;'><strong>DELIVERED</strong></span>";
-                            }else if(status == 2){
-                                status_ext = "<span class='label' style='background-color: #d32f2f; font-size: 12px;'><strong>BACKLOADED</strong></span>";
-                            }
-
-                            myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
-                            myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
-                            myTbody += "<td><strong>" + quantity + "</strong></td>";
-                            myTbody += "<td><strong>" + gate_pass + "</strong></td>";
-                            myTbody += "<td><strong>" + date + "</strong></td>";
-                            myTbody += "<td><strong>" + issued_plant + "</strong></td>";
-                            myTbody += "<td><strong>" + status_ext + "</strong></td></tr>";
+                            document.getElementById('orderList').innerHTML = myTbody;
                         }
 
-                        document.getElementById('orderList').innerHTML = myTbody;
+                        $('.se-pre-con').fadeOut('slow');
                     });
                 });
             });
@@ -476,7 +487,7 @@
 </style>
 </head>
 <body>
-    <!-- <div class="se-pre-con"></div> -->
+    <div class="se-pre-con"></div>
     <section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">

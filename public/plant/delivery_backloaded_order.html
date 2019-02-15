@@ -493,7 +493,7 @@
         firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
             if(orderSnapshot.val() != null){
                 firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').on('child_added', function(itemSnapshot){
-                    if(itemSnapshot.val().balance != 0){
+                    if(itemSnapshot.val().balance > 0){
                         po_count = po_count + 1;
 
                         document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + Number(po_count).toLocaleString('en') + "</span>";

@@ -503,7 +503,7 @@
 
                         itemSnapshot.forEach(function(itemChildSnapshot){
 
-                            if(itemChildSnapshot.val().balance != 0){
+                            if(itemChildSnapshot.val().balance > 0){
 
                                 pending_order_count++;
                             }

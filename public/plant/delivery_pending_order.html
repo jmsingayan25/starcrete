@@ -211,7 +211,7 @@
                         firebase.database().ref('purchase_order/'+orderChildSnapshot.key+'/item').once('value', function(itemSnapshot){
                             itemSnapshot.forEach(function(itemChildSnapshot){
 
-                                if(itemChildSnapshot.val().balance != 0){
+                                if(itemChildSnapshot.val().balance > 0){
 
                                     firebase.database().ref('client/'+client_key).once('value', function(clientSnapshot){
                                         firebase.database().ref('project/'+client_key+'/'+project_key).once('value', function(projectSnapshot){
@@ -347,7 +347,7 @@
                             firebase.database().ref('purchase_order/'+orderChildSnapshot.key+'/item').once('value', function(itemSnapshot){
                                 itemSnapshot.forEach(function(itemChildSnapshot){
 
-                                    if(itemChildSnapshot.val().balance != 0){
+                                    if(itemChildSnapshot.val().balance > 0){
 
                                         firebase.database().ref('client/'+client_key).once('value', function(clientSnapshot){
                                             firebase.database().ref('project/'+client_key+'/'+project_key).once('value', function(projectSnapshot){
@@ -459,7 +459,7 @@
         firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
             if(orderSnapshot.val() != null){
                 firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').on('child_added', function(itemSnapshot){
-                    if(itemSnapshot.val().balance != 0){
+                    if(itemSnapshot.val().balance > 0){
                         po_count = po_count + 1;
 
                         document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + Number(po_count).toLocaleString('en') + "</span>";
