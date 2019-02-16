@@ -132,10 +132,9 @@
                     if(plant == 'Head Office'){
                         window.location.href = '../headoffice/index.html';
                     }
-                    // tableData(plant);
 
                     displayNotif();
-                    refreshNotif();
+                    totalCountBadge();
         
                     if(plant == 'Bravo'){
                         plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
@@ -349,6 +348,46 @@
         });
     }
 
+    function totalCountBadge(){
+
+        po_count = 0;
+        firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
+            if(orderSnapshot.val() != null){
+                firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').on('child_added', function(itemSnapshot){
+                    if(itemSnapshot.val().balance > 0){
+                        po_count = po_count + 1;
+
+                        document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + Number(po_count).toLocaleString('en') + "</span>";
+
+                    }
+                });
+            }
+        });
+
+        if(po_count == 0){
+            document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
+        }
+
+        do_count = 0;
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).on('child_added', function(ongoingOrderSnapshot) {
+            if(ongoingOrderSnapshot.val() != null){
+
+                var status = ongoingOrderSnapshot.val().status;
+
+                if(status == 0){
+                    do_count = do_count + 1;
+                }
+
+                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + Number(do_count).toLocaleString('en') + "</span>";
+
+            }
+        });
+
+        if(do_count == 0){
+            document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+        }
+    }
+
 </script>
 </head>
 <body>
@@ -447,6 +486,19 @@
                             <li><a class="" href="view_batch_report_item_summary.html">Item Summary</a></li>
                         </ul>
                     </li> 
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Delivery Order</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="delivery_pending_order.html">Pending Order <span id="id_count_existing_po"></span></a></li>    
+                            <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span id="id_count_ongoing_order"></span></a></li>                          
+                            <li><a class="" href="delivery_delivered_order.html">Delivered Order</a></li>
+                            <li><a class="" href="delivery_backloaded_order.html">Backloaded Order</a></li>
+                        </ul>
+                    </li>
                     <li class="active">
                         <a class="" href="diesel.html">
                             <i class="fa fa-building"></i>

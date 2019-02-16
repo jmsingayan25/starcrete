@@ -469,24 +469,24 @@
 
                             myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\"><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
 
-                            var currentTime = new Date().toLocaleDateString('en');
-                            var newcurrenttime = new Date(currentTime);
-                            newcurrenttime.setDate(newcurrenttime.getDate() - 3);
-                            newcurrenttime = new Date(newcurrenttime);
-                            newnewcurrenttime = newcurrenttime.getTime();
+                            // var currentTime = new Date().toLocaleDateString('en');
+                            // var newcurrenttime = new Date(currentTime);
+                            // newcurrenttime.setDate(newcurrenttime.getDate() - 3);
+                            // newcurrenttime = new Date(newcurrenttime);
+                            // newnewcurrenttime = newcurrenttime.getTime();
 
-                            var newdatettime = new Date(date);
-                            var newgettime = newdatettime.getTime();
+                            // var newdatettime = new Date(date);
+                            // var newgettime = newdatettime.getTime();
 
-                            if(newgettime < newnewcurrenttime){
+                            // if(newgettime < newnewcurrenttime){
 
-                                notifData = {
-                                    isRead: 0
-                                }
+                            //     notifData = {
+                            //         isRead: 0
+                            //     }
 
-                                firebase.database().ref('notification/'+key).update(notifData);
+                            //     firebase.database().ref('notification/'+key).update(notifData);
 
-                            }
+                            // }
 
                             count_employee++;
 
@@ -583,6 +583,12 @@
                             <span>Dashboard</span>
                         </a>
                     </li> 
+                    <li class="">
+                        <a class="" href="client.html">
+                            <i class="fa fa-address-book-o"></i>
+                            <span>Client</span>
+                        </a>
+                    </li>
                     <li class="sub-menu">
                         <a href="javascript:;" class="">
                             <i class="fa fa-building"></i>
@@ -592,10 +598,12 @@
                         <ul class="sub">
                             <li><a class="" href="attendance.html?plant=Bravo">Attendance</a></li>
                             <li><a class="" href="view_daily_production_report.html?plant=Bravo">Daily Production</a></li>
+                            <li><a class="" href="delivery_ongoing_order.html?plant=Bravo">Deliveries</a></li>
                             <li><a class="" href="diesel.html?plant=Bravo">Diesel</a></li>
                             <li><a class="" href="lineup.html?plant=Bravo">Line Up</a></li>
                             <li><a class="" href="diesel_category.html?plant=Bravo">Oil</a></li>
                             <li><a class="" href="parts.html?plant=Bravo">Parts</a></li>
+                            <li><a class="" href="purchase_order.html?plant=Bravo">Purchse Order</a></li>
                             <li><a class="" href="receive_aggregates.html?plant=Bravo">Received</a></li>
                             <li><a class="" href="transmittal_input.html?plant=Bravo">Transmittal</a></li>
                         </ul>
@@ -609,10 +617,12 @@
                         <ul class="sub">
                             <li><a class="" href="attendance.html?plant=Delta">Attendance</a></li>
                             <li><a class="" href="view_daily_production_report.html?plant=Delta">Daily Production</a></li>
+                            <li><a class="" href="delivery_ongoing_order.html?plant=Delta">Deliveries</a></li>
                             <li><a class="" href="diesel.html?plant=Delta">Diesel</a></li>
                             <li><a class="" href="lineup.html?plant=Delta">Line Up</a></li>
                             <li><a class="" href="diesel_category.html?plant=Delta">Oil</a></li>
                             <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
+                            <li><a class="" href="purchase_order.html?plant=Delta">Purchase Order</a></li>
                             <li><a class="" href="receive_aggregates.html?plant=Delta">Received</a></li>
                             <li><a class="" href="transmittal_input.html?plant=Delta">Transmittal</a></li>
                         </ul>

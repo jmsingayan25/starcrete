@@ -456,37 +456,9 @@
 
     function totalCountBadge(){
 
-        var pending_order_count = 0;
         var ongoing_order_count = 0;
 
-        firebase.database().ref('purchase_order').orderByChild('issued_po_plant').equalTo(plant).once('value', function(orderSnapshot){
-
-            if(orderSnapshot.val() != null){
-                orderSnapshot.forEach(function(orderChildSnapshot){
-
-                    firebase.database().ref('purchase_order/'+orderChildSnapshot.key+'/item').once('value', function(itemSnapshot){
-
-                        itemSnapshot.forEach(function(itemChildSnapshot){
-
-                            if(itemChildSnapshot.val().balance != 0){
-                                pending_order_count++;
-                            }
-                        });
-                        
-                        document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" +  Number(pending_order_count).toLocaleString('en') + "</span>";
-
-                    });
-                });
-            }
-        });
-
-        if(pending_order_count == 0){
-            document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + pending_order_count + "</span>";
-        }
-
         firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).once('value', function(ongoingOrderSnapshot) {
-
-            ongoing_order_count = 0;
 
             if(ongoingOrderSnapshot.val() != null){
 
@@ -679,6 +651,12 @@
                             <span>Dashboard</span>
                         </a>
                     </li> 
+                    <li class="">
+                        <a class="" href="client.html">
+                            <i class="fa fa-address-book-o"></i>
+                            <span>Client</span>
+                        </a>
+                    </li>
                     <li class="sub-menu">
                         <a href="javascript:;" class="">
                             <i class="fa fa-building"></i>
@@ -688,11 +666,12 @@
                         <ul class="sub">
                             <li><a class="" href="attendance.html?plant=Bravo">Attendance</a></li>
                             <li><a class="" href="view_daily_production_report.html?plant=Bravo">Daily Production</a></li>
+                            <li><a class="" href="delivery_ongoing_order.html?plant=Bravo">Deliveries</a></li>
                             <li><a class="" href="diesel.html?plant=Bravo">Diesel</a></li>
                             <li><a class="" href="lineup.html?plant=Bravo">Line Up</a></li>
                             <li><a class="" href="diesel_category.html?plant=Bravo">Oil</a></li>
                             <li><a class="" href="parts.html?plant=Bravo">Parts</a></li>
-                            <li><a class="" href="purchase_order.html?plant=Bravo">Purchase Order</a></li>
+                            <li><a class="" href="purchase_order.html?plant=Bravo">Purchse Order</a></li>
                             <li><a class="" href="receive_aggregates.html?plant=Bravo">Received</a></li>
                             <li><a class="" href="transmittal_input.html?plant=Bravo">Transmittal</a></li>
                         </ul>
@@ -706,6 +685,7 @@
                         <ul class="sub">
                             <li><a class="" href="attendance.html?plant=Delta">Attendance</a></li>
                             <li><a class="" href="view_daily_production_report.html?plant=Delta">Daily Production</a></li>
+                            <li><a class="" href="delivery_ongoing_order.html?plant=Delta">Deliveries</a></li>
                             <li><a class="" href="diesel.html?plant=Delta">Diesel</a></li>
                             <li><a class="" href="lineup.html?plant=Delta">Line Up</a></li>
                             <li><a class="" href="diesel_category.html?plant=Delta">Oil</a></li>
@@ -714,7 +694,7 @@
                             <li><a class="" href="receive_aggregates.html?plant=Delta">Received</a></li>
                             <li><a class="" href="transmittal_input.html?plant=Delta">Transmittal</a></li>
                         </ul>
-                    </li>   
+                    </li>  
                 </ul>
                 <!-- sidebar menu end-->
             </div>
@@ -734,7 +714,7 @@
                     <div class="col-md-12">
                         <ol class="breadcrumb" id="id_breadcrumb">
                             <li><i class="fa fa-building"></i><span id="li_plant"></span></li>
-                            <li><i class="icon_document"></i>Ongoing Delivery <span id="id_count_ongoing_order"></span></li>
+                            <li><i class="icon_document"></i>Ongoing <span id="id_count_ongoing_order"></span></li>
                             <!-- <li><i class="fa fa-info-circle"></i><span id="li_pending_order"></span></li> -->
                             <li><i class="fa fa-truck"></i><span id="li_delivered_order"></span></li>
                             <li><i class="fa fa-reply"></i><span id="li_backload_order"></span></li>

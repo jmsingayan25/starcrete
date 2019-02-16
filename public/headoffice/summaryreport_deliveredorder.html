@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,17 +8,18 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="../img/favicon.png">
 
-    <title>New Client</title>
+    <title>Summary of Delivered Order</title>
 
     <!-- Firebase App is always required and must be first -->
-	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
+    <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase-app.js"></script>
 
-	<!-- Add additional services you want to use -->
-	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
-	<script src="../js_config/firebase_config.js"></script>
+    <!-- Add additional services you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+    <script src="../js_config/firebase_config.js"></script>
 
-	<!-- Bootstrap CSS -->    
+    <!-- Bootstrap CSS -->    
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <!-- bootstrap theme -->
     <link href="../css/bootstrap-theme.css" rel="stylesheet">
@@ -35,7 +36,7 @@
     <link href="../css/widgets.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/style-responsive.css" rel="stylesheet" />
-    <link href="../css/xcharts.min.css" rel=" stylesheet">	
+    <link href="../css/xcharts.min.css" rel=" stylesheet">  
     <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
 
     <!-- javascripts -->
@@ -80,19 +81,18 @@
     <script src="../js/jquery.slimscroll.min.js"></script>
     <script src="../js_config/function.js"></script>
 
-    <!-- =======================================================
-    Theme Name: NiceAdmin
-    Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-    Author: BootstrapMade
-    Author URL: https://bootstrapmade.com
-    ======================================================= -->
-
+    <!-- Custom Javascript Datepicker -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
 <script>
-    
+
+    var plant = getUrlParameter('plant');
+
     $(document).ready(function(){
 
-        displayNotif();
+        tableData();
         
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -100,85 +100,202 @@
                 var uid = user.uid;
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-
                     if(snapshot.val().office != 'Head Office'){
                         window.location.href = '../plant/index.html';
                     }
+                    
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
-                    console.log(error);
+                    console.error(error);
                 });
             } else {
                 window.location.href = '../login.html';
             }
         });
+
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
+        document.getElementById('id_page_header').innerHTML = "<a href='delivery_delivered_order.html?plant='" + plant + " style='color: inherit;'>" + plant + " Monthly Delivered Order</a>";
+
+        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i>Monthly Delivery</li>";
     });
 
-    function add_row(){
-        $rowno=$("#item_table tr").length;
-        $rowno=$rowno+1;
-        $("#item_table tr:last").after("<tr id='row"+$rowno+"' style='text-align: center;'><td class='col-md-4'><div class='form-group'><input type='text' name='contact_name[]' class='form-control' style='text-transform: uppercase;' autocomplete='off' required></div></td><td class='col-md-4'><div class='form-group'><input type='text' name='contact_no[]' class='form-control' autocomplete='off' required></div></td><td class='col-md-4'><div class='form-group'><button type='button' class='btn btn-danger btn-md' onclick=delete_row('row"+$rowno+"')><span class='fa fa-minus'></span></button></div></td></tr>");
+    function tableData(){
+
+        $(".se-pre-con").fadeIn("fast");
+        var myTbody = "";
+        var myTbody1 = "";
+        var myThead = "";
+        var optionYear = {year: "numeric"};
+        var optionMonthYear = {year: "numeric", month: "long"};
+        var currentYear = new Date().toLocaleDateString('en', optionYear);
+        var currentMonthYear = new Date().toLocaleDateString('en', optionMonthYear);
+        count = 0;
+
+        // document.getElementById("quantityList").innerHTML = "<tr><td colspan='26' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
+
+        firebase.database().ref('summary_delivered_order/'+plant+'/'+currentMonthYear).once('value', function(dateSnapshot){
+            console.log(dateSnapshot.val());
+
+            document.getElementById('id_month_head').innerHTML = "<th colspan='" + count + "' style='color: white;'>For the Month of " + currentMonthYear + "</th>";
+
+            if(dateSnapshot.val() == null){
+            
+                myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                document.getElementById('quantityList').innerHTML = myTbody;
+                document.getElementById('quantityTotalList').innerHTML = "";
+                document.getElementById('id_item_head').innerHTML = "";
+                $(".se-pre-con").fadeOut("slow");
+                
+            }else{
+
+                firebase.database().ref('item').once('value', function(itemSnapshot){
+
+                    myThead += "<th style='color: white;'>Date</th>";
+                    itemSnapshot.forEach(function(itemChildSnapshot){
+
+                        myThead += "<th style='color: white;'>" + itemChildSnapshot.val().item + "</th>";
+                        
+                    });
+
+                    myThead += "<th style='color: white;'>Total</th>";
+                    document.getElementById('id_item_head').innerHTML = myThead;
+                });
+
+                firebase.database().ref('summary_delivered_order/'+plant+'/'+currentMonthYear).orderByChild('number').once('value', function(dateDaySnapshot){
+                    dateDaySnapshot.forEach(function(dateDayChildSnapshot){
+         
+                        firebase.database().ref('summary_delivered_order/'+plant+'/'+currentMonthYear+'/'+dateDayChildSnapshot.key+'/item').once('value', function(itemSnapshot){
+
+                            var day = new Date(dateDayChildSnapshot.val().date).getDate();
+
+                            myTbody += "<tr><td style='background-color: #00a3cc; color: white;'><strong>" + day + "</strong></td>";
+
+                            itemSnapshot.forEach(function(itemChildSnapshot){
+
+                                myTbody += "<td><strong>" + itemChildSnapshot.val().total + "</strong></td>";
+                                count++;
+
+                            });
+
+                            myTbody += "<td style='background-color: #00b300; color: white;'><strong>" + dateDayChildSnapshot.val().total + "</strong></td></tr>";
+
+                            document.getElementById('quantityList').innerHTML = myTbody;
+
+                            $(".se-pre-con").fadeOut("slow");
+
+
+                        });
+
+                        console.log(count);
+                    });
+
+
+                });
+
+                firebase.database().ref('summary_delivered_order_monthly_total/'+plant+'/'+currentYear+'/'+currentMonthYear).once('value', function(totalSnapshot){
+                    firebase.database().ref('summary_delivered_order/'+plant+'/'+currentMonthYear).once('value', function(){
+                        
+
+                        myTbody1 += "<tr><td style='background-color: #007a99; color: white;'><strong>Grand Total</strong></td>";
+                        myTbody1 += "<td colspan='" + count + "'></td>";
+                        myTbody1 += "<td style='background-color: #008000; color: white;'><strong>" + totalSnapshot.val().grand_total + "</strong></td></tr>";
+
+                        document.getElementById('quantityTotalList').innerHTML = myTbody1;
+                    });
+                });
+            }
+        });
     }
 
-    function delete_row(rowno){
-        $('#'+rowno).remove();
-    }
-
-    function insertClient(){
+    function submitForm(){
 
         event.preventDefault();
 
-        var client_contact_name = $("input[name='contact_name[]']").map(function(){return $(this).val();}).get();
-        var client_contact_no = $("input[name='contact_no[]']").map(function(){return $(this).val();}).get();
-        var client_name = document.getElementById('client_name').value;
-        var client_address = document.getElementById('client_address').value;
+        $(".se-pre-con").fadeIn("fast");
+        var myTbody = "";
+        var myTbody1 = "";
+        var myThead = "";
+        var monthSelect = document.getElementById('month').value;
+        var optionYear = {year: "numeric"};
+        var optionMonthYear = {year: "numeric", month: "long"};
 
-        console.log("Client Name: " + client_name.toUpperCase());
-        console.log("Client Address: " + client_address.toUpperCase());
-
-        for(var i = 0; i < client_contact_name.length; i++){
-            console.log("Client Contact Name: " + client_contact_name[i].toUpperCase());
-            console.log("Client Contact No: " + client_contact_no[i]);
-        }
-
-        var clientData = {
-            client_name: client_name.toUpperCase(),
-            client_address: client_address.toUpperCase()
-        };
-
-        // console.log(clientData);
-
-        var postData = firebase.database().ref().child("client");
-        var newPostRef = postData.push();
-        newPostRef.set(clientData);
-
-        var postId = newPostRef.key;
-        var postContact = firebase.database().ref("client/"+postId+"/contact");
-        var count = 0;
-        for(var i = 0; i < client_contact_name.length; i++){
-
-            var postContactData = {
-                client_contact_name: client_contact_name[i].toUpperCase(),
-                client_contact_no: client_contact_no[i]
-            }
-
-            // console.log(postContactData);
-            postContact.push(postContactData);
-            count++;
-        }
-        
-        if(count == client_contact_name.length){
-            if(confirm("'New client added successfully. Proceed to Add Project?") == true){
-                window.location.href='project_add.html?key=' + postId;
-            }else{
-                event.preventDefault();
-                window.location.href = 'client_add.html';
-            }
+        if(monthSelect == ''){
+            var selectMonthYear = new Date().toLocaleDateString('en', optionMonthYear);
+            var selectYear = new Date().toLocaleDateString('en', optionYear);
         }else{
-            alert("Failed. Try Again.");
+            var selectMonthYear = new Date(monthSelect).toLocaleDateString('en', optionMonthYear);
+            var selectYear = new Date(monthSelect).toLocaleDateString('en', optionYear);
         }
+
+        console.log(selectMonthYear);
+
+        firebase.database().ref('summary_delivered_order/'+plant+'/'+selectMonthYear).once('value', function(dateSnapshot){
+            console.log(dateSnapshot.val());
+
+            document.getElementById('id_month_head').innerHTML = "<th colspan='26' style='color: white;'>For the Month of " + selectMonthYear + "</th>";
+
+            if(dateSnapshot.val() == null){
+
+                myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                document.getElementById('quantityList').innerHTML = myTbody;
+                document.getElementById('quantityTotalList').innerHTML = "";
+                document.getElementById('id_item_head').innerHTML = "";
+                $(".se-pre-con").fadeOut("slow");
+
+            }else{
+
+                firebase.database().ref('item').once('value', function(itemSnapshot){
+
+                    myThead += "<th style='color: white;'>Date</th>";
+                    itemSnapshot.forEach(function(itemChildSnapshot){
+
+                        myThead += "<th style='color: white;'>" + itemChildSnapshot.val().item + "</th>";
+                        
+                    });
+
+                    myThead += "<th style='color: white;'>Total</th>";
+                    document.getElementById('id_item_head').innerHTML = myThead;
+                });
+
+                firebase.database().ref('summary_delivered_order/'+plant+'/'+selectMonthYear).orderByChild('number').once('value', function(dateDaySnapshot){
+                    dateDaySnapshot.forEach(function(dateDayChildSnapshot){
+         
+                        firebase.database().ref('summary_delivered_order/'+plant+'/'+selectMonthYear+'/'+dateDayChildSnapshot.key+'/item').once('value', function(itemSnapshot){
+
+                            var day = new Date(dateDayChildSnapshot.val().date).getDate();
+
+                            myTbody += "<tr><td style='background-color: #00a3cc; color: white;'><strong>" + day + "</strong></td>";
+
+                            itemSnapshot.forEach(function(itemChildSnapshot){
+
+                                myTbody += "<td><strong>" + itemChildSnapshot.val().total + "</strong></td>";
+
+                            });
+
+                            myTbody += "<td style='background-color: #00b300; color: white;'><strong>" + dateDayChildSnapshot.val().total + "</strong></td></tr>";
+
+                            document.getElementById('quantityList').innerHTML = myTbody;
+
+                             $(".se-pre-con").fadeOut("slow");
+
+                        });
+                    });
+                });
+
+                firebase.database().ref('summary_delivered_order_monthly_total/'+plant+'/'+selectYear+'/'+selectMonthYear).once('value', function(totalSnapshot){
+                    console.log(count);
+
+                    myTbody1 += "<tr><td style='background-color: #007a99; color: white;'><strong>Grand Total</strong></td>";
+                    myTbody1 += "<td colspan='" + 24 + "'></td>";
+                    myTbody1 += "<td style='background-color: #008000; color: white;'><strong>" + totalSnapshot.val().grand_total + "</strong></td></tr>";
+
+                    document.getElementById('quantityTotalList').innerHTML = myTbody1;
+                });
+            }
+        });
     }
 
     function displayNotif(){
@@ -249,8 +366,12 @@
     }
 
 </script>
+<style>
+    
+</style>
 </head>
 <body>
+    <div class="se-pre-con"></div>
     <section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
@@ -313,7 +434,7 @@
                             <span>Dashboard</span>
                         </a>
                     </li> 
-                    <li class="active">
+                    <li class="">
                         <a class="" href="client.html">
                             <i class="fa fa-address-book-o"></i>
                             <span>Client</span>
@@ -369,91 +490,54 @@
                 <!--overview start-->
                 <div class="row">
                     <div class="col-md-12">
-                        <!-- <h3 class="page-header">New Client</h3> -->
-                        <ol class="breadcrumb">
-                            <li><i class="fa fa-address-book"></i><a href="client.html">Clients</a></li>                            
-                            <li><i class="icon_document"></i>New Client</li>                            
-                        </ol>
+                        <h3 class="page-header" id="id_page_header"></h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb" id="id_breadcrumb"></ol>
                     </div>
                 </div>
 
-                <!-- Basic Forms & Horizontal Forms-->
-                <form class="form-horizontal" onsubmit="if(confirm('Proceed')) insertClient();">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <section class="panel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <section class="panel">
+                            <form class="form-inline" onsubmit="return submitForm();">
                                 <header class="panel-heading">
-                                Client Info
-                                </header>
-                                <div class="panel-body">
-                                    <div class="form-group">
-                                        <label for="client_name" class="col-md-4 control-label">Client Name<span class="required" style="color: red;">*</span></label>
-                                        <div class="col-md-8">
-                                            <textarea name="client_name" id="client_name" class="form-control" style="resize: none; text-transform: uppercase;" required></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="client_address" class="col-md-4 control-label">Client Address<span class="required" style="color: red;">*</span></label>
-                                        <div class="col-md-8">
-                                            <textarea name="client_address" id="client_address" class="form-control" rows="5" style="resize: none; text-transform: uppercase;" required></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-offset-8 col-md-4">
-                                            <input type="submit" name="submit" id="submit" value="Save" class="btn btn-primary" style="font-weight: bold;">
-                                            <a href="client.html" class="btn btn-default"><strong>Cancel</strong></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
-                        <div class="col-md-6">
-                            <section class="panel">
-                                <header class="panel-heading">
-                                Contact
-                                </header>
-                                <div class="panel-body">
                                     <div class="row">
-                                        <table id="item_table" align="center">
-                                            <tr>
-                                                <td class="col-md-4">
-                                                    <label for="contact_name">Name<span class="required" style="color: red;">*</span></label>
-                                                </td>
-                                                <td class="col-md-4">
-                                                    <label for="contact_no">Number<span class="required" style="color: red;">*</span></label>
-                                                </td>
-                                                <td class="col-md-4">
-                                                    <label for="button"></label>
-                                                </td>
-                                            </tr>
-                                            <tr id="row1" style="text-align: center;">
-                                                <td class="col-md-3">
-                                                    <div class="form-group">
-                                                        <input type="text" name="contact_name[]" class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
-                                                    </div>
-                                                </td>
-                                                <td class="col-md-5">
-                                                    <div class="form-group" >
-                                                        <input type="text" name="contact_no[]" class="form-control" autocomplete="off" required>
-                                                    </div>
-                                                </td>
-                                                <td class="col-md-4">
-                                                    <div class="form-group">
-                                                        <button type="button" onclick="add_row();" class='btn btn-primary btn-md'><span class="fa fa-plus"></span></button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </table>
+                                        <div class="form-group" style="margin-top: 5px; margin-bottom: 5px;">
+                                            <label for="month" class="col-md-2 control-label" style="margin-right: -10px;">Date:</label>
+                                            <div class="col-md-7" style="margin-right: -25px;">
+                                                <input type="month" id="month" name="month" class="form-control">
+                                                
+                                            </div>
+                                            <div class="col-md-1" style="margin-right: 25px;">
+                                                <button class="btn btn-info" type="submit" name="search_table">
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                             <div class="col-md-1">
+                                                <button class="btn btn-info" onclick="print();">
+                                                    <span class="fa fa-print"></span> <strong>Print Preview</strong>
+                                                </button>
+                                            </div>
+                                        </div>                                  
                                     </div>
-                                </div>
-                                <footer class="panel-footer">
-                                    <p class="help-block"><span class="required" style="color: red;">*</span> - required</p>
-                                    <p class="help-block">Note: Put a comma between contact numbers. <strong>N/A</strong> for not available.</p>
-                                </footer>
-                            </section>
-                        </div>
+                                </header>
+                            </form>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr id="id_month_head" style="background-color: #00a3cc;"></tr>
+                                        <tr id="id_item_head" style="background-color: #00a3cc;"></tr>
+                                    </thead>
+                                    <tbody id="quantityList"></tbody>
+                                    <tbody id="quantityTotalList"></tbody>
+                                </table>
+                            </div>
+                        </section>
                     </div>
-                </form>
+                </div>
             </section>
         </section>
     </section>
