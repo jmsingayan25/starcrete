@@ -8,7 +8,7 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="../img/favicon.png">
 
-    <title>Summary of Delivered Order</title>
+    <title>Backloaded Order</title>
 
     <!-- Firebase App is always required and must be first -->
     <!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
@@ -137,7 +137,7 @@
         firebase.database().ref('summary_delivered_order/'+plant+'/'+currentMonthYear).once('value', function(dateSnapshot){
             console.log(dateSnapshot.val());
 
-            document.getElementById('id_month_head').innerHTML = "<th colspan='" + count + "' style='color: white;'>For the Month of " + currentMonthYear + "</th>";
+            document.getElementById('id_month_head').innerHTML = "<th colspan='26' style='color: white;'>For the Month of " + currentMonthYear + "</th>";
 
             if(dateSnapshot.val() == null){
             
@@ -184,26 +184,18 @@
                             document.getElementById('quantityList').innerHTML = myTbody;
 
                             $(".se-pre-con").fadeOut("slow");
-
-
                         });
-
-                        console.log(count);
                     });
-
-
                 });
 
                 firebase.database().ref('summary_delivered_order_monthly_total/'+plant+'/'+currentYear+'/'+currentMonthYear).once('value', function(totalSnapshot){
-                    firebase.database().ref('summary_delivered_order/'+plant+'/'+currentMonthYear).once('value', function(){
-                        
+                    console.log(count);
 
-                        myTbody1 += "<tr><td style='background-color: #007a99; color: white;'><strong>Grand Total</strong></td>";
-                        myTbody1 += "<td colspan='" + count + "'></td>";
-                        myTbody1 += "<td style='background-color: #008000; color: white;'><strong>" + totalSnapshot.val().grand_total + "</strong></td></tr>";
+                    myTbody1 += "<tr><td style='background-color: #007a99; color: white;'><strong>Grand Total</strong></td>";
+                    myTbody1 += "<td colspan='" + 24 + "'></td>";
+                    myTbody1 += "<td style='background-color: #008000; color: white;'><strong>" + totalSnapshot.val().grand_total + "</strong></td></tr>";
 
-                        document.getElementById('quantityTotalList').innerHTML = myTbody1;
-                    });
+                    document.getElementById('quantityTotalList').innerHTML = myTbody1;
                 });
             }
         });

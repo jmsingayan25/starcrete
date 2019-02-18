@@ -240,6 +240,8 @@
                                                         psi_ext = "";
                                                     }
 
+                                                    var item = item + psi_ext;
+
                                                     quantity = Number(ongoingChildSnapshot.val().quantity).toLocaleString('en');
                                                     project_name = projectSnapshot.val().project_name;
                                                     project_address = projectSnapshot.val().project_address;
@@ -252,9 +254,9 @@
                                                     myTbody += "<tr><td><strong>" + gate_pass + "</strong></td>";
                                                     myTbody += "<td><strong>" + dr_no + "</strong></td>";
                                                     myTbody += "<td><strong>" + client_name + "</strong></td>";
-                                                    myTbody += "<td><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
+                                                    myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + " and " + item + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + po_no_key + "&item_key=" + item_key + "'\"><strong>" + po_no + "</strong></div></td>";
                                                     myTbody += "<td><strong>" + project_name + " <br> " + project_address + "</strong></td>";
-                                                    myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+                                                    myTbody += "<td><strong>" + item + "</strong></td>";
                                                     myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
                                                     myTbody += "<td><strong>" + truck_no + "</strong></td>";
                                                     myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
@@ -384,6 +386,8 @@
                                                             psi_ext = "";
                                                         }
 
+                                                        var item = item_no + psi_ext;
+
                                                         quantity = Number(ongoingChildSnapshot.val().quantity).toLocaleString('en');
                                                         project_name = projectSnapshot.val().project_name;
                                                         project_address = projectSnapshot.val().project_address;
@@ -396,9 +400,9 @@
                                                         myTbody += "<tr><td><strong>" + gate_pass + "</strong></td>";
                                                         myTbody += "<td><strong>" + dr_no + "</strong></td>";
                                                         myTbody += "<td><strong>" + client_name + "</strong></td>";
-                                                        myTbody += "<td><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
+                                                        myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + " and " + item + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + po_no_key + "&item_key=" + item_key + "'\"><strong>" + po_no + "</strong></div></td>";
                                                         myTbody += "<td><strong>" + project_name + " <br> " + project_address + "</strong></td>";
-                                                        myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+                                                        myTbody += "<td><strong>" + item + "</strong></td>";
                                                         myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
                                                         myTbody += "<td><strong>" + truck_no + "</strong></td>";
                                                         myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
@@ -734,7 +738,7 @@
                                         </div>
                                     </div>
                                     <div class="input-group col-md-5" style="margin: 38px 0px 0px 0px;">
-                                        <div class="tooltips" data-original-title="Search DR No., P.O. No., Item, Project Name, Address or Contact" data-placement="top">
+                                        <div class="tooltips" data-original-title="Search DR No., P.O. No., Item, Client Name, Project Site" data-placement="top">
                                             <input type="text" id="search" name="search" class="form-control" placeholder="Search...">
                                         </div>
                                         <span class="input-group-btn">

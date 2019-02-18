@@ -129,8 +129,9 @@
             }
         });
 
-        tableData();
         displayNotif();
+        itemOption();
+        tableData();
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -153,9 +154,211 @@
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
+    function itemOption(){
+
+        event.preventDefault();
+
+        var myTbody = "";
+
+        firebase.database().ref('purchase_order/'+poNoKeyId+'/item').once('value', function(itemSnapshot){
+            
+            myTbody += "<option value=''>Select</option>";
+
+            itemSnapshot.forEach(function(itemChildSnapshot){
+
+                var item_no = itemChildSnapshot.val().item_no;
+                var key = itemChildSnapshot.key;
+
+                myTbody += "<option value='" + key + "'>" + item_no + "</option>";
+
+                document.getElementById('itemList').innerHTML = myTbody;
+            });
+        });
+    }
+
     function tableData(){
 
-        
+        var myContactBody = "";
+
+        firebase.database().ref('purchase_order/'+poNoKeyId).once('value', function(itemSnapshot){
+
+            var client_key = itemSnapshot.val().client_key;
+            var project_key = itemSnapshot.val().project_key;
+            var po_no = itemSnapshot.val().po_no;
+
+            document.getElementById('id_po_no').innerHTML = po_no;
+
+            firebase.database().ref('client/'+client_key).once('value').then(function(clientSnapshot){
+                firebase.database().ref('project/'+client_key+'/'+project_key).once('value').then(function(projectSnapshot){
+                    
+                    document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-address-book'></i><a href='client.html'>Clients</a></li><li><i class='fa fa-building'></i><a href='client_list_po.html?key=" + client_key + "'>" + clientSnapshot.val().client_name + "</a></li><li><i class='fa fa-building'></i>Purchase Order No. " + po_no + "</li>";
+
+                    document.getElementById('id_project_name').innerHTML = projectSnapshot.val().project_name;
+                    document.getElementById('id_project_address').innerHTML = projectSnapshot.val().project_address;
+
+                    firebase.database().ref('project/'+client_key+'/'+project_key+'/contact').once('value', function(contactSnapshot){
+                        contactSnapshot.forEach(function(contactChildSnapshot){
+
+                            contact_name = contactChildSnapshot.val().project_contact_name;
+                            contact_no = contactChildSnapshot.val().project_contact_no;
+
+                            myContactBody += "<tr><td><strong>" + contact_name + "</strong></td>";
+                            myContactBody += "<td><strong>" + contact_no + "</strong></td></tr>";
+
+                            document.getElementById('contactList').innerHTML = myContactBody;
+                        });
+
+                        $('.se-pre-con').fadeOut('slow');
+                    }); 
+                });
+            });
+
+            document.getElementById('tableID').innerHTML = "<h4 style='text-align: center;'><p class='text-muted'>No data found</p>";
+        });
+    }
+
+    function itemData(key){
+
+        event.preventDefault();
+
+        $('.se-pre-con').fadeIn('fast');
+
+        var myThead = "";
+        var myTbody = "";
+        var array = [];
+
+        if(key != ''){
+
+            firebase.database().ref('purchase_order/'+poNoKeyId+'/item/'+key).once('value', function(itemSnapshot){
+
+                var item_no = itemSnapshot.val().item_no;
+                var quantity = itemSnapshot.val().quantity;
+                var client_key = itemSnapshot.val().client_key;
+                var project_key = itemSnapshot.val().project_key;
+
+                myThead += "<table class='table table-striped table-bordered'><thead><tr class='filterable'><th colspan='4'>Item: " + item_no + " <br> Quantity: " + quantity + "</th></tr><tr style='background-color: #00a3cc;'><th class='col-md-1' style='color: white;'>Date Delivered</th><th class='col-md-1' style='color: white;'>DR No.</th><th class='col-md-1' style='color: white;'>Quantity</th><th class='col-md-1' style='color: white;'>Truck No.</th></tr></thead><tbody id='deliverList'></tbody></table>";
+
+                document.getElementById('tableID').innerHTML  = myThead;
+
+                firebase.database().ref('delivery_ongoing_order').once('value', function(ongoingSnapshot){
+                    ongoingSnapshot.forEach(function(ongoingChildSnapshot){
+
+                        var po_no_key = ongoingChildSnapshot.val().po_no_key;
+                        var dr_no_key = ongoingChildSnapshot.key;
+                        var item_key = ongoingChildSnapshot.val().item_key;
+                        var status = ongoingChildSnapshot.val().status;
+
+                        if(po_no_key == poNoKeyId && key == item_key && status == 1){
+
+                            console.log(ongoingChildSnapshot.val());
+
+                            firebase.database().ref('delivery_delivered_order').orderByChild('reverseDate').once('value', function(deliveredSnapshot){
+                                deliveredSnapshot.forEach(function(deliveredChildSnapshot){
+
+                                    var dl_dr_no_key = deliveredChildSnapshot.val().dr_no_key;
+
+                                    if(dr_no_key == dl_dr_no_key){
+
+                                        console.log(deliveredChildSnapshot.val());
+
+                                        var gate_pass = ongoingChildSnapshot.val().gate_pass;
+                                        var dr_no = ongoingChildSnapshot.val().dr_no;
+                                        var date = deliveredChildSnapshot.val().date;
+                                        var quantity = ongoingChildSnapshot.val().quantity;
+                                        var truck_no = ongoingChildSnapshot.val().truck_no;
+
+                                        myTbody += "<tr><td><strong>" + date + "</strong></td>";
+                                        myTbody += "<td><strong>" + dr_no + "</strong></td>";
+                                        myTbody += "<td><strong>" + quantity + "</strong></td>";
+                                        myTbody += "<td><strong>" + truck_no + "</strong></td></tr>";
+
+                                        document.getElementById('deliverList').innerHTML = myTbody;
+
+                                        $('.se-pre-con').fadeOut('slow');
+                                    }
+                                });
+                            });
+                        }
+                    });
+                });
+            });
+
+        }else{
+
+            myTbody = "";
+            myThead = "<h4 style='text-align: center;'><p class='text-muted'>No data found</p>";
+
+            document.getElementById('tableID').innerHTML = myThead;
+ 
+            $('.se-pre-con').fadeOut('slow');
+        }
+    }
+
+    function displayNotif(){
+
+        var myList = "";
+        count_employee = 0;
+        var option = {year: "numeric", month: "long", day: "numeric"}
+        var currentDate = new Date().toLocaleDateString('en', option);
+        var currentDate1 = new Date().toLocaleDateString('en', option);
+
+        var currentDate_date = new Date(currentDate);
+        var currentDate1_date = new Date(currentDate1);
+        currentDate1_date.setDate(currentDate1_date.getDate() - 1);
+        currentDate1_date = new Date(currentDate1_date);
+
+        var currentDateTimestamp = currentDate_date.getTime();
+        var yesterDateTimestamp = currentDate1_date.getTime();
+
+        firebase.database().ref('notification').orderByChild('reverseDate').limitToFirst(20).once('value', function(notifSnapshot){
+
+            if(notifSnapshot.val() != null){
+
+                notifSnapshot.forEach(function(notifChildSnapshot){
+
+                    if(notifChildSnapshot.val().toOffice == "Head Office"){
+
+                        date = notifChildSnapshot.val().date;
+                        var dateDate = new Date(date);
+                        var dateTimestamp = dateDate.getTime();
+
+                        if(dateTimestamp == currentDateTimestamp){
+                            var date_status = "Today";
+                        }else if(dateTimestamp == yesterDateTimestamp){
+                            var date_status = "Yesterday";
+                        }else if(dateTimestamp < yesterDateTimestamp){
+                            var date_status = date;
+                        }
+
+                        fromOffice = notifChildSnapshot.val().fromOffice;
+                        message = notifChildSnapshot.val().message;
+                        page = notifChildSnapshot.val().page;
+                        time = notifChildSnapshot.val().time;
+                        key = notifChildSnapshot.key;
+
+                        if(notifChildSnapshot.val().isRead == 1){
+
+                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\"><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
+
+                            count_employee++;
+
+                        }else if(notifChildSnapshot.val().isRead == 0){
+
+                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\" style='color: #595959;'><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
+
+                        }
+                    }
+                });
+
+                document.getElementById('id_notif_list').innerHTML = myList;
+
+                if(count_employee != 0){
+                    document.getElementById('id_badge').innerHTML = "<span class='badge bg-important'>" + count_employee + "</span>";
+                } 
+            }
+
+            $('.class_notif').text(count_employee);
+        });
     }
 
 </script>
@@ -277,7 +480,69 @@
         </aside>
         <!--sidebar end-->
 
-
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">            
+                <!--overview start-->
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb" id="id_breadcrumb"></ol>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-9">
+                        <section class="panel">
+                             <!-- <header class="panel-heading">
+                                    <span>Project Name: <strong><span id="id_project_name"></span></strong></span><br>
+                                    <span>Project Address: <strong><span id="id_project_address"></strong></span><br>
+                                    <span>Item: <strong><span id="id_item"></strong></span><br>
+                                    P.O. No.: <select id="itemList" onchange="itemData(this.value);">
+                                        <option value="">Select</option>
+                                    </select>
+                            </header>
+                            <span id="tableID"></span>   --> 
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Project Name: <strong><span id="id_project_name"></span></strong><br>
+                                                Project Address: <strong><span id="id_project_address"></span></strong><br>
+                                                Purchase Order No.: <strong><span id="id_po_no"></span></strong><br>
+                                                Item: <select id="itemList" onchange="itemData(this.value);">
+                                        <option value="">Select</option>
+                                    </select>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td id="tableID"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="col-md-3">
+                        <section class="panel">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr style="background-color: #00a3cc;">
+                                            <th style="color: white;">Name</th>
+                                            <th style="color: white;">Contact No.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="contactList">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </section>
     </section>
 </body>
 </html>

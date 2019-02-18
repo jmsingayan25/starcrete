@@ -85,6 +85,7 @@
 
     // var plant = getUrlParameter('plant');
     var po_no_key = getUrlParameter('po_no_key');
+    var item_key = getUrlParameter('item_key');
     
     $(document).ready(function(){
 
@@ -166,10 +167,11 @@
 
                 var order_po_no_key = ongoingChildSnapshot.val().po_no_key;
                 var status = ongoingChildSnapshot.val().status;
+                var order_item_key = ongoingChildSnapshot.val().item_key;
 
-                if(order_po_no_key == po_no_key && status == 0){
+                if(order_po_no_key == po_no_key && status == 0 && order_item_key == item_key){
 
-                    var item_key = ongoingChildSnapshot.val().item_key;
+                    // var item_key = ongoingChildSnapshot.val().item_key;
 
                     firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
 
@@ -209,10 +211,9 @@
                 firebase.database().ref('delivery_ongoing_order/'+dr_no_key).once('value', function(ongoingSnapshot){
 
                     var order_po_no_key = ongoingSnapshot.val().po_no_key;
+                    var order_item_key = ongoingSnapshot.val().item_key;
 
-                    if(order_po_no_key == po_no_key){
-
-                        var item_key = ongoingSnapshot.val().item_key;
+                    if(order_po_no_key == po_no_key && order_item_key == item_key){
 
                         firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
 
@@ -254,10 +255,9 @@
                 firebase.database().ref('delivery_ongoing_order/'+dr_no_key).once('value', function(ongoingSnapshot){
 
                     var order_po_no_key = ongoingSnapshot.val().po_no_key;
+                    var order_item_key = ongoingSnapshot.val().item_key;
 
-                    if(order_po_no_key == po_no_key){
-
-                        var item_key = ongoingSnapshot.val().item_key;
+                    if(order_po_no_key == po_no_key && order_item_key == item_key){
 
                         firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
 
@@ -359,17 +359,21 @@
 
             document.getElementById('id_po_no').innerHTML = po_no;
 
-            firebase.database().ref('client/'+client_key).once('value', function(clientSnapshot){
-                firebase.database().ref('project/'+client_key+'/'+project_key).once('value', function(projectSnapshot){
+            firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
+                firebase.database().ref('client/'+client_key).once('value', function(clientSnapshot){
+                    firebase.database().ref('project/'+client_key+'/'+project_key).once('value', function(projectSnapshot){
 
-                    var client_name = clientSnapshot.val().client_name;
-                    var project_name = projectSnapshot.val().project_name;
-                    var project_address = projectSnapshot.val().project_address;
+                        var client_name = clientSnapshot.val().client_name;
+                        var project_name = projectSnapshot.val().project_name;
+                        var project_address = projectSnapshot.val().project_address;
+                        var quantity = itemSnapshot.val().quantity;
 
-                    document.getElementById('id_client_name').innerHTML = client_name;
-                    document.getElementById('id_project_name').innerHTML = project_name;
-                    document.getElementById('id_project_address').innerHTML = project_address;
+                        document.getElementById('id_client_name').innerHTML = client_name;
+                        document.getElementById('id_project_name').innerHTML = project_name;
+                        document.getElementById('id_project_address').innerHTML = project_address;
+                        document.getElementById('id_quantity').innerHTML = Number(quantity).toLocaleString('en');
 
+                    });
                 });
             });
 
@@ -630,7 +634,8 @@
                                                         Client Name: <strong><span id="id_client_name"></span></strong><br>
                                                         Project Name: <strong><span id="id_project_name"></span></strong><br>
                                                         Project Address: <strong><span id="id_project_address"></span></strong><br>
-                                                        Purchase Order No.: <strong><span id="id_po_no"></span></strong>
+                                                        Purchase Order No.: <strong><span id="id_po_no"></span></strong><br>
+                                                        Quantity: <strong><span id="id_quantity"></span></strong>
                                                         <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                                     </th>
                                                 </tr>
