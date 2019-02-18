@@ -207,6 +207,7 @@
 
                         var client_key = orderChildSnapshot.val().client_key;
                         var project_key = orderChildSnapshot.val().project_key;
+                        var po_no_key = orderChildSnapshot.key;
 
                         firebase.database().ref('purchase_order/'+orderChildSnapshot.key+'/item').once('value', function(itemSnapshot){
                             itemSnapshot.forEach(function(itemChildSnapshot){
@@ -238,6 +239,7 @@
                                                     project_address = projectSnapshot.val().project_address;
                                                     date = dateFormat(orderChildSnapshot.val().date);
                                                     psi = itemChildSnapshot.val().psi || "";
+                                                    item_key = itemChildSnapshot.key;
 
                                                     if(psi != ""){
                                                         var psi_ext = " (" + psi + " psi)";
@@ -342,6 +344,7 @@
 
                         var client_key = orderChildSnapshot.val().client_key;
                         var project_key = orderChildSnapshot.val().project_key;
+                        var po_no_key = orderChildSnapshot.key;
                         orderDate = new Date(orderChildSnapshot.val().date);
 
                         if(orderDate.getTime() >= fromDate.getTime() && orderDate.getTime() <= endDate.getTime()){
@@ -376,6 +379,7 @@
                                                         project_address = projectSnapshot.val().project_address;
                                                         date = dateFormat(orderChildSnapshot.val().date);
                                                         psi = itemChildSnapshot.val().psi || "";
+                                                        item_key = itemChildSnapshot.key;
 
                                                         if(psi != ""){
                                                             var psi_ext = " (" + psi + " psi)";

@@ -190,11 +190,15 @@
 
                         var client_key = orderChildSnapshot.val().client_key;
                         var project_key = orderChildSnapshot.val().project_key;
+                        var po_no_key = orderChildSnapshot.key;
 
                         firebase.database().ref('purchase_order/'+orderChildSnapshot.key+'/item').once('value', function(itemSnapshot){
                             itemSnapshot.forEach(function(itemChildSnapshot){
 
                                 if(itemChildSnapshot.val().balance > 0){
+
+                                    var item_key = itemChildSnapshot.key;
+
                                     firebase.database().ref('client/'+client_key).once('value', function(clientSnapshot){
                                         firebase.database().ref('project/'+client_key+'/'+project_key).once('value', function(projectSnapshot){
                                             firebase.database().ref('project/'+client_key+'/'+project_key+'/contact').once('value', function(contactSnapshot){
@@ -252,7 +256,8 @@
                                                         
 
                                                         myTbody += "</td>";
-                                                        myTbody += "<td><strong>" + date + "</strong></td></tr>";
+                                                        myTbody += "<td><strong>" + date + "</strong></td>";
+                                                        myTbody += "<td><strong><a href='purchase_order_update.html?po_no_key=" + orderChildSnapshot.key + "&item_key=" + itemChildSnapshot.key + "' value='Issue DR No.' class='btn btn-sm btn-block' style='background-color: #ffa000; color: white; margin-bottom: 5px; font-weight: bold;'><strong>Update</a></strong></td></tr>";
 
                                                         count++;   
 
@@ -327,6 +332,7 @@
 
                         var client_key = orderChildSnapshot.val().client_key;
                         var project_key = orderChildSnapshot.val().project_key;
+                        var po_no_key = orderChildSnapshot.val().po_no_key;
                         orderDate = new Date(orderChildSnapshot.val().date);
 
                         if(orderDate.getTime() >= fromDate.getTime() && orderDate.getTime() <= endDate.getTime()){
@@ -335,6 +341,9 @@
                                 itemSnapshot.forEach(function(itemChildSnapshot){
 
                                     if(itemChildSnapshot.val().balance > 0){
+
+                                        var item_key = itemChildSnapshot.key;
+
                                         firebase.database().ref('project/'+client_key+'/'+project_key).once('value', function(projectSnapshot){
                                             firebase.database().ref('project/'+client_key+'/'+project_key+'/contact').once('value', function(contactSnapshot){
 
@@ -390,7 +399,8 @@
                                                         
 
                                                         myTbody += "</td>";
-                                                        myTbody += "<td><strong>" + date + "</strong></td></tr>";
+                                                        myTbody += "<td><strong>" + date + "</strong></td>";
+                                                        myTbody += "<td><strong><a href='purchase_order_update.html?po_no_key=" + po_no_key + "&item_key=" + item_key + "' class='btn btn-sm btn-block' style='background-color: #ffa000; color: white; margin-bottom: 5px; font-weight: bold;'><strong>Update</a></strong></td></tr>";
 
                                                         count++;   
 
@@ -723,7 +733,7 @@
                                             <th class="col-md-2" style="color: white;">Ordered / Remaining</th>
                                             <th class="col-md-1"><input type="text" class="form-control" placeholder="Contact" disabled></th>
                                             <th class="col-md-1" style="color: white;">Date Order</th>
-                                            <!-- <th class="col-md-1">Action</th> -->
+                                            <th class="col-md-1"></th>
                                         </tr>
                                     </thead>
                                     <tbody id="orderList"></tbody>
