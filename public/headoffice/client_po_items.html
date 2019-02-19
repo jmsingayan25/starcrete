@@ -236,51 +236,65 @@
                 var client_key = itemSnapshot.val().client_key;
                 var project_key = itemSnapshot.val().project_key;
 
-                myThead += "<table class='table table-striped table-bordered'><thead><tr class='filterable'><th colspan='4'>Item: " + item_no + " <br> Quantity: " + quantity + "</th></tr><tr style='background-color: #00a3cc;'><th class='col-md-1' style='color: white;'>Date Delivered</th><th class='col-md-1' style='color: white;'>DR No.</th><th class='col-md-1' style='color: white;'>Quantity</th><th class='col-md-1' style='color: white;'>Truck No.</th></tr></thead><tbody id='deliverList'></tbody></table>";
+                myThead += "<table class='table table-striped table-bordered'><thead><tr class='filterable'><th colspan='4'>Item: " + item_no + " <br> Quantity: " + Number(quantity).toLocaleString('en') + "</th></tr><tr style='background-color: #00a3cc;'><th class='col-md-1' style='color: white;'>Date Delivered</th><th class='col-md-1' style='color: white;'>DR No.</th><th class='col-md-1' style='color: white;'>Quantity</th><th class='col-md-1' style='color: white;'>Truck No.</th></tr></thead><tbody id='deliverList'></tbody></table>";
 
                 document.getElementById('tableID').innerHTML  = myThead;
 
                 firebase.database().ref('delivery_ongoing_order').once('value', function(ongoingSnapshot){
-                    ongoingSnapshot.forEach(function(ongoingChildSnapshot){
 
-                        var po_no_key = ongoingChildSnapshot.val().po_no_key;
-                        var dr_no_key = ongoingChildSnapshot.key;
-                        var item_key = ongoingChildSnapshot.val().item_key;
-                        var status = ongoingChildSnapshot.val().status;
+                    if(ongoingSnapshot.val() != null){
 
-                        if(po_no_key == poNoKeyId && key == item_key && status == 1){
+                        ongoingSnapshot.forEach(function(ongoingChildSnapshot){
 
-                            console.log(ongoingChildSnapshot.val());
+                            var po_no_key = ongoingChildSnapshot.val().po_no_key;
+                            var dr_no_key = ongoingChildSnapshot.key;
+                            var item_key = ongoingChildSnapshot.val().item_key;
+                            var status = ongoingChildSnapshot.val().status;
 
-                            firebase.database().ref('delivery_delivered_order').orderByChild('reverseDate').once('value', function(deliveredSnapshot){
-                                deliveredSnapshot.forEach(function(deliveredChildSnapshot){
+                            if(po_no_key == poNoKeyId && key == item_key && status == 1){
 
-                                    var dl_dr_no_key = deliveredChildSnapshot.val().dr_no_key;
+                                console.log(ongoingChildSnapshot.val());
 
-                                    if(dr_no_key == dl_dr_no_key){
+                                firebase.database().ref('delivery_delivered_order').orderByChild('reverseDate').once('value', function(deliveredSnapshot){
+                                    deliveredSnapshot.forEach(function(deliveredChildSnapshot){
 
-                                        console.log(deliveredChildSnapshot.val());
+                                        var dl_dr_no_key = deliveredChildSnapshot.val().dr_no_key;
 
-                                        var gate_pass = ongoingChildSnapshot.val().gate_pass;
-                                        var dr_no = ongoingChildSnapshot.val().dr_no;
-                                        var date = deliveredChildSnapshot.val().date;
-                                        var quantity = ongoingChildSnapshot.val().quantity;
-                                        var truck_no = ongoingChildSnapshot.val().truck_no;
+                                        if(dr_no_key == dl_dr_no_key){
 
-                                        myTbody += "<tr><td><strong>" + date + "</strong></td>";
-                                        myTbody += "<td><strong>" + dr_no + "</strong></td>";
-                                        myTbody += "<td><strong>" + quantity + "</strong></td>";
-                                        myTbody += "<td><strong>" + truck_no + "</strong></td></tr>";
+                                            // console.log(deliveredChildSnapshot.val());
 
-                                        document.getElementById('deliverList').innerHTML = myTbody;
+                                            var ongoing_gate_pass = ongoingChildSnapshot.val().gate_pass;
+                                            var ongoing_dr_no = ongoingChildSnapshot.val().dr_no;
+                                            var date = deliveredChildSnapshot.val().date;
+                                            var ongoing_quantity = ongoingChildSnapshot.val().quantity;
+                                            var ongoing_truck_no = ongoingChildSnapshot.val().truck_no;
 
-                                        $('.se-pre-con').fadeOut('slow');
-                                    }
+                                            myTbody += "<tr><td><strong>" + date + "</strong></td>";
+                                            myTbody += "<td><strong>" + ongoing_dr_no + "</strong></td>";
+                                            myTbody += "<td><strong>" + Number(ongoing_quantity).toLocaleString('en') + "</strong></td>";
+                                            myTbody += "<td><strong>" + ongoing_truck_no + "</strong></td></tr>";
+
+                                            document.getElementById('deliverList').innerHTML = myTbody;
+                                        }
+                                    });
                                 });
-                            });
-                        }
-                    });
+
+                            }else{
+
+                                myTbody = "<tr><td colspan='4'><h4 style='text-align: center;'><p class='text-muted'>No deliveries found</p></td></tr>";
+                                document.getElementById('deliverList').innerHTML = myTbody;
+                            }
+                        });
+
+                    }else{
+
+                        myTbody = "<tr><td colspan='4'><h4 style='text-align: center;'><p class='text-muted'>No deliveries found</p></td></tr>";
+                        document.getElementById('deliverList').innerHTML = myTbody;
+                    }
                 });
+
+                $('.se-pre-con').fadeOut('slow');
             });
 
         }else{

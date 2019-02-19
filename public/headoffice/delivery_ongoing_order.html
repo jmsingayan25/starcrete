@@ -240,7 +240,7 @@
                                                         psi_ext = "";
                                                     }
 
-                                                    var item = item + psi_ext;
+                                                    var item = item_no + psi_ext;
 
                                                     quantity = Number(ongoingChildSnapshot.val().quantity).toLocaleString('en');
                                                     project_name = projectSnapshot.val().project_name;
@@ -291,14 +291,14 @@
 
                                         document.getElementById('orderList').innerHTML = myTbody;
                                         $(function(){ $(".tooltips").tooltip(); });
-                                        document.getElementById('printPo').style.display = 'inline';
+                                        // document.getElementById('printPo').style.display = 'inline';
 
                                     }else{
 
                                          myTbody = "<tr><td colspan='11' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                                          document.getElementById("orderList").innerHTML = myTbody;
-                                         document.getElementById('printPo').style.display = 'none';
+                                         // document.getElementById('printPo').style.display = 'none';
                                     }
 
                                     $(".se-pre-con").fadeOut("slow");
@@ -312,7 +312,7 @@
                     myTbody = "<tr><td colspan='11' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                     document.getElementById("orderList").innerHTML = myTbody;
-                    document.getElementById('printPo').style.display = 'none';
+                    // document.getElementById('printPo').style.display = 'none';
 
                     $(".se-pre-con").fadeOut("slow");
                 }
@@ -438,14 +438,14 @@
 
                                         document.getElementById('orderList').innerHTML = myTbody;
                                         $(function(){ $(".tooltips").tooltip(); });
-                                        document.getElementById('printPo').style.display = 'inline';
+                                        // document.getElementById('printPo').style.display = 'inline';
 
                                     }else{
 
                                          myTbody = "<tr><td colspan='11' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                                          document.getElementById("orderList").innerHTML = myTbody;
-                                         document.getElementById('printPo').style.display = 'none';
+                                         // document.getElementById('printPo').style.display = 'none';
                                     }
 
                                     $(".se-pre-con").fadeOut("slow");
@@ -755,7 +755,7 @@
                                 <thead>
                                     <tr class="filterable">
                                         <th colspan="11">
-                                            <button class="btn btn-info btn-md" id="printPo" style="display: none;" onclick="printPo();"><strong><span class="fa fa-print"></span> Print Preview</strong></button>
+                                            <!-- <button class="btn btn-info btn-md" id="printPo" style="display: none;" onclick="printPo();"><strong><span class="fa fa-print"></span> Print Preview</strong></button> -->
                                             <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                         </th>
                                     </tr>

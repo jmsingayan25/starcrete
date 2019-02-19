@@ -161,7 +161,7 @@
         var search_text = document.getElementById('search').value;
         var array = [];
 
-        firebase.database().ref('client').once('value', function(clientSnapshot){
+        firebase.database().ref('client').orderByChild('client_name').once('value', function(clientSnapshot){
 
             if(clientSnapshot.val() != null){
 

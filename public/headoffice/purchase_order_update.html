@@ -85,6 +85,7 @@
 
     var po_no_key = getUrlParameter("po_no_key");
     var item_key = getUrlParameter("item_key");
+    var plant = "";
 
     $(function() {
         
@@ -150,7 +151,8 @@
 
             var client_key = orderSnapshot.val().client_key;
             var project_key = orderSnapshot.val().project_key;
-            var plant = orderSnapshot.val().issued_po_plant;
+            var order_plant = orderSnapshot.val().issued_po_plant;
+            plant = order_plant;
 
             firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
                 firebase.database().ref('client/'+client_key).once('value', function(clientSnapshot){
@@ -161,15 +163,22 @@
                         var project_name = projectSnapshot.val().project_name;
                         var project_address = projectSnapshot.val().project_address;
                         var item_no = itemSnapshot.val().item_no;
+                        var psi = itemSnapshot.val().psi;
                         var quantity = itemSnapshot.val().quantity;
+
+                        if(psi != ""){
+                            psi_ext = " (" + psi + ") ";
+                        }else{
+                            psi_ext = "";
+                        }
 
                         document.getElementById('id_po_no').innerHTML = po_no;
                         document.getElementById('id_client_name').innerHTML = client_name;
                         document.getElementById('id_project_site').innerHTML = project_name + " / " + project_address;
-                        document.getElementById('id_current_item_no').innerHTML = item_no;
+                        document.getElementById('id_current_item_no').innerHTML = item_no + psi_ext;
                         document.getElementById('id_ordered_quantity').innerHTML = Number(quantity).toLocaleString('en');
 
-                        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</a></li><li><i class='icon_document'></i><a href='purchase_order.html?plant=" + plant + "'>Pending P.O.</a></li><li><i class='fa fa-file-text'></i>Update</li>";
+                        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + order_plant + "</a></li><li><i class='icon_document'></i><a href='purchase_order.html?plant=" + order_plant + "'>Pending P.O.</a></li><li><i class='fa fa-file-text'></i>Update</li>";
                     });
                 });
             });
@@ -204,16 +213,49 @@
         var new_psi = document.getElementById('update_psi').value;
         var new_quantity = document.getElementById('update_quantity').value;
 
-        var data = {
-            item_no: new_item,
-            psi: new_psi,
-            quantity: new_quantity
-        }
+        firebase.database().ref('purchase_order/'+po_no_key).once('value', function(orderSnapshot){
+            firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
 
-        if(firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).update(data)){
-            alert("Update success");
+                var item_no = itemSnapshot.val().item_no;
+                var psi = itemSnapshot.val().psi;
+                var quantity = itemSnapshot.val().quantity;
+                var balance = itemSnapshot.val().balance;
+                new_quantity = new_quantity.replace(",","");
 
-        }
+                var new_total_diff = Number(new_quantity) - Number(quantity);
+                var new_balance = Number(new_total_diff) + Number(balance);
+
+                if(new_item != ""){
+                    item_value = new_item;
+                }else{
+                    item_value = item_no;
+                }
+
+                if(new_psi != ""){
+                    psi_value = new_psi;
+                }else{
+                    psi_value = psi;
+                }
+
+                if(new_quantity != ""){
+                    quantity_value = new_quantity;
+                }else{
+                    quantity_value = quantity;
+                }
+
+                var data = {
+                    item_no: item_value,
+                    psi: psi_value,
+                    quantity: quantity_value,
+                    balance: new_balance
+                }
+
+                if(firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).update(data)){
+                    alert("Update success");
+                    window.location.href = 'purchase_order.html?plant='+plant;
+                } 
+            });
+        });
     }
 
     function displayNotif(){
