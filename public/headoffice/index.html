@@ -469,24 +469,24 @@
 
                             myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\"><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
 
-                            // var currentTime = new Date().toLocaleDateString('en');
-                            // var newcurrenttime = new Date(currentTime);
-                            // newcurrenttime.setDate(newcurrenttime.getDate() - 3);
-                            // newcurrenttime = new Date(newcurrenttime);
-                            // newnewcurrenttime = newcurrenttime.getTime();
+                            var currentTime = new Date().toLocaleDateString('en');
+                            var newcurrenttime = new Date(currentTime);
+                            newcurrenttime.setDate(newcurrenttime.getDate() - 3);
+                            newcurrenttime = new Date(newcurrenttime);
+                            newnewcurrenttime = newcurrenttime.getTime();
 
-                            // var newdatettime = new Date(date);
-                            // var newgettime = newdatettime.getTime();
+                            var newdatettime = new Date(date);
+                            var newgettime = newdatettime.getTime();
 
-                            // if(newgettime < newnewcurrenttime){
+                            if(newgettime < newnewcurrenttime){
 
-                            //     notifData = {
-                            //         isRead: 0
-                            //     }
+                                notifData = {
+                                    isRead: 0
+                                }
 
-                            //     firebase.database().ref('notification/'+key).update(notifData);
+                                firebase.database().ref('notification/'+key).update(notifData);
 
-                            // }
+                            }
 
                             count_employee++;
 

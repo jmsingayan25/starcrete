@@ -83,6 +83,7 @@
 <script>
     
     var po_no_key = getUrlParameter('po_no_key');
+    var item_no_key = getUrlParameter('item_key');
 
     $(document).ready(function(){
 
@@ -364,6 +365,13 @@
             var project_key = orderSnapshot.val().project_key;
             var po_no = orderSnapshot.val().po_no;
 
+            firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_no_key).once('value', function(orderSnapshot){
+
+                var quantity = orderSnapshot.val().quantity;
+
+                document.getElementById('id_quantity').innerHTML = Number(quantity).toLocaleString('en');
+            });
+
             document.getElementById('id_po_no').innerHTML = po_no;
 
             firebase.database().ref('client/'+client_key).once('value', function(clientSnapshot){
@@ -636,11 +644,18 @@
                                             <thead>
                                                 <tr class="filterable">
                                                     <th colspan="9">
-                                                        Client Name: <strong><span id="id_client_name"></span></strong><br>
-                                                        Project Name: <strong><span id="id_project_name"></span></strong><br>
-                                                        Project Address: <strong><span id="id_project_address"></span></strong><br>
-                                                        Purchase Order No.: <strong><span id="id_po_no"></span></strong>
-                                                        <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                Client Name: <strong><span id="id_client_name"></span></strong><br>
+                                                                Purchase Order No.: <strong><span id="id_po_no"></span></strong><br>
+                                                                Quantity: <strong><span id="id_quantity"></span></strong>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                Project Name: <strong><span id="id_project_name"></span></strong><br>
+                                                                Project Address: <strong><span id="id_project_address"></span></strong><br>
+                                                                <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
+                                                            </div>
+                                                        </div>
                                                     </th>
                                                 </tr>
                                                 <tr class="filters" style="background-color: #00a3cc;">

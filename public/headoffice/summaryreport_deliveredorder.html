@@ -174,12 +174,20 @@
 
                             itemSnapshot.forEach(function(itemChildSnapshot){
 
-                                myTbody += "<td><strong>" + itemChildSnapshot.val().total + "</strong></td>";
+                                var total = itemChildSnapshot.val().total;
+
+                                if(total != 0){
+                                    total_ext = Number(itemChildSnapshot.val().total).toLocaleString('en');
+                                }else{
+                                    total_ext = "";
+                                }
+
+                                myTbody += "<td><strong>" + total_ext + "</strong></td>";
                                 count++;
 
                             });
 
-                            myTbody += "<td style='background-color: #00b300; color: white;'><strong>" + dateDayChildSnapshot.val().total + "</strong></td></tr>";
+                            myTbody += "<td style='background-color: #00b300; color: white;'><strong>" + Number(dateDayChildSnapshot.val().total).toLocaleString('en') + "</strong></td></tr>";
 
                             document.getElementById('quantityList').innerHTML = myTbody;
 
@@ -192,8 +200,8 @@
                     console.log(count);
 
                     myTbody1 += "<tr><td style='background-color: #007a99; color: white;'><strong>Grand Total</strong></td>";
-                    myTbody1 += "<td colspan='" + 24 + "'></td>";
-                    myTbody1 += "<td style='background-color: #008000; color: white;'><strong>" + totalSnapshot.val().grand_total + "</strong></td></tr>";
+                    myTbody1 += "<td colspan='24'></td>";
+                    myTbody1 += "<td style='background-color: #008000; color: white;'><strong>" + Number(totalSnapshot.val().grand_total).toLocaleString('en') + "</strong></td></tr>";
 
                     document.getElementById('quantityTotalList').innerHTML = myTbody1;
                 });
@@ -263,11 +271,19 @@
 
                             itemSnapshot.forEach(function(itemChildSnapshot){
 
-                                myTbody += "<td><strong>" + itemChildSnapshot.val().total + "</strong></td>";
+                                var total = itemChildSnapshot.val().total;
+
+                                if(total != 0){
+                                    total_ext = Number(itemChildSnapshot.val().total).toLocaleString('en');
+                                }else{
+                                    total_ext = "";
+                                }
+
+                                myTbody += "<td><strong>" + total_ext + "</strong></td>";
 
                             });
 
-                            myTbody += "<td style='background-color: #00b300; color: white;'><strong>" + dateDayChildSnapshot.val().total + "</strong></td></tr>";
+                            myTbody += "<td style='background-color: #00b300; color: white;'><strong>" + Number(dateDayChildSnapshot.val().total).toLocaleString('en') + "</strong></td></tr>";
 
                             document.getElementById('quantityList').innerHTML = myTbody;
 
@@ -281,8 +297,8 @@
                     console.log(count);
 
                     myTbody1 += "<tr><td style='background-color: #007a99; color: white;'><strong>Grand Total</strong></td>";
-                    myTbody1 += "<td colspan='" + 24 + "'></td>";
-                    myTbody1 += "<td style='background-color: #008000; color: white;'><strong>" + totalSnapshot.val().grand_total + "</strong></td></tr>";
+                    myTbody1 += "<td colspan='24'></td>";
+                    myTbody1 += "<td style='background-color: #008000; color: white;'><strong>" + Number(totalSnapshot.val().grand_total).toLocaleString('en') + "</strong></td></tr>";
 
                     document.getElementById('quantityTotalList').innerHTML = myTbody1;
                 });
@@ -355,6 +371,25 @@
 
             $('.class_notif').text(count_employee);
         });
+    }
+
+    function printPreview(){
+
+        event.preventDefault();
+
+        var monthSelect = document.getElementById('month').value;
+        var optionYear = {year: "numeric"};
+        var optionMonthYear = {year: "numeric", month: "long"};
+
+        if(monthSelect == ''){
+            var selectMonthYear = new Date().toLocaleDateString('en', optionMonthYear);
+            var selectYear = new Date().toLocaleDateString('en', optionYear);
+        }else{
+            var selectMonthYear = new Date(monthSelect).toLocaleDateString('en', optionMonthYear);
+            var selectYear = new Date(monthSelect).toLocaleDateString('en', optionYear);
+        }
+
+        window.open("summaryreport_deliveredorder_print.html?plant="+plant+"&month="+selectMonthYear+"&year="+selectYear, "_blank");
     }
 
 </script>
@@ -509,7 +544,7 @@
                                                 </button>
                                             </div>
                                              <div class="col-md-1">
-                                                <button class="btn btn-info" onclick="print();">
+                                                <button class="btn btn-info" onclick="printPreview();">
                                                     <span class="fa fa-print"></span> <strong>Print Preview</strong>
                                                 </button>
                                             </div>
@@ -517,8 +552,8 @@
                                     </div>
                                 </header>
                             </form>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped">
+                            <!-- <div class="table-responsive"> -->
+                                <table class="table table-bordered table-striped table-condensed">
                                     <thead>
                                         <tr id="id_month_head" style="background-color: #00a3cc;"></tr>
                                         <tr id="id_item_head" style="background-color: #00a3cc;"></tr>
@@ -526,7 +561,7 @@
                                     <tbody id="quantityList"></tbody>
                                     <tbody id="quantityTotalList"></tbody>
                                 </table>
-                            </div>
+                            <!-- </div> -->
                         </section>
                     </div>
                 </div>
