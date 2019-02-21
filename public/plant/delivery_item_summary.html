@@ -81,8 +81,9 @@
     <script src="../js_config/function.js"></script>
 
 <script>
-
-    var poNoKeyId = getUrlParameter('key') || "0";
+    
+    var po_no_key = getUrlParameter('po_no_key');
+    var item_no_key = getUrlParameter('item_key');
 
     $(document).ready(function(){
 
@@ -142,7 +143,7 @@
                     
                     tableData();
                     totalCountBadge();
-                    itemOption();
+                    // goAway(plant);
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
 
@@ -164,195 +165,238 @@
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
-    function itemOption(){
-
-        event.preventDefault();
-
-        var myTbody = "";
-
-        firebase.database().ref('purchase_order/'+poNoKeyId+'/item').once('value', function(itemSnapshot){
-            
-            myTbody += "<option value=''>Select</option>";
-
-            itemSnapshot.forEach(function(itemChildSnapshot){
-
-                var item_no = itemChildSnapshot.val().item_no;
-                var key = itemChildSnapshot.key;
-
-                myTbody += "<option value='" + key + "'>" + item_no + "</option>";
-
-                document.getElementById('itemList').innerHTML = myTbody;
-            });
-        });
-    }
-
     function tableData(){
 
-        var myContactBody = "";
+        var myTbody = "";
+        var contactTbody = "";
+        var array = [];
 
-        firebase.database().ref('purchase_order/'+poNoKeyId).once('value', function(itemSnapshot){
+        firebase.database().ref('delivery_ongoing_order').once('value', function(ongoingSnapshot){
+            ongoingSnapshot.forEach(function(ongoingChildSnapshot){
 
-            var client_key = itemSnapshot.val().client_key;
-            var project_key = itemSnapshot.val().project_key;
-            var po_no = itemSnapshot.val().po_no;
+                var order_po_no_key = ongoingChildSnapshot.val().po_no_key;
+                var status = ongoingChildSnapshot.val().status;
+                var item_key = ongoingChildSnapshot.val().item_key;
+
+                if(order_po_no_key == po_no_key && item_key == item_no_key && status == 0){
+
+                    firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
+
+                        var dr_no = ongoingChildSnapshot.val().dr_no;
+                        var quantity = ongoingChildSnapshot.val().quantity;
+                        var gate_pass = ongoingChildSnapshot.val().gate_pass;
+                        var date = ongoingChildSnapshot.val().date;
+                        var issued_plant = ongoingChildSnapshot.val().issued_dr_plant;
+                        var timestamp = ongoingChildSnapshot.val().reverseDate;
+                        var item_no = itemSnapshot.val().item_no;
+                        var psi = itemSnapshot.val().psi || "";
+
+                        var data = {
+                            dr_no: dr_no,
+                            item_no: item_no,
+                            psi: psi,
+                            quantity: quantity,
+                            gate_pass: gate_pass,
+                            date: date,
+                            issued_plant: issued_plant,
+                            status: status,
+                            timestamp: timestamp
+                        }
+
+                        array.push(data);
+
+                    });
+                }
+            });
+        });
+
+        firebase.database().ref('delivery_delivered_order').once('value', function(deliveredSnapshot){
+            deliveredSnapshot.forEach(function(deliveredChildSnapshot){
+
+                var dr_no_key = deliveredChildSnapshot.val().dr_no_key;
+
+                firebase.database().ref('delivery_ongoing_order/'+dr_no_key).once('value', function(ongoingChildSnapshot){
+
+                    var order_po_no_key = ongoingChildSnapshot.val().po_no_key;
+                    var item_key = ongoingChildSnapshot.val().item_key;
+
+                    if(order_po_no_key == po_no_key && item_key == item_no_key){
+
+                        firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
+
+                            var dr_no = ongoingChildSnapshot.val().dr_no;
+                            var quantity = ongoingChildSnapshot.val().quantity;
+                            var gate_pass = ongoingChildSnapshot.val().gate_pass;
+                            var date = ongoingChildSnapshot.val().date;
+                            var issued_plant = ongoingChildSnapshot.val().issued_dr_plant;
+                            var status = ongoingChildSnapshot.val().status;
+                            var timestamp = ongoingChildSnapshot.val().reverseDate;
+                            var item_no = itemSnapshot.val().item_no;
+                            var psi = itemSnapshot.val().psi || "";
+
+                            var data = {
+                                dr_no: dr_no,
+                                item_no: item_no,
+                                psi: psi,
+                                quantity: quantity,
+                                gate_pass: gate_pass,
+                                date: date,
+                                issued_plant: issued_plant,
+                                status: status,
+                                timestamp: timestamp
+                            }
+
+                            array.push(data);
+
+                        });
+                    }
+                });
+            });
+        });
+
+        firebase.database().ref('delivery_backloaded_order').once('value', function(backloadSnapshot){
+            backloadSnapshot.forEach(function(backloadChildSnapshot){
+
+                var dr_no_key = backloadChildSnapshot.val().dr_no_key;
+
+                firebase.database().ref('delivery_ongoing_order/'+dr_no_key).once('value', function(ongoingChildSnapshot){
+
+                    var order_po_no_key = ongoingChildSnapshot.val().po_no_key;
+                    var item_key = ongoingChildSnapshot.val().item_key;
+
+                    if(order_po_no_key == po_no_key && item_key == item_no_key){
+
+                        firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
+
+                            var dr_no = ongoingChildSnapshot.val().dr_no;
+                            var quantity = ongoingChildSnapshot.val().quantity;
+                            var gate_pass = ongoingChildSnapshot.val().gate_pass;
+                            var date = ongoingChildSnapshot.val().date;
+                            var issued_plant = ongoingChildSnapshot.val().issued_dr_plant;
+                            var status = ongoingChildSnapshot.val().status;
+                            var timestamp = ongoingChildSnapshot.val().reverseDate;
+                            var item_no = itemSnapshot.val().item_no;
+                            var psi = itemSnapshot.val().psi || "";
+
+                            var data = {
+                                dr_no: dr_no,
+                                item_no: item_no,
+                                psi: psi,
+                                quantity: quantity,
+                                gate_pass: gate_pass,
+                                date: date,
+                                issued_plant: issued_plant,
+                                status: status,
+                                timestamp: timestamp
+                            }
+
+                            array.push(data);
+
+                        });
+                    }
+                });
+            });
+        });
+
+        firebase.database().ref('purchase_order').once('value', function(){
+            firebase.database().ref('delivery_ongoing_order').once('value', function(){
+                firebase.database().ref('delivery_delivered_order').once('value', function(){
+                    firebase.database().ref('delivery_backloaded_order').once('value', function(){
+                    
+                        // array.sort(function(a,b){
+                        //     return Number(a.timestamp) - Number(b.timestamp);
+                        // });
+
+                        if(array.length > 0){
+
+                            for(var i = 0; i < array.length; i++){
+
+                                var dr_no = array[i].dr_no;
+                                var quantity = Number(array[i].quantity).toLocaleString('en');
+                                var gate_pass = array[i].gate_pass;
+                                var date = array[i].date;
+                                var issued_plant = array[i].issued_plant;
+                                var status = array[i].status;
+                                var item_no = array[i].item_no;
+                                var psi = array[i].psi || "";
+
+                                if(psi != ""){
+                                    psi_ext = " (" + psi + " psi)";
+                                }else{
+                                    psi_ext = "";
+                                }
+
+                                if(status == 0){
+                                    status_ext = "<span class='label' style='background-color: #ffa000; font-size: 12px;'><strong>ONGOING</strong></span>";
+                                }else if(status == 1){
+                                    status_ext = "<span class='label' style='background-color: #388e3c; font-size: 12px;'><strong>DELIVERED</strong></span>";
+                                }else if(status == 2){
+                                    status_ext = "<span class='label' style='background-color: #d32f2f; font-size: 12px;'><strong>BACKLOADED</strong></span>";
+                                }
+
+                                myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
+                                myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+                                myTbody += "<td><strong>" + quantity + "</strong></td>";
+                                myTbody += "<td><strong>" + gate_pass + "</strong></td>";
+                                myTbody += "<td><strong>" + date + "</strong></td>";
+                                myTbody += "<td><strong>" + issued_plant + "</strong></td>";
+                                myTbody += "<td><strong>" + status_ext + "</strong></td></tr>";
+                            }
+                        }else{
+
+                            myTbody = "<tr class='no-result text-center'><td colspan='7' style='min-height: 100%;background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+                        }
+
+                        document.getElementById('orderList').innerHTML = myTbody;
+
+                        $('.se-pre-con').fadeOut('slow');
+                    });
+                });
+            });
+        });
+
+        firebase.database().ref('purchase_order/'+po_no_key).once('value', function(orderSnapshot){
+
+            var client_key = orderSnapshot.val().client_key;
+            var project_key = orderSnapshot.val().project_key;
+            var po_no = orderSnapshot.val().po_no;
+
+            firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_no_key).once('value', function(orderSnapshot){
+
+                var quantity = orderSnapshot.val().quantity;
+
+                document.getElementById('id_quantity').innerHTML = Number(quantity).toLocaleString('en');
+            });
 
             document.getElementById('id_po_no').innerHTML = po_no;
 
-            firebase.database().ref('client/'+client_key).once('value').then(function(clientSnapshot){
-                firebase.database().ref('project/'+client_key+'/'+project_key).once('value').then(function(projectSnapshot){
-                    
-                    // document.getElementById('id_breadcrumb').innerHTML = "<li>Purchase Order No. " + po_no + "</li>";
+            firebase.database().ref('client/'+client_key).once('value', function(clientSnapshot){
+                firebase.database().ref('project/'+client_key+'/'+project_key).once('value', function(projectSnapshot){
 
-                    document.getElementById('id_client_name').innerHTML = clientSnapshot.val().client_name;
-                    document.getElementById('id_project_name').innerHTML = projectSnapshot.val().project_name;
-                    document.getElementById('id_project_address').innerHTML = projectSnapshot.val().project_address;
+                    var client_name = clientSnapshot.val().client_name;
+                    var project_name = projectSnapshot.val().project_name;
+                    var project_address = projectSnapshot.val().project_address;
 
-                    firebase.database().ref('project/'+client_key+'/'+project_key+'/contact').once('value', function(contactSnapshot){
-                        contactSnapshot.forEach(function(contactChildSnapshot){
+                    document.getElementById('id_client_name').innerHTML = client_name;
+                    document.getElementById('id_project_name').innerHTML = project_name;
+                    document.getElementById('id_project_address').innerHTML = project_address;
 
-                            contact_name = contactChildSnapshot.val().project_contact_name;
-                            contact_no = contactChildSnapshot.val().project_contact_no;
-
-                            myContactBody += "<tr><td><strong>" + contact_name + "</strong></td>";
-                            myContactBody += "<td><strong>" + contact_no + "</strong></td></tr>";
-
-                            document.getElementById('contactList').innerHTML = myContactBody;
-                        });
-
-                        $('.se-pre-con').fadeOut('slow');
-                    }); 
                 });
             });
 
-            document.getElementById('tableID').innerHTML = "<h4 style='text-align: center;'><p class='text-muted'>No data found</p>";
+            firebase.database().ref('project/'+client_key+'/'+project_key+'/contact').once('value', function(contactSnapshot){
+                contactSnapshot.forEach(function(contactChildSnapshot){
+
+                    var contact_name = contactChildSnapshot.val().project_contact_name;
+                    var contact_no = contactChildSnapshot.val().project_contact_no;
+
+                    contactTbody += "<tr><td><strong>" + contact_name + "</strong></td>";
+                    contactTbody += "<td><strong>" + contact_no + "</strong></td></tr>";
+                });
+
+                document.getElementById('contactList').innerHTML = contactTbody;
+            });
         });
-    }
-
-    function itemData(key){
-
-        event.preventDefault();
-
-        $('.se-pre-con').fadeIn('fast');
-
-        var myThead = "";
-        var myTbody = "";
-        var array = [];
-        var remarks = "";
-
-        if(key != ''){
-
-            firebase.database().ref('purchase_order/'+poNoKeyId+'/item/'+key).once('value', function(itemSnapshot){
-
-                var item_no = itemSnapshot.val().item_no;
-                var quantity = itemSnapshot.val().quantity;
-                var client_key = itemSnapshot.val().client_key;
-                var project_key = itemSnapshot.val().project_key;
-                var balance = itemSnapshot.val().balance;
-
-                // if(balance <= 0){
-                //     remarks = "SERVED";
-                // }else{
-                //     remarks = "WITH BALANCE";
-                // }
-
-                firebase.database().ref('purchase_order_closed').orderByChild('item_key').equalTo(key).once('value', function(closedSnapshot){
-
-                    if(closedSnapshot.val() != null){
-
-                        if(balance == 0 ){
-                            remarks = "<span style='color: red;'>SERVED</span>";
-                        }else if(balance < 0){
-                            remarks = "<span style='color: red;'>SERVED (OVER)</span>";
-                        }
-
-                    }else{
-
-                        remarks = "WITH BALANCE";
-                    }
-                    
-                    myThead += "<table class='table table-striped table-bordered'><thead><tr class='filterable'><th colspan='4'><div class='row'><div class='col-md-6'>Item: " + item_no + " <br> Quantity: " + Number(quantity).toLocaleString('en') + "</div><div class='col-md-6'>Status: " + remarks + "</div></div></th></tr><tr style='background-color: #00a3cc;'><th class='col-md-1' style='color: white;'>Date Delivered</th><th class='col-md-1' style='color: white;'>DR No.</th><th class='col-md-1' style='color: white;'>Quantity</th><th class='col-md-1' style='color: white;'>Truck No.</th></tr></thead><tbody id='deliverList'></tbody></table>";
-
-                    document.getElementById('tableID').innerHTML  = myThead;
-
-                    firebase.database().ref('delivery_ongoing_order').once('value', function(ongoingSnapshot){
-
-                        if(ongoingSnapshot.val() != null){
-
-                            var count = 0;
-                            ongoingSnapshot.forEach(function(ongoingChildSnapshot){
-
-                                var po_no_key = ongoingChildSnapshot.val().po_no_key;
-                                var dr_no_key = ongoingChildSnapshot.key;
-                                var item_key = ongoingChildSnapshot.val().item_key;
-                                var status = ongoingChildSnapshot.val().status;
-
-                                // console.log(poNoKeyId, po_no_key, key, item_key, status);
-                                if(poNoKeyId == po_no_key && key == item_key && status == 1){
-
-                                    // console.log(ongoingChildSnapshot.val());
-
-                                    firebase.database().ref('delivery_delivered_order').orderByChild('reverseDate').once('value', function(deliveredSnapshot){
-                                        deliveredSnapshot.forEach(function(deliveredChildSnapshot){
-
-                                            var dl_dr_no_key = deliveredChildSnapshot.val().dr_no_key;
-
-                                            if(dr_no_key == dl_dr_no_key){
-
-                                                // console.log(deliveredChildSnapshot.val());
-
-                                                var ongoing_gate_pass = ongoingChildSnapshot.val().gate_pass;
-                                                var ongoing_dr_no = ongoingChildSnapshot.val().dr_no;
-                                                var date = deliveredChildSnapshot.val().date;
-                                                var ongoing_quantity = ongoingChildSnapshot.val().quantity;
-                                                var ongoing_truck_no = ongoingChildSnapshot.val().truck_no;
-
-                                                myTbody += "<tr><td><strong>" + date + "</strong></td>";
-                                                myTbody += "<td><strong>" + ongoing_dr_no + "</strong></td>";
-                                                myTbody += "<td><strong>" + Number(ongoing_quantity).toLocaleString('en') + "</strong></td>";
-                                                myTbody += "<td><strong>" + ongoing_truck_no + "</strong></td></tr>";
-
-                                                count++;
-                                            }
-                                        });
-                                    });
-                                }
-                            });
-
-                            firebase.database().ref('delivery_ongoing_order').once('value', function(ongoingSnapshot){
-                                firebase.database().ref('delivery_delivered_order').once('value', function(){
-
-                                    if(count > 0){
-
-                                        document.getElementById('deliverList').innerHTML = myTbody;
-                                    }else{
-
-                                         myTbody = "<tr><td colspan='4'><h4 style='text-align: center;'><p class='text-muted'>No deliveries found</p></td></tr>";
-
-                                        document.getElementById('deliverList').innerHTML = myTbody;
-                                    }
-                                });
-                            });
-
-                        }else{
-
-                            myTbody = "<tr><td colspan='4'><h4 style='text-align: center;'><p class='text-muted'>No deliveries found</p></td></tr>";
-                            document.getElementById('deliverList').innerHTML = myTbody;
-                        }
-                    });
-
-                    $('.se-pre-con').fadeOut('slow');
-                });
-            });
-
-        }else{
-
-            myTbody = "";
-            myThead = "<h4 style='text-align: center;'><p class='text-muted'>No data found</p>";
-
-            document.getElementById('tableID').innerHTML = myThead;
- 
-            $('.se-pre-con').fadeOut('slow');
-        }
     }
 
     function totalCountBadge(){
@@ -420,7 +464,7 @@
      color: white;
      text-align: left;
      font-weight: bold;
-}     
+}    
 </style>
 </head>
 <body>
@@ -574,58 +618,65 @@
         <section id="main-content">
             <section class="wrapper">            
                 <!--overview start-->
-                <!-- <div class="row">
+                <div class="row">
                     <div class="col-md-12">
-                        <ol class="breadcrumb" id="id_breadcrumb"></ol>
+                        <ol class="breadcrumb">
+                            <li><i class="fa fa-building"></i>Delivery Order</li>
+                            <!-- <li><i class="fa fa-exclamation-circle"></i><a href="delivery_pending_order.html">Existing P.O. <span class='badge'></span></a></li>  
+                            <li><i class="fa fa-truck"></i><a href="delivery_ongoing_order.html">Ongoing Delivery <span class="badge"></span></a></li>   
+                            <li><i class="fa fa-truck"></i><a href="delivery_delivered_order.html">Delivered Order</a></li> 
+                            <li><i class="fa fa-truck"></i><a href="delivery_backloaded_order.html">Backloaded Order</a></li> -->
+                            <li><i class="icon_document"></i>Details</li>                          
+                        </ol>
                     </div>
-                </div> -->
+                </div>
+
                 <div class="row">
                     <div class="col-md-9">
-                        <section class="panel">
-                             <!-- <header class="panel-heading">
-                                    <span>Project Name: <strong><span id="id_project_name"></span></strong></span><br>
-                                    <span>Project Address: <strong><span id="id_project_address"></strong></span><br>
-                                    <span>Item: <strong><span id="id_item"></strong></span><br>
-                                    P.O. No.: <select id="itemList" onchange="itemData(this.value);">
-                                        <option value="">Select</option>
-                                    </select>
-                            </header>
-                            <span id="tableID"></span>   --> 
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-condensed">
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        Client Name: <strong><span id="id_client_name"></span></strong><br>
-                                                        Purchase Order No.: <strong><span id="id_po_no"></span></strong><br>
-                                                        Item: <select id="itemList" onchange="itemData(this.value);">
-                                                                <option value="">Select</option>
-                                                            </select>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        Project Name: <strong><span id="id_project_name"></span></strong><br>
-                                                        Project Address: <strong><span id="id_project_address"></span></strong>
-                                                    </div>
-                                                </div>
-                                                
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td id="tableID"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <section class="panel">
+                                    <div class="table-responsive filterable">
+                                        <table class="table table-striped table-bordered table-condensed">
+                                            <thead>
+                                                <tr class="filterable">
+                                                    <th colspan="9">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                Client Name: <strong><span id="id_client_name"></span></strong><br>
+                                                                Purchase Order No.: <strong><span id="id_po_no"></span></strong><br>
+                                                                Quantity: <strong><span id="id_quantity"></span></strong>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                Project Name: <strong><span id="id_project_name"></span></strong><br>
+                                                                Project Address: <strong><span id="id_project_address"></span></strong><br>
+                                                                <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
+                                                            </div>
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                                <tr class="filters" style="background-color: #00a3cc;">
+                                                    <th class="col-md-1"><input type="text" class="form-control" placeholder="DR No." disabled></th>
+                                                    <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
+                                                    <th class="col-md-1" style="color: white">Quantity</th>
+                                                    <th class="col-md-1" style="color: white">Gate Pass</th>
+                                                    <th class="col-md-1" style="color: white">Date Transaction</th>
+                                                    <th class="col-md-1" style="color: white">Plant</th>
+                                                    <th class="col-md-2" style="color: white">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="orderList">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </section>
                             </div>
-                        </section>
+                        </div>
                     </div>
                     <div class="col-md-3">
                         <section class="panel">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered">
+                                <table class="table table-striped table-bordered table-condensed">
                                     <thead>
                                         <tr style="background-color: #00a3cc;">
                                             <th style="color: white;">Name</th>

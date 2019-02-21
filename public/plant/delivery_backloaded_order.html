@@ -271,7 +271,7 @@
                                                             myTbody += "<tr><td><strong>" + gate_pass + "</strong></td>";
                                                             myTbody += "<td><strong>" + dr_no + "</strong></td>";
                                                             myTbody += "<td><strong>" + client_name + "</strong></td>";
-                                                            myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + " and " + item + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + po_no_key + "&item_key=" + item_key + "'\"><strong>" + po_no + "</strong></div></td>";
+                                                            myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_item_summary.html?po_no_key=" + po_no_key + "&item_key=" + item_key + "'\"><strong>" + po_no + "</strong></div></td>";
                                                             myTbody += "<td><strong>" + project_name + " <br> " + project_address + "</strong></td>";
                                                             myTbody += "<td><strong>" + item + "</strong></td>";
                                                             myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
@@ -421,7 +421,7 @@
                                                             myTbody += "<tr><td><strong>" + gate_pass + "</strong></td>";
                                                             myTbody += "<td><strong>" + dr_no + "</strong></td>";
                                                             myTbody += "<td><strong>" + client_name + "</strong></td>";
-                                                            myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + " and " + item + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + po_no_key + "&item_key=" + item_key + "'\"><strong>" + po_no + "</strong></div></td>";
+                                                            myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_item_summary.html?po_no_key=" + po_no_key + "&item_key=" + item_key + "'\"><strong>" + po_no + "</strong></div></td>";
                                                             myTbody += "<td><strong>" + project_name + " <br> " + project_address + "</strong></td>";
                                                             myTbody += "<td><strong>" + item + "</strong></td>";
                                                             myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
@@ -665,6 +665,7 @@
                             <span class="menu-arrow arrow_carrot-down"></span>
                         </a>
                         <ul class="sub">
+                            <li><a class="" href="delivery_closed_order.html">Closed P.O.</a></li>
                             <li><a class="" href="delivery_pending_order.html">Pending Order <span id="id_count_existing_po"></span></a></li>    
                             <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span id="id_count_ongoing_order"></span></a></li>                          
                             <li><a class="" href="delivery_delivered_order.html">Delivered Order</a></li>
@@ -766,7 +767,7 @@
                                             <th class="col-md-2"><input type="text" class="form-control" placeholder="Project Site" disabled></th>
                                             <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
                                             <th class="col-md-1" style="color: white;">Quantity</th>
-                                            <th class="col-md-1"><input type="text" class="form-control" placeholder="Contact" disabled></th>
+                                            <th class="col-md-1" style="color: white;">Contact</th>
                                             <th class="col-md-1" style="color: white;">Truck No.</th>
                                             <th class="col-md-1" style="color: white;">Date</th>
                                             <th class="col-md-1" style="color: white;">Status</th>

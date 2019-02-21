@@ -247,17 +247,12 @@
                 firebase.database().ref('purchase_order_closed').orderByChild('item_key').equalTo(key).once('value', function(closedSnapshot){
 
                     if(closedSnapshot.val() != null){
-                        // closedSnapshot.forEach(function(closedChildSnapshot){
 
-                            // var closed_po_no_key = closedChildSnapshot.val().po_no_key;
-                            // var closed_item_key = closedChildSnapshot.val().item_key;
-
-                            // if(key == closed_item_key){
-                                remarks = "<span style='color: red;'>SERVED</span>";
-                            // }else{
-                            //     remarks = "WITH BALANCE";
-                            // }
-                        // });
+                        if(balance == 0 ){
+                            remarks = "<span style='color: red;'>SERVED</span>";
+                        }else if(balance < 0){
+                            remarks = "<span style='color: red;'>SERVED (OVER)</span>";
+                        }
 
                     }else{
 
@@ -320,7 +315,7 @@
                                         document.getElementById('deliverList').innerHTML = myTbody;
                                     }else{
 
-                                         myTbody = "<tr><td colspan='4'><h4 style='text-align: center;'><p class='text-muted'>No deliveries found1</p></td></tr>";
+                                         myTbody = "<tr><td colspan='4'><h4 style='text-align: center;'><p class='text-muted'>No deliveries found</p></td></tr>";
 
                                         document.getElementById('deliverList').innerHTML = myTbody;
                                     }
@@ -329,7 +324,7 @@
 
                         }else{
 
-                            myTbody = "<tr><td colspan='4'><h4 style='text-align: center;'><p class='text-muted'>No deliveries found2</p></td></tr>";
+                            myTbody = "<tr><td colspan='4'><h4 style='text-align: center;'><p class='text-muted'>No deliveries found</p></td></tr>";
                             document.getElementById('deliverList').innerHTML = myTbody;
                         }
                     });
@@ -341,7 +336,7 @@
         }else{
 
             myTbody = "";
-            myThead = "<h4 style='text-align: center;'><p class='text-muted'>No data found3</p>";
+            myThead = "<h4 style='text-align: center;'><p class='text-muted'>No data found</p>";
 
             document.getElementById('tableID').innerHTML = myThead;
  
