@@ -811,11 +811,12 @@
 
             if(option == "tagapukpok" || option == "checker" || option == "others" || option == "machine1" || option == "machine3"){
                 query_ext = option;
-            }else if(option == "new_tagapukpok" || option == "new_checker" || option == "new_others" || option == "new_machine1" || option == "new_machine3"){
-
-                new_option = option.replace("new_","");
-                query_ext = "new/"+new_option;
             }
+            // else if(option == "new_tagapukpok" || option == "new_checker" || option == "new_others" || option == "new_machine1" || option == "new_machine3"){
+
+            //     new_option = option.replace("new_","");
+            //     query_ext = "new/"+new_option;
+            // }
 
             firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(snapshot){
 
@@ -886,9 +887,10 @@
 
             if(option == "trucking"){
                 query_ext = option;
-            }else if(option == "new_trucking"){
-                query_ext = "new/trucking";
             }
+            // else if(option == "new_trucking"){
+            //     query_ext = "new/trucking";
+            // }
 
             if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).remove()){
 
@@ -922,9 +924,10 @@
 
             if(option == "forklift_operator"){
                 query_ext = option;
-            }else if(option == "new_forklift_operator"){
-                query_ext = "new/forklift_operator";
             }
+            // else if(option == "new_forklift_operator"){
+            //     query_ext = "new/forklift_operator";
+            // }
 
             if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).remove()){
 
