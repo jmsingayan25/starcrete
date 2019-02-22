@@ -521,7 +521,7 @@
                 var text_date = {printCurrentDate:GetStringDate};
                 firebase.database().ref().child("diesel_current_date_print/" + plant).set(text_date);
                 window.location.href ="diesel_transaction_print.html";
-                //window.open("diesel_transaction_print.html","_blank");
+
           });
 
         }else{
@@ -534,7 +534,7 @@
                 var text_date = {printCurrentDate:GetStringDate};
                 firebase.database().ref().child("diesel_current_date_print/" + plant).set(text_date);
                 window.location.href ="diesel_transaction_print.html";
-                //window.open("diesel_transaction_print.html","_blank","","","width=200,height=100");
+    
             });
         }  
     }
@@ -593,7 +593,6 @@
                                 RollbackResult = RollbackResult.toString();
                                 var stock_available  = {currentstockCopy: RollbackResult};
 
-                                // console.log(stock_available);
                                 firebase.database().ref().child("incoming_diesel/" + plant + "/" + foreachSnapshot.key).update(stock_available);
                             }
                         });
@@ -635,7 +634,6 @@
 
                             if (neweachTimeStamp > newTimestamp){
 
-                                // console.log(foreachSnapshot.val());
                                 firebase.database().ref().child("incoming_diesel/" + plant + "/" + foreachSnapshot.key).remove();
                             }
                         });

@@ -161,11 +161,8 @@
 
         document.getElementById('id_page_header').innerHTML = "<a href='delivery_backloaded_order.html?plant=" + plant + "' style='color: inherit;'>" + plant + " Backloaded Order</a>";
 
-        // document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='delivery_ongoing_order.html?plant=" + plant + "'>Ongoing Delivery <span id='id_count_ongoing_order'></span></a></li><li><i class='fa fa-info-circle'></i><a href='delivery_pending_order.html?plant=" + plant + "'>Existing P.O. <span id='id_count_existing_po'></span></a></li><li><i class='fa fa-truck'></i><a href='delivery_delivered_order.html?plant=" + plant + "'>Delivered</a></li><li><i class='fa fa-reply'></i>Backloaded</li>";
-
         document.getElementById('li_plant').innerHTML = plant;
         document.getElementById('li_ongoing_order').innerHTML = "<a href='delivery_ongoing_order.html?plant="+plant+"'>Ongoing <span id='id_count_ongoing_order'></span></a>";
-        // document.getElementById('li_pending_order').innerHTML = "<a href='delivery_pending_order.html?plant="+plant+"'>Pending <span id='id_count_existing_po'></span></a>";
         document.getElementById('li_delivered_order').innerHTML = "<a href='delivery_delivered_order.html?plant="+plant+"'>Delivered</a>";
 
         totalCountBadge();
@@ -280,7 +277,7 @@
                                                             myTbody += "</td>";
                                                             myTbody += "<td><strong>" + truck_no + "</strong></td>";
                                                             myTbody += "<td><strong>" + date + "</strong></td>";
-                                                            myTbody += "<td><span class='label' style='background-color: #d32f2f; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
+                                                            // myTbody += "<td><span class='label' style='background-color: #d32f2f; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
 
                                                             count++;
                                                         }
@@ -308,7 +305,7 @@
                                             
                                         }else{
 
-                                            myTbody = "<tr><td colspan='11' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+                                            myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                                             document.getElementById("orderList").innerHTML = myTbody;
                                         }
@@ -322,7 +319,7 @@
 
                 }else{
 
-                    myTbody = "<tr><td colspan='11' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+                    myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                     document.getElementById("orderList").innerHTML = myTbody;
                 
@@ -431,7 +428,7 @@
                                                             myTbody += "</td>";
                                                             myTbody += "<td><strong>" + truck_no + "</strong></td>";
                                                             myTbody += "<td><strong>" + date + "</strong></td>";
-                                                            myTbody += "<td><span class='label' style='background-color: #d32f2f; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
+                                                            // myTbody += "<td><span class='label' style='background-color: #d32f2f; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
 
                                                             count++;
                                                         }
@@ -458,7 +455,7 @@
                                             
                                         }else{
 
-                                            myTbody = "<tr><td colspan='11' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+                                            myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                                             document.getElementById("orderList").innerHTML = myTbody;
                                         }
@@ -472,7 +469,7 @@
 
                 }else{
 
-                    myTbody = "<tr><td colspan='11' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+                    myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                     document.getElementById("orderList").innerHTML = myTbody;
                 
@@ -485,19 +482,24 @@
     function totalCountBadge(){
 
         do_count = 0;
-        firebase.database().ref('delivery_ongoing_order').on('child_added', function(ongoingOrderSnapshot) {
-            // console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val()); 
+        firebase.database().ref('delivery_ongoing_order').once('value', function(ongoingOrderSnapshot) {
+
             if(ongoingOrderSnapshot.val() != null){
-                if(ongoingOrderSnapshot.val().issued_dr_plant == plant){
 
-                    var status = ongoingOrderSnapshot.val().status;
+                ongoingOrderSnapshot.forEach(function(ongoingOrderChildSnapshot){
 
-                    if(status == 0){
-                        do_count++;
+                    if(ongoingOrderChildSnapshot.val().issued_dr_plant == plant){
+
+                        var status = ongoingOrderChildSnapshot.val().status;
+
+                        if(status == 0){
+                            do_count++;
+                        }
+
+                        document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
                     }
-
-                    document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
-                }
+                });
+                
             }else{
                 document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
             }
@@ -739,7 +741,6 @@
                         <ol class="breadcrumb" id="id_breadcrumb">
                            <li><i class="fa fa-building"></i><span id="li_plant"></span></li>
                             <li><i class="icon_document"></i><span id="li_ongoing_order"></span></li>
-                            <!-- <li><i class="fa fa-info-circle"></i><span id="li_pending_order"></span></li> -->
                             <li><i class="fa fa-truck"></i><span id="li_delivered_order"></span></li>
                             <li><i class="fa fa-reply"></i>Backloaded</li>                      
                         </ol>
@@ -774,7 +775,7 @@
                                 <table class="table table-striped table-bordered table-condensed">
                                     <thead>
                                         <tr class="filterable">
-                                            <th colspan="11">
+                                            <th colspan="10">
                                                 <!-- <button class="btn btn-info btn-md" id="printPo" style="display: none;" onclick="printPo();"><strong><span class="fa fa-print"></span> Print Preview</strong></button> -->
                                                 <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                             </th>
@@ -782,7 +783,7 @@
                                         <tr class="filters" style="background-color: #00a3cc;">
                                             <th class="col-md-1" style="color: white;">Gate Pass</th>
                                             <th class="col-md-1"><input type="text" class="form-control" placeholder="DR No." disabled></th>
-                                            <th class="col-md-1"><input type="text" class="form-control" placeholder="Client Name" disabled></th>
+                                            <th class="col-md-2"><input type="text" class="form-control" placeholder="Client Name" disabled></th>
                                             <th class="col-md-1"><input type="text" class="form-control" placeholder="P.O. No." disabled></th>
                                             <th class="col-md-2"><input type="text" class="form-control" placeholder="Project Site" disabled></th>
                                             <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
@@ -790,7 +791,7 @@
                                             <th class="col-md-1" style="color: white;">Truck No.</th>
                                             <th class="col-md-1" style="color: white;">Contact</th>
                                             <th class="col-md-1" style="color: white;">Date</th>
-                                            <th class="col-md-1" style="color: white;">Status</th>
+                                            <!-- <th class="col-md-1" style="color: white;">Status</th> -->
                                         </tr>
                                     </thead>
                                     <tbody id="orderList">

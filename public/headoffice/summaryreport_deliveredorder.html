@@ -123,6 +123,7 @@
     function tableData(){
 
         $(".se-pre-con").fadeIn("fast");
+        
         var myTbody = "";
         var myTbody1 = "";
         var myThead = "";
@@ -135,7 +136,7 @@
         // document.getElementById("quantityList").innerHTML = "<tr><td colspan='26' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
 
         firebase.database().ref('summary_delivered_order/'+plant+'/'+currentMonthYear).once('value', function(dateSnapshot){
-            console.log(dateSnapshot.val());
+            // console.log(dateSnapshot.val());
 
             document.getElementById('id_month_head').innerHTML = "<th colspan='26' style='color: white;'>For the Month of " + currentMonthYear + "</th>";
 
@@ -146,6 +147,8 @@
                 document.getElementById('quantityList').innerHTML = myTbody;
                 document.getElementById('quantityTotalList').innerHTML = "";
                 document.getElementById('id_item_head').innerHTML = "";
+                document.getElementById('id_print').style.display = "none";
+
                 $(".se-pre-con").fadeOut("slow");
                 
             }else{
@@ -544,7 +547,7 @@
                                                 </button>
                                             </div>
                                              <div class="col-md-1">
-                                                <button class="btn btn-info" onclick="printPreview();">
+                                                <button class="btn btn-info" id="id_print" onclick="printPreview();">
                                                     <span class="fa fa-print"></span> <strong>Print Preview</strong>
                                                 </button>
                                             </div>

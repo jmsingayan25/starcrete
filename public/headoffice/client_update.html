@@ -177,7 +177,7 @@
     function deleteContactNo(contactKey){
 
         event.preventDefault();
-        // console.log("DELETE");
+
         if(confirm("Proceed?")){
             if(firebase.database().ref('client/'+clientKeyId+'/contact/'+contactKey).remove()){
                 alert("Contact successfully deleted.");

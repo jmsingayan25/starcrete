@@ -150,6 +150,7 @@
                     
                     submitForm();
                     totalCountBadge();
+                    displayNotif();
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
 
@@ -166,24 +167,6 @@
             } else {
                 window.location.href = '../login.html';
             }
-
-            // firebase.database().ref('delivery_ongoing_order').on('child_changed', function(){
-            //     $(".se-pre-con").fadeIn("fast");
-            //     setTimeout(function(){
-            //         tableData();
-            //         totalCountBadge();
-            //         $(".se-pre-con").fadeOut("slow");
-            //     }, 1000);
-            // });
-
-            // firebase.database().ref('delivery_ongoing_order').on('child_removed', function(){
-            //     $(".se-pre-con").fadeIn("fast");
-            //     setTimeout(function(){
-            //         tableData();
-            //         totalCountBadge();
-            //         $(".se-pre-con").fadeOut("slow");
-            //     }, 1000);
-            // });
         });
 
         $('input[name="daterange"]').daterangepicker({
@@ -205,7 +188,6 @@
         var myTbody = "";
         var count = 1;
         var search_text = document.getElementById('search').value;
-        // var plant = document.getElementById('hidden_plant').value;
 
         if(fromDate == '' && endDate == ''){
 
@@ -262,7 +244,6 @@
                                                     var client_name = clientSnapshot.val().client_name;
                                                     var project_name = projectSnapshot.val().project_name;
                                                     var project_address = projectSnapshot.val().project_address;
-                                                    // var client_name = clientSnapshot2.val().client_name;
                                                     var gate_pass = orderChildSnapshot.val().gate_pass;
                                                     var truck_no = orderChildSnapshot.val().truck_no;
                                                     var date = dateFormat(orderChildSnapshot.val().date);
@@ -277,9 +258,8 @@
                                                     myTbody += "<td><strong>" + truck_no + "</strong></td>";
                                                     myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
 
-                                                    
                                                     contactSnapshot.forEach(function(contactChildSnapshot){
-                                                        // console.log(contactChildSnapshot.key, contactChildSnapshot.val());
+
                                                         contact_name = contactChildSnapshot.val().project_contact_name;
                                                         contact_no = contactChildSnapshot.val().project_contact_no;
 
@@ -383,6 +363,7 @@
                                                     text_item_no = itemSnapshot.val().item_no.toLowerCase();
                                                     text_project_name = projectSnapshot.val().project_name.toLowerCase();
                                                     text_project_address = projectSnapshot.val().project_address.toLowerCase();
+                                                    text_client_name = clientSnapshot.val().client_name.toLowerCase();
 
                                                     all_text = text_dr_no + " " + text_po_no + " " + text_item_no + " " + text_project_name + " " + text_project_address;
 
@@ -403,12 +384,10 @@
                                                         }
 
                                                         var item = item_no + psi_ext;
-
                                                         var quantity = Number(orderChildSnapshot.val().quantity).toLocaleString('en');
                                                         var client_name = clientSnapshot.val().client_name;
                                                         var project_name = projectSnapshot.val().project_name;
                                                         var project_address = projectSnapshot.val().project_address;
-                                                        // var client_name = clientSnapshot2.val().client_name;
                                                         var gate_pass = orderChildSnapshot.val().gate_pass;
                                                         var truck_no = orderChildSnapshot.val().truck_no;
                                                         var date = dateFormat(orderChildSnapshot.val().date);
@@ -423,9 +402,8 @@
                                                         myTbody += "<td><strong>" + truck_no + "</strong></td>";
                                                         myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
 
-                                                        
                                                         contactSnapshot.forEach(function(contactChildSnapshot){
-                                                            // console.log(contactChildSnapshot.key, contactChildSnapshot.val());
+
                                                             contact_name = contactChildSnapshot.val().project_contact_name;
                                                             contact_no = contactChildSnapshot.val().project_contact_no;
 
@@ -442,7 +420,6 @@
                                                 });
                                             });
                                         });
-
                                     });
                                 });
                             }
@@ -533,8 +510,6 @@
                     delivered_plant: delivered_plant
                 }
 
-                // console.log(drData);
-
                 firebase.database().ref('delivery_delivered_order').push(drData);
 
                 //         var historyData = {
@@ -613,7 +588,7 @@
                 firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year).orderByChild('date').equalTo(date).once('value').then(function(dateSnapshot){
 
                     if(dateSnapshot.val() == null){
-                        // // alert("not exist");
+                       
                         var date_number = new Date(date_value).getDate();
 
                         var dateInsert = {
@@ -625,7 +600,7 @@
                         firebase.database().ref().child('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day).set(dateInsert);
 
                         firebase.database().ref('item').on('child_added', function(itemInsertSnapshot){
-                            // console.log(itemInsertSnapshot.val());
+    
                             var insert_item_no = itemInsertSnapshot.val().item;
                             // var position = itemInsertSnapshot.val().position;
                             
@@ -645,8 +620,6 @@
                                         total: quantity
                                     }
 
-                                    // console.log(itemUpdate);
-
                                     firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day+'/item/'+itemUpdateChildSnapshot.key).update(itemUpdate);
                                 });
                             });
@@ -664,7 +637,6 @@
                         firebase.database().ref('summary_delivered_order_monthly_total/'+plant+'/'+date_year+'/'+date_month_year).once('value', function(monthTotalSnapshot){
 
                             if(monthTotalSnapshot.val() == null){
-                                // console.log(monthTotalSnapshot.val());
 
                                 var grandTotal = {
                                     grand_total: quantity
@@ -718,7 +690,7 @@
                                 var updateItem = {
                                     total: new_total
                                 }
-                                // console.log(updateItem);
+
                                 firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day+'/item/'+dateExistChildSnapshot.key).update(updateItem);
                             });
                         });
@@ -801,8 +773,6 @@
                 backloaded_plant: backloaded_plant
             }
 
-            // console.log(drData);
-
             firebase.database().ref('delivery_backloaded_order').push(drData);
 
             firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
@@ -846,9 +816,6 @@
 
             //     firebase.database().ref('history/'+plant+'/'+postHistoryId).update(timeUpdate);
             // });
-            
-
-            // console.log(historyData);
 
             var ongoingData = {
                 status: 2
@@ -858,6 +825,73 @@
                 alert("DR No. " + dr_no + " has been backloaded.");
                 window.location.href = 'delivery_ongoing_order.html';
             } 
+        });
+    }
+
+    function displayNotif(){
+
+        var myList = "";
+        count_employee = 0;
+        var option = {year: "numeric", month: "long", day: "numeric"}
+        var currentDate = new Date().toLocaleDateString('en', option);
+        var currentDate1 = new Date().toLocaleDateString('en', option);
+
+        var currentDate_date = new Date(currentDate);
+        var currentDate1_date = new Date(currentDate1);
+        currentDate1_date.setDate(currentDate1_date.getDate() - 1);
+        currentDate1_date = new Date(currentDate1_date);
+
+        var currentDateTimestamp = currentDate_date.getTime();
+        var yesterDateTimestamp = currentDate1_date.getTime();
+
+        firebase.database().ref('notification').orderByChild('reverseDate').limitToFirst(20).once('value', function(notifSnapshot){
+
+            if(notifSnapshot.val() != null){
+
+                notifSnapshot.forEach(function(notifChildSnapshot){
+
+                    if(notifChildSnapshot.val().toOffice == plant){
+
+                        date = notifChildSnapshot.val().date;
+                        var dateDate = new Date(date);
+                        var dateTimestamp = dateDate.getTime();
+
+                        if(dateTimestamp == currentDateTimestamp){
+                            var date_status = "Today";
+                        }else if(dateTimestamp == yesterDateTimestamp){
+                            var date_status = "Yesterday";
+                        }else if(dateTimestamp < yesterDateTimestamp){
+                            var date_status = date;
+                        }
+
+                        fromOffice = notifChildSnapshot.val().fromOffice;
+                        message = notifChildSnapshot.val().message;
+                        page = notifChildSnapshot.val().page;
+                        time = notifChildSnapshot.val().time;
+                        key = notifChildSnapshot.key;
+
+                        if(notifChildSnapshot.val().isRead == 1){
+
+                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\"><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
+
+                            count_employee++;
+
+                        }else if(notifChildSnapshot.val().isRead == 0){
+
+                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\" style='color: #595959;'><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
+
+                        }
+                    }
+                });
+
+                document.getElementById('id_notif_list').innerHTML = myList;
+
+                if(count_employee != 0){
+                    document.getElementById('id_badge').innerHTML = "<span class='badge bg-important'>" + count_employee + "</span>";
+                } 
+            }
+
+            $('.class_notif').text(count_employee);
         });
     }
 
@@ -1153,7 +1187,6 @@
                                     <thead>
                                         <tr class="filterable">
                                             <th colspan="11">
-                                              <!--   <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button> -->
                                                 Total Ongoing Delivery: <span id="id_count_ongoing_order1"></span>
                                                 <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                             </th>
@@ -1167,7 +1200,7 @@
                                             <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
                                             <th class="col-md-1" style="color: white;">Quantity</th>
                                             <th class="col-md-1" style="color: white;">Truck No.</th>
-                                            <th class="col-md-1"><input type="text" class="form-control" placeholder="Contact" disabled></th>
+                                            <th class="col-md-1" style="color: white;">Contact</th>
                                             <th class="col-md-1" style="color: white;">Date Issued</th>
                                             <th class="col-md-1" style="color: white;">Action</th>
                                         </tr>

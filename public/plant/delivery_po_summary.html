@@ -143,6 +143,7 @@
                     tableData();
                     totalCountBadge();
                     itemOption();
+                    displayNotif();
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
 
@@ -249,12 +250,6 @@
                 var project_key = itemSnapshot.val().project_key;
                 var balance = itemSnapshot.val().balance;
 
-                // if(balance <= 0){
-                //     remarks = "SERVED";
-                // }else{
-                //     remarks = "WITH BALANCE";
-                // }
-
                 firebase.database().ref('purchase_order_closed').orderByChild('item_key').equalTo(key).once('value', function(closedSnapshot){
 
                     if(closedSnapshot.val() != null){
@@ -286,10 +281,7 @@
                                 var item_key = ongoingChildSnapshot.val().item_key;
                                 var status = ongoingChildSnapshot.val().status;
 
-                                // console.log(poNoKeyId, po_no_key, key, item_key, status);
                                 if(poNoKeyId == po_no_key && key == item_key && status == 1){
-
-                                    // console.log(ongoingChildSnapshot.val());
 
                                     firebase.database().ref('delivery_delivered_order').orderByChild('reverseDate').once('value', function(deliveredSnapshot){
                                         deliveredSnapshot.forEach(function(deliveredChildSnapshot){
@@ -297,8 +289,6 @@
                                             var dl_dr_no_key = deliveredChildSnapshot.val().dr_no_key;
 
                                             if(dr_no_key == dl_dr_no_key){
-
-                                                // console.log(deliveredChildSnapshot.val());
 
                                                 var ongoing_gate_pass = ongoingChildSnapshot.val().gate_pass;
                                                 var ongoing_dr_no = ongoingChildSnapshot.val().dr_no;
@@ -353,6 +343,73 @@
  
             $('.se-pre-con').fadeOut('slow');
         }
+    }
+
+    function displayNotif(){
+
+        var myList = "";
+        count_employee = 0;
+        var option = {year: "numeric", month: "long", day: "numeric"}
+        var currentDate = new Date().toLocaleDateString('en', option);
+        var currentDate1 = new Date().toLocaleDateString('en', option);
+
+        var currentDate_date = new Date(currentDate);
+        var currentDate1_date = new Date(currentDate1);
+        currentDate1_date.setDate(currentDate1_date.getDate() - 1);
+        currentDate1_date = new Date(currentDate1_date);
+
+        var currentDateTimestamp = currentDate_date.getTime();
+        var yesterDateTimestamp = currentDate1_date.getTime();
+
+        firebase.database().ref('notification').orderByChild('reverseDate').limitToFirst(20).once('value', function(notifSnapshot){
+
+            if(notifSnapshot.val() != null){
+
+                notifSnapshot.forEach(function(notifChildSnapshot){
+
+                    if(notifChildSnapshot.val().toOffice == plant){
+
+                        date = notifChildSnapshot.val().date;
+                        var dateDate = new Date(date);
+                        var dateTimestamp = dateDate.getTime();
+
+                        if(dateTimestamp == currentDateTimestamp){
+                            var date_status = "Today";
+                        }else if(dateTimestamp == yesterDateTimestamp){
+                            var date_status = "Yesterday";
+                        }else if(dateTimestamp < yesterDateTimestamp){
+                            var date_status = date;
+                        }
+
+                        fromOffice = notifChildSnapshot.val().fromOffice;
+                        message = notifChildSnapshot.val().message;
+                        page = notifChildSnapshot.val().page;
+                        time = notifChildSnapshot.val().time;
+                        key = notifChildSnapshot.key;
+
+                        if(notifChildSnapshot.val().isRead == 1){
+
+                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\"><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
+
+                            count_employee++;
+
+                        }else if(notifChildSnapshot.val().isRead == 0){
+
+                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\" style='color: #595959;'><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
+
+                        }
+                    }
+                });
+
+                document.getElementById('id_notif_list').innerHTML = myList;
+
+                if(count_employee != 0){
+                    document.getElementById('id_badge').innerHTML = "<span class='badge bg-important'>" + count_employee + "</span>";
+                } 
+            }
+
+            $('.class_notif').text(count_employee);
+        });
     }
 
     function totalCountBadge(){
@@ -574,23 +631,9 @@
         <section id="main-content">
             <section class="wrapper">            
                 <!--overview start-->
-                <!-- <div class="row">
-                    <div class="col-md-12">
-                        <ol class="breadcrumb" id="id_breadcrumb"></ol>
-                    </div>
-                </div> -->
                 <div class="row">
                     <div class="col-md-9">
                         <section class="panel">
-                             <!-- <header class="panel-heading">
-                                    <span>Project Name: <strong><span id="id_project_name"></span></strong></span><br>
-                                    <span>Project Address: <strong><span id="id_project_address"></strong></span><br>
-                                    <span>Item: <strong><span id="id_item"></strong></span><br>
-                                    P.O. No.: <select id="itemList" onchange="itemData(this.value);">
-                                        <option value="">Select</option>
-                                    </select>
-                            </header>
-                            <span id="tableID"></span>   --> 
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-condensed">
                                     <thead>

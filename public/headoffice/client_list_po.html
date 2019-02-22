@@ -182,8 +182,6 @@
 
                             firebase.database().ref('project/'+client_key+'/'+project_key).once('value', function(projectSnapshot){
 
-                                // console.log(orderChildSnapshot.val());
-
                                 text_po_no = orderChildSnapshot.val().po_no;
                                 text_project_address = projectSnapshot.val().project_address;
                                 text_project_name = projectSnapshot.val().project_name;

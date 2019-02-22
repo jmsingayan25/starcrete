@@ -96,26 +96,9 @@
 <script>
 	
 	var plant = getUrlParameter("plant");
-    var timer = null;
     var fromDate = "";
     var endDate = "";
 
-    // function goAway() {
-    //     clearTimeout(timer);
-    //     timer = setTimeout(function() {
-    //         // window.location.reload(true);
-    //      //    tableData();
-    //      //    oilCategory();
-    //     	// availableStock();
-    //     	// selectCategory('');
-    //     }, 60000);
-    // }
-
-    // window.addEventListener('mousemove', goAway, true);
-    // window.addEventListener('keypress', goAway, true);
-
-    // goAway();
-    
     $(document).ready(function(){
 
     	$(".se-pre-con").fadeIn("fast");
@@ -603,15 +586,6 @@
 
 		window.open("diesel_category_print.html?plant="+plant+"&fromdate="+date1+"&enddate="+date2+"&category="+oil_value, "_blank");
 	}
-
-	// function lastDelivery(){
-
-	// 	firebase.database().ref('incoming_diesel_category/'+plant).orderByChild('Date_Input').limitToLast(1).on('child_added', function(dateSnapshot){
-	// 		console.log(dateSnapshot.val());
-
-	// 		document.getElementById('id_last_delivery').innerHTML = dateSnapshot.val().date;
-	// 	});
-	// }
 
     function displayNotif(){
 

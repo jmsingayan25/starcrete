@@ -152,52 +152,53 @@
 
     function tableData(plant){
 
-        if(option == "machine1" || option == "new_machine1"){
+        if(option == "machine1"){
             headline = "MACHINE 1 DETAILS";
-        }else if(option == "machine3" || option == "new_machine3"){
+        }else if(option == "machine3"){
             headline = "MACHINE 3 DETAILS";
-        }else if(option == "forklift_operator" || option == "new_forklift_operator"){
+        }else if(option == "forklift_operator"){
             headline = "FORKLIFT OPERATOR DETAILS";
-        }else if(option == "mechanic" || option == "new_mechanic"){
+        }else if(option == "mechanic"){
             headline = "MECHANIC DETAILS";
-        }else if(option == "nonskid1" || option == "new_nonskid1"){
+        }else if(option == "nonskid1"){
             headline = "NON-SKID 1 DETAILS";
-        }else if(option == "nonskid2" || option == "new_nonskid2"){
+        }else if(option == "nonskid2"){
             headline = "NON-SKID 2 DETAILS";
-        }else if(option == "nonskid3" || option == "new_nonskid3"){
+        }else if(option == "nonskid3"){
             headline = "NON-SKID 3 DETAILS";
-        }else if(option == "nonskid4" || option == "new_nonskid4"){
+        }else if(option == "nonskid4"){
             headline = "NON-SKID 4 DETAILS";
-        }else if(option == "tagapukpok" || option == "new_tagapukpok"){
+        }else if(option == "tagapukpok"){
             headline = "TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG DETAILS";
-        }else if(option == "checker" || option == "new_checker"){
+        }else if(option == "checker"){
             headline = "CHECKER / FOREMAN / BATCHER / SUPERVISOR DETAILS";
-        }else if(option == "kamador" || option == "new_kamador"){
+        }else if(option == "kamador"){
             headline = "KAMADOR DETAILS";
-        }else if(option == "loader" || option == "new_loader"){
+        }else if(option == "loader"){
             headline = "LOADER DETAILS";
-        }else if(option == "others" || option == "new_others"){
+        }else if(option == "others"){
             headline = "OTHERS DETAILS";
-        }else if(option == "absent_plant" || option == "new_absent_plant"){
+        }else if(option == "absent_plant"){
             headline = "ABSENT IN PLANT DETAILS";
-        }else if(option == "absent_motorpool" || option == "new_absent_motorpool"){
+        }else if(option == "absent_motorpool"){
             headline = "ABSENT IN MOTORPOOL DETAILS";
-        }else if(option == "absent_trucking" || option == "new_absent_trucking"){
+        }else if(option == "absent_trucking"){
             headline = "ABSENT IN TRUCKING DETAILS";
-        }else if(option == "comment" || option == "new_comment"){
+        }else if(option == "comment"){
             headline = "COMMENT DETAILS";
-        }else if(option == "trucking" || option == "new_trucking"){
+        }else if(option == "trucking"){
             headline = "TRUCKING DETAILS";
         }
 
-        if(option == "mechanic" || option == "kamador" || option == "loader" || option == "new_mechanic" || option == "new_kamador" || option == "new_loader"){
+        if(option == "mechanic" || option == "kamador" || option == "loader"){
 
             if(option == "mechanic" || option == "kamador" || option == "loader"){
                 query_ext = option;
-            }else if(option == "new_mechanic" || option == "new_kamador" || option == "new_loader"){
-                new_option = option.replace("new_","");
-                query_ext = "new/"+new_option;
             }
+            // else if(option == "new_mechanic" || option == "new_kamador" || option == "new_loader"){
+            //     new_option = option.replace("new_","");
+            //     query_ext = "new/"+new_option;
+            // }
 
             document.getElementById('not_comment_section').style.display = "block";
             document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
@@ -218,13 +219,14 @@
                 document.getElementById('id_fields').innerHTML = optionTable;
             });
 
-        }else if(option == "comment" || option == "new_comment"){
+        }else if(option == "comment"){
 
             if(option == "comment"){
                 query_ext = option;
-            }else if(option == "new_comment"){
-                query_ext = "new/comment";
             }
+            // else if(option == "new_comment"){
+            //     query_ext = "new/comment";
+            // }
 
             document.getElementById('comment_section').style.display = "block";
             document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
@@ -239,14 +241,15 @@
                 document.getElementById('id_comment_field').innerHTML = optionTable;
             });
 
-        }else if(option == "tagapukpok" || option == "checker" || option == "others" || option == "machine1" || option == "machine3" || option == "new_tagapukpok" || option == "new_checker" || option == "new_others" || option == "new_machine1" || option == "new_machine3"){
+        }else if(option == "tagapukpok" || option == "checker" || option == "others" || option == "machine1" || option == "machine3"){
 
             if(option == "tagapukpok" || option == "checker" || option == "others" || option == "machine1" || option == "machine3"){
                 query_ext = option;
-            }else if(option == "new_tagapukpok" || option == "new_checker" || option == "new_others" || option == "new_machine1" || option == "new_machine3"){
-                new_option = option.replace("new_","");
-                query_ext = "new/"+new_option;
             }
+            // else if(option == "new_tagapukpok" || option == "new_checker" || option == "new_others" || option == "new_machine1" || option == "new_machine3"){
+            //     new_option = option.replace("new_","");
+            //     query_ext = "new/"+new_option;
+            // }
 
             document.getElementById('not_comment_section').style.display = "block";
             document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
@@ -269,13 +272,14 @@
                 document.getElementById('id_fields').innerHTML = optionTable;
             });
 
-        }else if(option == "trucking" || option == "new_trucking"){
+        }else if(option == "trucking"){
 
             if(option == "trucking"){
                 query_ext = option;
-            }else if(option == "new_trucking"){
-                query_ext = "new/trucking";
             }
+            // else if(option == "new_trucking"){
+            //     query_ext = "new/trucking";
+            // }
 
             document.getElementById('not_comment_section').style.display = "block";
             document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
@@ -311,13 +315,14 @@
                 }
             });
 
-        }else if(option == "forklift_operator" || option == "new_forklift_operator"){
+        }else if(option == "forklift_operator"){
 
             if(option == "forklift_operator"){
                 query_ext = option;
-            }else if(option == "new_forklift_operator"){
-                query_ext = "new/forklift_operator";
             }
+            // else if(option == "new_forklift_operator"){
+            //     query_ext = "new/forklift_operator";
+            // }
 
             document.getElementById('not_comment_section').style.display = "block";
             document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
@@ -338,14 +343,15 @@
 
             });
         
-        }else if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4" || option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4"){
+        }else if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4"){
 
             if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4"){
                 query_ext = option;
-            }else if(option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4"){
-                new_option = option.replace("new_","");
-                query_ext = "new/"+new_option;
             }
+            // else if(option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4"){
+            //     new_option = option.replace("new_","");
+            //     query_ext = "new/"+new_option;
+            // }
 
             document.getElementById('not_comment_section').style.display = "block";
             document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
@@ -458,15 +464,16 @@
             //     });
             // });
 
-        }else if(option == "absent_plant" || option == "absent_motorpool" || option == "absent_trucking" || option == "new_absent_plant" || option == "new_absent_motorpool" || option == "new_absent_trucking"){
+        }else if(option == "absent_plant" || option == "absent_motorpool" || option == "absent_trucking"){
 
             if(option == "absent_plant" || option == "absent_motorpool" || option == "absent_trucking"){
                 new_option = option.replace("absent_","");
                 query_ext = "absent/"+new_option;
-            }else if(option == "new_absent_plant" || option == "new_absent_motorpool" || option == "new_absent_trucking"){
-                new_option = option.replace("new_absent_","");
-                query_ext = "new/absent/"+new_option;
             }
+            // else if(option == "new_absent_plant" || option == "new_absent_motorpool" || option == "new_absent_trucking"){
+            //     new_option = option.replace("new_absent_","");
+            //     query_ext = "new/absent/"+new_option;
+            // }
 
             document.getElementById('not_comment_section').style.display = "block";
             document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
@@ -497,19 +504,19 @@
         $rowno = $("#employee_table tr").length;
         $rowno = $rowno + 1;
 
-        if(option == "kamador" || option == "loader" || option == "mechanic" || option == "new_kamador" || option == "new_loader" || option == "new_mechanic"){
+        if(option == "kamador" || option == "loader" || option == "mechanic"){
 
             $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-5'><input type='text' name='update_employee_name[]' class='form-control input_type employees' required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
 
-        }else if(option == "tagapukpok" || option == "checker" || option == "others" || option == "machine1" || option == "machine3" || option == "new_tagapukpok" || option == "new_checker" || option == "new_others" || option == "new_machine1" || option == "new_machine3"){
+        }else if(option == "tagapukpok" || option == "checker" || option == "others" || option == "machine1" || option == "machine3"){
 
             $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-5'><input type='text' name='update_employee_name[]' class='form-control input_type employees' required></td><td class='col-md-5'><input type='text' name='update_employee_position[]' style='text-transform: uppercase;' class='form-control'></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
 
-        }else if(option == "absent_plant" || option == "absent_motorpool" || option == "absent_trucking" || option == "new_absent_plant" || option == "new_absent_motorpool" || option == "new_absent_trucking"){
+        }else if(option == "absent_plant" || option == "absent_motorpool" || option == "absent_trucking"){
 
             $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-3'><input type='text' name='update_employee_name[]' class='form-control input_type employees' required></td><td class='col-md-6'><textarea name='update_employee_reason[]' class='form-control input_type' rows='2' required></textarea></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
         
-        }else if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4" || option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4"){
+        }else if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4"){
 
             $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-8'><input type='text' name='update_employee_name[]' class='form-control input_type employees' required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
         }
@@ -529,14 +536,15 @@
 
         event.preventDefault();
 
-        if(option == "checker" || option == "machine1" || option == "machine3" || option == "others" || option == "tagapukpok" || option == "new_checker" || option == "new_machine1" || option == "new_machine3" || option == "new_others" || option == "new_tagapukpok"){
+        if(option == "checker" || option == "machine1" || option == "machine3" || option == "others" || option == "tagapukpok"){
 
             if(option == "checker" || option == "machine1" || option == "machine3" || option == "others" || option == "tagapukpok"){
                 query_ext = option;
-            }else if(option == "new_checker" || option == "new_machine1" || option == "new_machine3" || option == "new_others" || option == "new_tagapukpok"){
-                new_option = option.replace("new_","");
-                query_ext = "new/"+new_option;
             }
+            // else if(option == "new_checker" || option == "new_machine1" || option == "new_machine3" || option == "new_others" || option == "new_tagapukpok"){
+            //     new_option = option.replace("new_","");
+            //     query_ext = "new/"+new_option;
+            // }
 
             firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/'+key).once('value', function(snapshot){
 
@@ -574,14 +582,15 @@
                 }
             });        
 
-        }else if(position == "kamador" || position == "loader" || position == "mechanic" || position == "new_kamador" || position == "new_loader" || position == "new_mechanic"){
+        }else if(position == "kamador" || position == "loader" || position == "mechanic"){
 
             if(position == "kamador" || position == "loader" || position == "mechanic"){
                 query_ext = position;
-            }else if(position == "new_kamador" || position == "new_loader" || position == "new_mechanic"){
-                new_option = position.replace("new_","");
-                query_ext = "new/"+new_option;
             }
+            // else if(position == "new_kamador" || position == "new_loader" || position == "new_mechanic"){
+            //     new_option = position.replace("new_","");
+            //     query_ext = "new/"+new_option;
+            // }
 
             if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/'+key).remove()){
 
@@ -604,15 +613,16 @@
                 });
             }
 
-        }else if(position == "absent_plant" || position == "absent_motorpool" || position == "absent_trucking" || position == "new_absent_plant" || position == "new_absent_motorpool" || position == "new_absent_trucking"){
+        }else if(position == "absent_plant" || position == "absent_motorpool" || position == "absent_trucking"){
 
             if(position == "absent_plant" || position == "absent_motorpool" || position == "absent_trucking"){
                 new_option = position.replace("absent_","");
                 query_ext = "absent/"+new_option;
-            }else if(position == "new_absent_plant" || position == "new_absent_motorpool" || position == "new_absent_trucking"){
-                new_option = position.replace("new_absent_");
-                query_ext = "new/absent/"+new_option;
             }
+            // else if(position == "new_absent_plant" || position == "new_absent_motorpool" || position == "new_absent_trucking"){
+            //     new_option = position.replace("new_absent_");
+            //     query_ext = "new/absent/"+new_option;
+            // }
 
             if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/'+key).remove()){
 
@@ -636,14 +646,15 @@
                 });
             }
 
-        }else if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4" || option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4"){
+        }else if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4"){
 
             if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4"){
                 query_ext = option;
-            }else if(option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4"){
-                new_option = option.replace("new_","");
-                query_ext = "new/"+new_option;
             }
+            // else if(option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4"){
+            //     new_option = option.replace("new_","");
+            //     query_ext = "new/"+new_option;
+            // }
 
             if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext+'/employee/'+key).remove()){
 
@@ -675,41 +686,41 @@
 
         event.preventDefault();
 
-        if(option == "machine1" || option == "new_machine1"){
+        if(option == "machine1"){
             headline = "MACHINE 1 SECTION";
-        }else if(option == "machine3" || option == "new_machine3"){
+        }else if(option == "machine3"){
             headline = "MACHINE 3 SECTION";
-        }else if(option == "forklift_operator" || option == "new_forklift_operator"){
+        }else if(option == "forklift_operator"){
             headline = "FORKLIFT OPERATOR SECTION";
-        }else if(option == "mechanic" || option == "new_mechanic"){
+        }else if(option == "mechanic"){
             headline = "MECHANIC SECTION";
-        }else if(option == "nonskid1" || option == "new_nonskid1"){
+        }else if(option == "nonskid1"){
             headline = "NON-SKID 1 SECTION";
-        }else if(option == "nonskid2" || option == "new_nonskid2"){
+        }else if(option == "nonskid2"){
             headline = "NON-SKID 2 SECTION";
-        }else if(option == "nonskid3" || option == "new_nonskid3"){
+        }else if(option == "nonskid3"){
             headline = "NON-SKID 3 SECTION";
-        }else if(option == "nonskid4" || option == "new_nonskid4"){
+        }else if(option == "nonskid4"){
             headline = "NON-SKID 4 SECTION";
-        }else if(option == "tagapukpok" || option == "new_tagapukpok"){
+        }else if(option == "tagapukpok"){
             headline = "TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG SECTION";
-        }else if(option == "checker" || option == "new_checker"){
+        }else if(option == "checker"){
             headline = "CHECKER / FOREMAN / BATCHER / SUPERVISOR SECTION";
-        }else if(option == "kamador" || option == "new_kamador"){
+        }else if(option == "kamador"){
             headline = "KAMADOR SECTION";
-        }else if(option == "loader" || option == "new_loader"){
+        }else if(option == "loader"){
             headline = "LOADER SECTION";
-        }else if(option == "others" || option == "new_others"){
+        }else if(option == "others"){
             headline = "OTHERS SECTION";
-        }else if(option == "absent_plant" || option == "new_absent_plant"){
+        }else if(option == "absent_plant"){
             headline = "ABSENT IN PLANT SECTION";
-        }else if(option == "absent_motorpool" || option == "new_absent_motorpool"){
+        }else if(option == "absent_motorpool"){
             headline = "ABSENT IN MOTORPOOL SECTION";
-        }else if(option == "absent_trucking" || option == "new_absent_trucking"){
+        }else if(option == "absent_trucking"){
             headline = "ABSENT IN TRUCKING SECTION";
-        }else if(option == "comment" || option == "new_comment"){
+        }else if(option == "comment"){
             headline = "COMMENT SECTION";
-        }else if(option == "trucking" || option == "new_trucking"){
+        }else if(option == "trucking"){
             headline = "TRUCKING SECTION";
         }
 
@@ -732,15 +743,16 @@
 
         firebase.database().ref('notification').push(notifData);
 
-        if(option == "absent_plant" || option == "absent_motorpool" || option == "absent_trucking" || option == "new_absent_plant" || option == "new_absent_motorpool" || option == "new_absent_trucking"){
+        if(option == "absent_plant" || option == "absent_motorpool" || option == "absent_trucking"){
 
             if(option == "absent_plant" || option == "absent_motorpool" || option == "absent_trucking"){
                 new_option = option.replace("absent_","");
                 query_ext = "absent/"+new_option;
-            }else if(option == "new_absent_plant" || option == "new_absent_motorpool" || option == "new_absent_trucking"){
-                new_option = option.replace("new_absent_","");
-                query_ext = "new/absent/"+new_option;
             }
+            // else if(option == "new_absent_plant" || option == "new_absent_motorpool" || option == "new_absent_trucking"){
+            //     new_option = option.replace("new_absent_","");
+            //     query_ext = "new/absent/"+new_option;
+            // }
 
             count = 0;
             var input_employee_name = $("input[name='update_employee_name[]']").map(function(){return $(this).val();}).get();
@@ -765,15 +777,16 @@
                     window.location.href='lineup.html';
                 }
             }
-        }else if(option == "comment" || option == "new_comment"){
+        }else if(option == "comment"){
 
             var input_comment = document.getElementById('comment').value;
 
             if(option == "comment"){
                 query_ext = option;
-            }else if(option == "new_comment"){
-                query_ext = "new/comment"
             }
+            // else if(option == "new_comment"){
+            //     query_ext = "new/comment"
+            // }
 
             firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+query_ext).once('value', function(commentSnapshot){
                 commentSnapshot.forEach(function(commentChildSnapshot){
@@ -789,7 +802,7 @@
                 });
             });
 
-        }else if(option == "tagapukpok" || option == "checker" || option == "others" || option == "machine1" || option == "machine3" || option == "new_tagapukpok" || option == "new_checker" || option == "new_others" || option == "new_machine1" || option == "new_machine3"){
+        }else if(option == "tagapukpok" || option == "checker" || option == "others" || option == "machine1" || option == "machine3"){
             
             count = 0;
 
@@ -862,7 +875,7 @@
                 }
             });
 
-        }else if(option == "trucking" || option == "new_trucking"){
+        }else if(option == "trucking"){
 
             count = 0;
             var input_truck_no = $("input[name='hidden_trucking[]']").map(function(){return $(this).val();}).get();
@@ -899,7 +912,7 @@
                 }
             }
 
-        }else if(option == "forklift_operator" || option == "new_forklift_operator"){
+        }else if(option == "forklift_operator"){
 
             count = 0;
 
@@ -934,14 +947,15 @@
 
             }
 
-        }else if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4" || option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4"){
+        }else if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4"){
 
             if(option == "nonskid1" || option == "nonskid2" || option == "nonskid3" || option == "nonskid4"){
                 query_ext = option;
-            }else if(option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4"){
-                new_option = option.replace("new_","");
-                query_ext = "new/"+new_option;
             }
+            // else if(option == "new_nonskid1" || option == "new_nonskid2" || option == "new_nonskid3" || option == "new_nonskid4"){
+            //     new_option = option.replace("new_","");
+            //     query_ext = "new/"+new_option;
+            // }
 
             count = 0;
 
@@ -972,14 +986,15 @@
                 }
             }
 
-        }else if(option == "kamador" || option == "loader" || option == "mechanic" || option == "new_kamador" || option == "new_loader" || option == "new_mechanic"){
+        }else if(option == "kamador" || option == "loader" || option == "mechanic"){
 
             if(option == "kamador" || option == "loader" || option == "mechanic"){
                 query_ext = option;
-            }else if(option == "new_kamador" || option == "new_loader" || option == "new_mechanic"){
-                new_option = option.replace("new_","");
-                query_ext = "new/"+new_option;
             }
+            // else if(option == "new_kamador" || option == "new_loader" || option == "new_mechanic"){
+            //     new_option = option.replace("new_","");
+            //     query_ext = "new/"+new_option;
+            // }
 
             count = 0;
 

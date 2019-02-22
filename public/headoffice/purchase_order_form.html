@@ -302,33 +302,6 @@
                     count++;
                 }
 
-                // var projectData = {
-                //     project_name: projectSnapshot.val().project_name,
-                //     project_address: projectSnapshot.val().project_address
-                // }
-
-                // firebase.database().ref('purchase_order/'+postId+'/project_detail/'+project_id).set(projectData);
-
-                // var clientData = {
-                //     client_name: clientSnapshot.val().client_name,
-                //     client_address: clientSnapshot.val().client_address
-                // }
-
-                // firebase.database().ref('purchase_order/'+postId+'/client_detail/'+client_id).set(clientData);
-
-                // firebase.database().ref('project/'+client_id+'/'+project_id+'/contact').once('value', function(snapshot){
-                //     snapshot.forEach(function(childSnapshot){
-
-                //         var contactData = {
-                //             contact_name: childSnapshot.val().project_contact_name,
-                //             contact_no: childSnapshot.val().project_contact_no
-                //         }
-
-                //         firebase.database().ref('purchase_order/'+postId+'/contact/'+childSnapshot.key).set(contactData);
-                        
-                //     });
-                // });
-
                 if(count == item_no.length){
                     document.getElementById('msg').innerHTML = "Transaction complete. You can view the order on <a href='purchase_order.html?plant=" + plant + "'>" + plant + " Purchase Order Page</a>.<a href='purchase_order_form.html'>Click here for another P.O. No.</a>";
                         $('#success_msg').show();

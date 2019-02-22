@@ -96,7 +96,6 @@
 <script>
 	
 	var plant = getUrlParameter("plant");
-    var timer = null;
     var fromDate = "";
     var endDate = "";
     
@@ -184,24 +183,8 @@
 
         $(".se-pre-con").fadeIn("fast");
         var myTbody = "";
-
-        // console.log(fromDate, endDate);
-        // var selectedDate = document.getElementById('date_view').value;
-
-        // if(selectedDate == ""){
-
-        //     document.getElementById('search_date').innerHTML = "";
-        // }else{
-
-        //     var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
-        //     var searchDate = new Date(selectedDate).toLocaleDateString('en', options);
-
-        //     document.getElementById('search_date').innerHTML = searchDate;
-        // }
-
         
         firebase.database().ref('incoming_diesel/'+plant).once('value', function(dieselSnapshot){
-            // console.log(dieselSnapshot.val(), dateFormat(selectedDate));
 
             var numRows = 0;
 
@@ -568,32 +551,20 @@
         });
     }
 
-    // function availableStock(plant){
+    function datePrint(){
 
-    //     var currentDate = new Date().toLocaleDateString();
+        event.preventDefault();
 
-    //     firebase.database().ref('available_stock/'+plant).on('value', function(stockSnapshot){
-    //         console.log(stockSnapshot.val());
+        if(fromDate == "" && endDate == ""){
+            date1 = "";
+            date2 = "";
+        }else{
+            date1 = new Date(fromDate).toLocaleDateString('en');
+            date2 = new Date(endDate).toLocaleDateString('en');
+        }
 
-    //         available_stock = Number(stockSnapshot.val().Liters).toLocaleString('en');
-    //         document.getElementById('id_today_stock').innerHTML = "Available stock as of today, " + currentDate + ": " + available_stock;    
-    //     });
-    // }
-
-function datePrint(){
-
-    event.preventDefault();
-
-    if(fromDate == "" && endDate == ""){
-        date1 = "";
-        date2 = "";
-    }else{
-        date1 = new Date(fromDate).toLocaleDateString('en');
-        date2 = new Date(endDate).toLocaleDateString('en');
+        window.open('diesel_print.html?plant=' + plant + "&fromdate=" + date1 + "&enddate=" + date2, '_blank');
     }
-
-    window.open('diesel_print.html?plant=' + plant + "&fromdate=" + date1 + "&enddate=" + date2, '_blank');
-}
 
     function displayNotif(){
 
@@ -862,13 +833,6 @@ function datePrint(){
 	                        <div class="table-responsive filterable">
                         		<table class="table table-bordered">
                         			<thead>
-                                        <!-- <tr>
-                                            <th colspan="8">
-                                                
-                                                <span>Available stock as of today: <span id="id_stock"></span></span><br>
-                                                <span>Search Date: <span id="search_date"></span>
-                                            </th>
-                                        </tr> -->
                         				<tr class="filterable">
                         					<th colspan="10">
                                                 <input type="hidden" id="hidden_stock">

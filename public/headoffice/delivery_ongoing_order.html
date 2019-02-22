@@ -161,12 +161,7 @@
 
         document.getElementById('id_page_header').innerHTML = "<a href='delivery_ongoing_order.html?plant=" + plant + "' style='color: inherit;'>" + plant + " Ongoing Order</a>";
 
-        // document.getElementById('id_summary_link').innerHTML = "<a href='summaryreport_deliveredorder.html?plant=" + plant + "' class='btn btn-info btn-md btn-block'><strong>MONTHLY DELIVERED ORDER</strong></a>";
-
-        // document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i>Ongoing Delivery <span id='id_count_ongoing_order'></span></li><li><i class='fa fa-info-circle'></i><a href='delivery_pending_order.html?plant=" + plant + "'>Existing P.O. <span id='id_count_existing_po'></span></a></li><li><i class='fa fa-truck'></i><a href='delivery_delivered_order.html?plant=" + plant + "'>Delivered</a></li><li><i class='fa fa-reply'></i><a href='delivery_backloaded_order.html?plant=" + plant + "'>Backloaded</a></li>";
-
         document.getElementById('li_plant').innerHTML = plant;
-        // document.getElementById('li_pending_order').innerHTML = "<a href='delivery_pending_order.html?plant="+plant+"'>Pending <span id='id_count_existing_po'></span></a>";
         document.getElementById('li_delivered_order').innerHTML = "<a href='delivery_delivered_order.html?plant="+plant+"'>Delivered</a>";
         document.getElementById('li_backload_order').innerHTML = "<a href='delivery_backloaded_order.html?plant="+plant+"'>Backloaded</a>";
 
@@ -719,7 +714,6 @@
                         <ol class="breadcrumb" id="id_breadcrumb">
                             <li><i class="fa fa-building"></i><span id="li_plant"></span></li>
                             <li><i class="icon_document"></i>Ongoing <span id="id_count_ongoing_order"></span></li>
-                            <!-- <li><i class="fa fa-info-circle"></i><span id="li_pending_order"></span></li> -->
                             <li><i class="fa fa-truck"></i><span id="li_delivered_order"></span></li>
                             <li><i class="fa fa-reply"></i><span id="li_backload_order"></span></li>
                         </ol>

@@ -240,8 +240,7 @@
                                      var newPostRef = postData.push();
                                      newPostRef.set(currentStockHolder);
                                      var postId = newPostRef.key;
-                                     //alert("Incoming diesel complete.");
-                                     //window.location.reload();
+    
                                  }
                                       firebase.database().ref().child("incoming_diesel_category/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot){
                         var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;

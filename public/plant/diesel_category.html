@@ -699,44 +699,12 @@
 //     // });
 // }
 
-function datePrint()
-{
-      event.preventDefault();
+    function DeleteRowData(key,plant){
 
-      if (document.getElementById('date_view').value != "") 
-      {
-           var date = dateFormat(document.getElementById('date_view').value);
-           var GetStringDate = date.toString();
-           var getCategoryName = document.getElementById("selectsys").value;
-          firebase.database().ref().child("diesel_category_print/" + plant).once('value',function(Snapshot)
-        {
-            var text_date = {printCurrentDate:GetStringDate,printCurrentCatagory: getCategoryName};
-          firebase.database().ref().child("diesel_category_print/" + plant).set(text_date);
-
-            window.location.href ="oil_currrent_print.html";
-        });
-      }
-      else
-      {
-           var date = new Date().toLocaleDateString('en');
-           var GetStringDate = date.toString();
-           var getCategoryName = document.getElementById("selectsys").value;
-          firebase.database().ref().child("diesel_category_print/" + plant).once('value',function(Snapshot)
-        {
-            var text_date = {printCurrentDate:GetStringDate,printCurrentCatagory: getCategoryName};
-           firebase.database().ref().child("diesel_category_print/" + plant).set(text_date);
-
-            window.location.href ="oil_currrent_print.html";
-        });
-      }
-}
-
-function DeleteRowData(key,plant)
-{
-    event.preventDefault();
-       firebase.database().ref().child("incoming_diesel_category//" + plant + "/" + key).remove();
-       window.location.reload();
-}
+        event.preventDefault();
+           firebase.database().ref().child("incoming_diesel_category//" + plant + "/" + key).remove();
+           window.location.reload();
+    }
 
     function displayNotif(){
 

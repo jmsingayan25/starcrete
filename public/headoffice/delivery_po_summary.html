@@ -171,8 +171,6 @@
 
                 if(order_po_no_key == po_no_key && status == 0 && order_item_key == item_key){
 
-                    // var item_key = ongoingChildSnapshot.val().item_key;
-
                     firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
 
                         var dr_no = ongoingChildSnapshot.val().dr_no;

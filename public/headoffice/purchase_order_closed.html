@@ -263,7 +263,7 @@
                                                             total_ext = total + " pcs";
                                                         }
 
-                                                        myTbody += "<tr><td><strong>" + count + "</strong></td>";
+                                                        // myTbody += "<tr><td><strong>" + count + "</strong></td>";
                                                         myTbody += "<td><strong>" + client_name + "</strong></td>";
                                                         myTbody += "<td><strong>" + project_name + " <br> " + project_address + "</strong></td>";
                                                         myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='client_po_items.html?key=" + po_no_key + "'\"><strong>" + po_no + "</strong></div></td>";
@@ -431,7 +431,7 @@
                                                                 total_ext = total + " pcs";
                                                             }
 
-                                                            myTbody += "<tr><td><strong>" + count + "</strong></td>";
+                                                            // myTbody += "<tr><td><strong>" + count + "</strong></td>";
                                                             myTbody += "<td><strong>" + client_name + "</strong></td>";
                                                             myTbody += "<td><strong>" + project_name + " <br> " + project_address + "</strong></td>";
                                                             myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='client_po_items.html?key=" + po_no_key + "'\"><strong>" + po_no + "</strong></div></td>";
@@ -770,7 +770,7 @@
                                 </header>
                             </form>
                             <div class="table-responsive filterable">
-                                <table class="table table-striped table-bordered">
+                                <table class="table table-striped table-bordered table-condensed">
                                     <thead>
                                         <tr class="filterable">
                                             <th colspan="8">
@@ -779,9 +779,9 @@
                                             </th>
                                         </tr>
                                         <tr class="filters" style="background-color: #00a3cc;">
-                                            <th class="col-md-1" style="color: white;">#</th>
+                                            <!-- <th class="col-md-1" style="color: white;">#</th> -->
                                             <th class="col-md-2"><input type="text" class="form-control" placeholder="Client Name" disabled></th>
-                                            <th class="col-md-2"><input type="text" class="form-control" placeholder="Project Site" disabled></th>
+                                            <th class="col-md-3"><input type="text" class="form-control" placeholder="Project Site" disabled></th>
                                             <th class="col-md-1"><input type="text" class="form-control" placeholder="P.O. No." disabled></th>
                                             <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
                                             <th class="col-md-2" style="color: white;">Ordered / Delivered</th>

@@ -145,11 +145,10 @@
                     if(plant == 'Head Office'){
                         window.location.href = '../headoffice/index.html';
                     }
-                    
-                    // tableData();
+
                     submitForm();
                     totalCountBadge();
-                    // goAway();
+                    displayNotif();
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                     // document.getElementById('id_hidden_plant').innerHTML = "<input type='hidden' id='hidden_plant' value='" + plant + "'>";
@@ -167,14 +166,6 @@
             } else {
                 window.location.href = '../login.html';
             }
-
-            // firebase.database().ref('purchase_order').on('child_changed', function(){
-            //     $(".se-pre-con").fadeIn("fast");
-            //     setTimeout(function() {
-            //         tableData();
-            //         $(".se-pre-con").fadeOut("slow");
-            //     }, 1000);
-            // });
         });
         
         $('input[name="daterange"]').daterangepicker({
@@ -249,11 +240,11 @@
 
                                                     var item = item_no + psi_ext;
 
-                                                    if(Number(itemChildSnapshot.val().balance) <= 1350){
-                                                        balance_ext = "<span style='color: red'>" + balance + " pcs</span>";
-                                                    }else{
+                                                    // if(Number(itemChildSnapshot.val().balance) <= 1350){
+                                                    //     balance_ext = "<span style='color: red'>" + balance + " pcs</span>";
+                                                    // }else{
                                                         balance_ext = balance + " pcs";
-                                                    }
+                                                    // }
 
                                                     myTbody += "<tr><td><strong>" + count + "</strong></td>";
                                                     myTbody += "<td><strong>" + client_name + "</strong></td>";
@@ -389,11 +380,11 @@
 
                                                         var item = item_no + psi_ext;
 
-                                                        if(Number(itemChildSnapshot.val().balance) <= 1350){
-                                                            balance_ext = "<span style='color: red'>" + balance + " pcs</span>";
-                                                        }else{
+                                                        // if(Number(itemChildSnapshot.val().balance) <= 1350){
+                                                        //     balance_ext = "<span style='color: red'>" + balance + " pcs</span>";
+                                                        // }else{
                                                             balance_ext = balance + " pcs";
-                                                        }
+                                                        // }
 
                                                         myTbody += "<tr><td><strong>" + count + "</strong></td>";
                                                         myTbody += "<td><strong>" + client_name + "</strong></td>";
@@ -458,6 +449,73 @@
                 }
             });
         }
+    }
+
+    function displayNotif(){
+
+        var myList = "";
+        count_employee = 0;
+        var option = {year: "numeric", month: "long", day: "numeric"}
+        var currentDate = new Date().toLocaleDateString('en', option);
+        var currentDate1 = new Date().toLocaleDateString('en', option);
+
+        var currentDate_date = new Date(currentDate);
+        var currentDate1_date = new Date(currentDate1);
+        currentDate1_date.setDate(currentDate1_date.getDate() - 1);
+        currentDate1_date = new Date(currentDate1_date);
+
+        var currentDateTimestamp = currentDate_date.getTime();
+        var yesterDateTimestamp = currentDate1_date.getTime();
+
+        firebase.database().ref('notification').orderByChild('reverseDate').limitToFirst(20).once('value', function(notifSnapshot){
+
+            if(notifSnapshot.val() != null){
+
+                notifSnapshot.forEach(function(notifChildSnapshot){
+
+                    if(notifChildSnapshot.val().toOffice == plant){
+
+                        date = notifChildSnapshot.val().date;
+                        var dateDate = new Date(date);
+                        var dateTimestamp = dateDate.getTime();
+
+                        if(dateTimestamp == currentDateTimestamp){
+                            var date_status = "Today";
+                        }else if(dateTimestamp == yesterDateTimestamp){
+                            var date_status = "Yesterday";
+                        }else if(dateTimestamp < yesterDateTimestamp){
+                            var date_status = date;
+                        }
+
+                        fromOffice = notifChildSnapshot.val().fromOffice;
+                        message = notifChildSnapshot.val().message;
+                        page = notifChildSnapshot.val().page;
+                        time = notifChildSnapshot.val().time;
+                        key = notifChildSnapshot.key;
+
+                        if(notifChildSnapshot.val().isRead == 1){
+
+                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\"><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
+
+                            count_employee++;
+
+                        }else if(notifChildSnapshot.val().isRead == 0){
+
+                            myList += "<li><a href=\"" + page + "\" onclick=\"return visitSite('" + key + "');\" style='color: #595959;'><span class='subject'><span class='from'>" + fromOffice + "</span><span class='time'>" + time + "</span></span><span class='message'>" + message + "</span><span class='subject'><span class='from'></span><span class='time'>" + date_status + "</span></span></a></li>";
+
+                        }
+                    }
+                });
+
+                document.getElementById('id_notif_list').innerHTML = myList;
+
+                if(count_employee != 0){
+                    document.getElementById('id_badge').innerHTML = "<span class='badge bg-important'>" + count_employee + "</span>";
+                } 
+            }
+
+            $('.class_notif').text(count_employee);
+        });
     }
 
     function totalCountBadge(){
@@ -736,7 +794,6 @@
                                     <thead>
                                         <tr class="filterable">
                                             <th colspan="10">
-                                                <!-- <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button> -->
                                                 Total Pending Order: <span id="id_count_existing_po1">
                                                 <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                             </th>
