@@ -522,7 +522,7 @@
                 firebase.database().ref().child("diesel_current_date_print/" + plant).set(text_date);
                 window.location.href ="diesel_transaction_print.html";
 
-          });
+            });
 
         }else{
 
@@ -589,15 +589,18 @@
 
                             if (neweachTimeStamp > newTimestamp){
 
-                                var RollbackResult = Number(getQuantityOut) + Number(foreachSnapshot.val().currentstockCopy);
-                                RollbackResult = RollbackResult.toString();
-                                var stock_available  = {currentstockCopy: RollbackResult};
+                                // var RollbackResult = Number(getQuantityOut) + Number(foreachSnapshot.val().currentstockCopy);
+                                // RollbackResult = RollbackResult.toString();
+                                // var stock_available  = {currentstockCopy: RollbackResult};
 
-                                firebase.database().ref().child("incoming_diesel/" + plant + "/" + foreachSnapshot.key).update(stock_available);
+                                // firebase.database().ref().child("incoming_diesel/" + plant + "/" + foreachSnapshot.key).update(stock_available);
+
+                                firebase.database().ref().child("incoming_diesel/" + plant + "/" + foreachSnapshot.key).remove();
                             }
                         });
 
-                        var RollbackResultLiters = Number(getQuantityOut) + Number(getAvailableStock);
+                        // var RollbackResultLiters = Number(getQuantityOut) + Number(getAvailableStock);
+                        var RollbackResultLiters = Number(getCurrentStock) + Number(getQuantityOut);
                         var stock_availableLiters  = {Liters: RollbackResultLiters};
                         firebase.database().ref().child("available_stock/" + plant).set(stock_availableLiters);
                         firebase.database().ref().child("incoming_diesel/" + plant + "/" + key).remove();
