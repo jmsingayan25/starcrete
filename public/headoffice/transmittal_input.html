@@ -89,6 +89,8 @@
 
 <script>
 
+    var plant = getUrlParameter('plant');
+
     $(document).ready(function(){
 
         displayNotif();
@@ -145,7 +147,8 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
-        // document.getElementById('id_breadcrumb').innerHTML = "<li><i class='icon_document'></i><a href='#'>Transmittal Input</a></li><li><i class='icon_document'></i><a href='transmittal_receive.html'>Incoming Items</a></li><li><i class='icon_document'></i><a href='transmittal_outgoing.html'>Outgoing Items</a></li>";
+        document.getElementById('input_plant').value = plant;
+        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='icon_document'></i><a href='#'>Transmittal Input</a></li><li><i class='icon_document'></i><a href='transmittal_receive.html?plant="+plant+"'>Incoming Items</a></li><li><i class='icon_document'></i><a href='transmittal_outgoing.html?plant="+plant+"'>Outgoing Items</a></li>";
 
     });
 
@@ -171,7 +174,8 @@
         var option = {year: "numeric", month: "long", day: "numeric"};
         displayDate = new Date(displayDate).toLocaleDateString('en',option);
 
-        var to_plant = document.getElementById('input_plant').value;
+        // var to_plant = document.getElementById('input_plant').value;
+        var to_plant = plant;
         var transmittal_no = document.getElementById('input_trans_no').value;
         var deliver_by = document.getElementById('input_deliver_by').value;
 
@@ -405,11 +409,7 @@
             <section class="wrapper">  
                 <div class="row">
                     <div class="col-md-12">
-                        <ol class="breadcrumb" id="id_breadcrumb">
-                            <li><i class='icon_document'></i>Transmittal Input</li>
-                            <li><i class='icon_document'></i><a href='transmittal_receive.html'>Incoming Items</a></li>
-                            <li><i class='icon_document'></i><a href='transmittal_outgoing.html'>Outgoing Items</a></li>        
-                        </ol>
+                        <ol class="breadcrumb" id="id_breadcrumb"></ol>
                     </div>
                 </div>
                 <form id="form" name="form" class="form-horizontal" onsubmit="if(confirm('Proceed?')){submitForm();}else{ event.preventDefault();}">
@@ -427,11 +427,12 @@
                                     <div class="form-group">
                                         <label for="input_plant" class="col-md-4 control-label">Transfer To<span class="required" style="color: red">*</span></label>
                                         <div class="col-md-7">
-                                            <select id="input_plant" class="form-control">
+                                            <!-- <select id="input_plant" class="form-control">
                                                 <option>Select</option>
                                                 <option value="Bravo">Bravo</option>
                                                 <option value="Delta">Delta</option>
-                                            </select>
+                                            </select> -->
+                                            <input type="text" id="input_plant" class="form-control" readonly>
                                         </div>
                                     </div>
                                     <div class="form-group">

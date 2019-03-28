@@ -105,13 +105,13 @@
         displayNotif();
         refreshNotif();
 
-        firebase.database().ref('available_stock').on('child_changed', function(){
-            $(".se-pre-con").fadeIn("fast");
-            setTimeout(function() {
-                tableData();
-                $(".se-pre-con").fadeOut("slow");
-            }, 1000);
-        });
+        // firebase.database().ref('available_stock').on('child_changed', function(){
+        //     $(".se-pre-con").fadeIn("fast");
+        //     setTimeout(function() {
+        //         tableData();
+        //         $(".se-pre-con").fadeOut("slow");
+        //     }, 1000);
+        // });
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {

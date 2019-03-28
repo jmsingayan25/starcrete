@@ -89,6 +89,8 @@
 
 <script>
 
+    var plant = getUrlParameter('plant');
+
     $(document).ready(function(){
 
         $('.filterable .btn-filter').click(function(){
@@ -157,7 +159,7 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
-        // document.getElementById('id_breadcrumb').innerHTML = "<li><i class='icon_document'></i><a href='transmittal_input.html'>Transmittal Input</a></li><li><i class='icon_document'></i><a href='transmittal_receive.html'>Incoming Items</a></li><li><i class='icon_document'></i><a href='#'>Outgoing Items</a></li>";
+        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='icon_document'></i><a href='transmittal_input.html?plant="+plant+"'>Transmittal Input</a></li><li><i class='icon_document'></i><a href='transmittal_receive.html?plant="+plant+"'>Incoming Items</a></li><li><i class='icon_document'></i><a href='#'>Outgoing Items</a></li>";
     });
 
     function tableData(){
@@ -187,23 +189,26 @@
                                 var receive = itemChildSnapshot.val().receive_date;
                                 var status = itemChildSnapshot.val().status;
 
-                                var rowData = {
-                                    date_holder: date_holder,
-                                    key: key,
-                                    item_key: item_key,
-                                    delivered_by, delivered_by,
-                                    from_plant: from_plant,
-                                    to_plant: to_plant,
-                                    transmittal_no: transmittal_no,
-                                    comment: comment,
-                                    item_no: item_no,
-                                    purpose: purpose,
-                                    quantity: quantity,
-                                    receive: receive,
-                                    status: status
-                                }
+                                if(to_plant == plant){
 
-                                array.push(rowData);
+                                    var rowData = {
+                                        date_holder: date_holder,
+                                        key: key,
+                                        item_key: item_key,
+                                        delivered_by, delivered_by,
+                                        from_plant: from_plant,
+                                        to_plant: to_plant,
+                                        transmittal_no: transmittal_no,
+                                        comment: comment,
+                                        item_no: item_no,
+                                        purpose: purpose,
+                                        quantity: quantity,
+                                        receive: receive,
+                                        status: status
+                                    }
+
+                                    array.push(rowData);
+                                }
                             });
 
                         });

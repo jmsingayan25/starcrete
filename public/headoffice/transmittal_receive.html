@@ -89,6 +89,8 @@
 
 <script>
 
+    var plant = getUrlParameter('plant');
+
     $(document).ready(function(){
 
         $('.filterable .btn-filter').click(function(){
@@ -157,7 +159,7 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
-        // document.getElementById('id_breadcrumb').innerHTML = "<li><i class='icon_document'></i><a href='transmittal_input.html'>Transmittal Input</a></li><li><i class='icon_document'></i><a href='#'>Incoming Items</a></li><li><i class='icon_document'></i><a href='transmittal_outgoing.html'>Outgoing Items</a></li>";
+        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='icon_document'></i><a href='transmittal_input.html?plant="+plant+"'>Transmittal Input</a></li><li><i class='icon_document'></i><a href='#'>Incoming Items</a></li><li><i class='icon_document'></i><a href='transmittal_outgoing.html?plant="+plant+"'>Outgoing Items</a></li>";
 
     });
 
@@ -189,23 +191,26 @@
                                 var receive = itemChildSnapshot.val().receive_date;
                                 var status = itemChildSnapshot.val().status;
 
-                                var rowData = {
-                                    key: key,
-                                    item_key: item_key,
-                                    receive: receive,
-                                    date_holder: date_holder,
-                                    from_plant: from_plant,
-                                    to_plant: to_plant,
-                                    delivered_by: delivered_by,
-                                    transmittal_no: transmittal_no,
-                                    item_no: item_no,
-                                    quantity: quantity,
-                                    purpose: purpose,
-                                    comment: comment,
-                                    status: status
-                                }
+                                if(from_plant == plant){
 
-                                array.push(rowData);
+                                    var rowData = {
+                                        key: key,
+                                        item_key: item_key,
+                                        receive: receive,
+                                        date_holder: date_holder,
+                                        from_plant: from_plant,
+                                        to_plant: to_plant,
+                                        delivered_by: delivered_by,
+                                        transmittal_no: transmittal_no,
+                                        item_no: item_no,
+                                        quantity: quantity,
+                                        purpose: purpose,
+                                        comment: comment,
+                                        status: status
+                                    }
+
+                                    array.push(rowData);
+                                }
                             });
                         });
                     });

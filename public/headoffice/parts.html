@@ -163,6 +163,7 @@
 
         document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i>Parts</li>";
         document.getElementById('page_header').innerHTML = plant + " PARTS TRANSACTION";
+        document.getElementById('id_parts_form').innerHTML = "<a href='parts_form.html?plant=" + plant + "' class='btn btn-info btn-md'><strong><span class='fa fa-plus'></span> Add Incoming Parts</strong></a>";
     });
 
     // function submitForm(){
@@ -837,7 +838,7 @@
                                             </div>
                                         </div>  -->
                                         <div class="col-md-offset-3 col-md-1" style="white-space: nowrap; margin-top: 38px;">
-                                        	<a href="parts_form.html" class="btn btn-info btn-md"><strong><span class="fa fa-plus"></span> Add Incoming Parts</strong></a>
+                                        	<span id="id_parts_form"></span>
                                         </div>
                                     </div>
                                 </header>
